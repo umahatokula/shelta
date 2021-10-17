@@ -37,6 +37,7 @@
                     <form wire:submit.prevent="save">
 
                         <div class="box-body">
+                            
                             <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Estate Details</h4>
                             <hr class="my-15">
                             <div class="row">
@@ -67,7 +68,7 @@
                             </div>
                             <hr class="my-15">
 
-                            @foreach ($properties as $key => $property)
+                            @foreach ($this->properties as $key => $property)
                             <div class="row mb-5">
                                 <div class="col-md-5">
                                     <div class="form-group">

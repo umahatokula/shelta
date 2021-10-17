@@ -12,7 +12,7 @@ class PropertyType extends Model
     use HasFactory;
     use HasSlug;
 
-    protected $fillable = ['name', 'phone', 'email', 'address'];
+    protected $fillable = ['name', 'description'];
 
     /**
      * Get the options for generating the slug.

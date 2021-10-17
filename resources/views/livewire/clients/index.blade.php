@@ -46,8 +46,12 @@
                                 </div>
                             @endif
                         </div>
+
+                        <div wire:loading>
+                            Loading Clients ...
+                        </div>
                         
-                        <div class="table-responsive-sm">
+                        <div class="table-responsive-sm" wire:loading.remove>
                             <table class="table mb-0">
                                 <thead>
                                     <tr>

@@ -6,8 +6,9 @@ use App\Models\Estate;
 use Livewire\Component;
 use App\Models\PropertyType;
 
-class CreateEstate extends Component
+class EditEstate extends Component
 {
+    public Estate $estate;
     public $propertyTypes;
     public $properties = [];
     public $name, $address;
@@ -22,12 +23,20 @@ class CreateEstate extends Component
      *
      * @return void
      */
-    public function mount() {
+    public function mount(Estate $estate) {
+
         $this->propertyTypes = PropertyType::all();
-        array_push($this->properties, [
-            'property' => $this->propertyTypes,
-            'price' => ''
-        ]);
+
+        $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) {
+            return [
+                'property_id' => $property->id,
+                'price' => $property->pivot->price
+            ];
+        })->toArray();
+
+        $this->name =  $estate->name;
+        $this->address = $estate->address;
+
     }
     
     /**
@@ -66,13 +75,17 @@ class CreateEstate extends Component
      * @return void
      */
     public function save() {
+
         $this->validate();
  
-        $estate = Estate::create([
-            'name'    => $this->name,
-            'address' => $this->address,
-        ]);
+        $estate = Estate::findOrFail($this->estate->id);
+        $estate->name    = $this->name;
+        $estate->address = $this->address;
+        $estate->save();
 
+        $estate->propertyTypes()->detach(); // detach existing properties
+
+        // attach new properties
         foreach($this->addedProperties as $property) {
             $estate->propertyTypes()->attach($property['property_id'], ['price' => $property['price']]);
         }
@@ -85,6 +98,6 @@ class CreateEstate extends Component
     
     public function render()
     {
-        return view('livewire.estates.create-estate');
+        return view('livewire.estates.edit-estate');
     }
 }

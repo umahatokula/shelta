@@ -69,6 +69,54 @@
 
                     <li class="treeview">
                         <a href="#">
+                            <i class="icon-Lock-overturning"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Estates</span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="{{ route('estates.index') }}">
+                                    <i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>All Estates
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('estates.create') }}">
+                                    <i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Add Estate
+                                </a>
+                            </li>	
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="icon-Lock-overturning"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Property Types</span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="{{ route('property-types.index') }}">
+                                    <i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>All Property Types
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('property-types.create') }}">
+                                    <i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Add Property Types
+                                </a>
+                            </li>	
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
                             <i class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
                             <span>Settings</span>
                             <span class="pull-right-container">

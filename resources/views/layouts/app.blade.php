@@ -562,6 +562,12 @@
     <script src="{{ asset('assets/cdn.amcharts.com/lib/4/charts.js') }}"></script>
     <script src="{{ asset('assets/cdn.amcharts.com/lib/4/themes/animated.js') }}"></script> --}}
 
+    
+	<script src="{{ asset('assets/vendor_components/gallery/js/animated-masonry-gallery.js') }}"></script>
+    <script src="{{ asset('assets/vendor_components/gallery/js/jquery.isotope.min.js') }}"></script>
+	<script src="{{ asset('assets/vendor_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor_components/Magnific-Popup-master/dist/jquery.magnific-popup-init.js') }}"></script>	
+
     <!-- CRMi App -->
     <script src="{{ asset('assets/src/js/template.js') }}"></script>
     {{-- <script src="{{ asset('assets/src/js/pages/dashboard.js') }}"></script> --}}
