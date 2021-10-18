@@ -54,11 +54,11 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h4 class="box-title text-info mb-0 mt-20"><i class="ti-save me-15"></i> Images
+                                    <h4 class="box-title text-info mb-0 mt-20"><i class="ti-save me-15"></i> Photos
                                     </h4>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end  d-flex align-items-center">
-                                    <a wire:click.prevent="addProperty" href="#" class="mt-4"> <span class="badge badge-success">Add Property Type</span> </a>
+                                    
                                 </div>
                             </div>
                             <hr class="my-15">
@@ -71,34 +71,6 @@
                                 @error('photo') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
-                            <section class="content">
-                                <div id="gallery">
-                                    <div class="box bg-transparent no-shadow b-0">
-                                      <div class="box-body text-center p-0">
-                                          <h4>Photo preview</h4>
-                                      </div>
-                                    </div>
-                                    <!-- Default box -->
-                                    <div class="box bg-transparent no-shadow b-0">
-                                      <div class="box-body">
-                                          <div id="gallery-content">
-                                              <div id="gallery-content-center" class="zoom-gallery">
-                                                @if ($photos)
-                                                    @foreach ($photos as $photo)
-                                                        <a href="{{ $photo->temporaryUrl() }}" data-gallery="multiimages" title="Image title will be apear here">
-                                                            <img src="{{ $photo->temporaryUrl() }}" alt="gallery" class="all studio" />
-                                                        </a>
-                                                    @endforeach
-                                                @endif
-                                              </div>
-                                          </div>
-                                          </div>
-                                      </div>
-                                  <!-- /.box-body -->
-                                </div>
-                                <!-- /.box -->
-                      
-                              </section>
 
                         </div>
                         <!-- /.box-body -->

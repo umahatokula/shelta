@@ -11,6 +11,7 @@ use App\Http\Livewire\Clients\Destroy;
 use App\Http\Livewire\Estates\EditEstate;
 use App\Http\Livewire\Estates\ListEstates;
 use App\Http\Livewire\Estates\CreateEstate;
+use App\Http\Livewire\PropertyTypes\EditPropertyType;
 use App\Http\Livewire\Transactions\TransactionsIndex;
 use App\Http\Livewire\Transactions\TransactionsStore;
 use App\Http\Livewire\PropertyTypes\ListPropertyTypes;
@@ -66,4 +67,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     // property-groups
     Route::get('property-types', ListPropertyTypes::class)->name('property-types.index');
     Route::get('property-types/create', CreatePropertyType::class)->name('property-types.create');
+    Route::get('property-types/{propertytype}/edit', EditPropertyType::class)->name('property-types.edit');
 

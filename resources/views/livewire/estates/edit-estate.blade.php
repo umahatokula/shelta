@@ -41,14 +41,14 @@
                             <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Estate Details</h4>
                             <hr class="my-15">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="form-label">Name</label>
                                         <input wire:model.lazy="name" class="form-control" type="text">
                                         @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="form-label">Address</label>
                                         <input wire:model.lazy="address" class="form-control" type="text">
@@ -90,7 +90,7 @@
                                         @error('price') <span class="error">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-2 pt-4 d-flex align-items-center">
+                                <div class="col-md-2 pt-4 d-flex justify-content-end align-items-center">
                                     <div class="form-group">
                                         <a wire:click.prevent="removeProperty({{ $key }})" href="#"
                                             class="text-white"> <span class="badge badge-danger">Remove</span> </a>

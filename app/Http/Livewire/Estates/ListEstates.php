@@ -8,7 +8,6 @@ use Livewire\WithPagination;
 
 class ListEstates extends Component
 {
-    
     use WithPagination;
 
     public function render()

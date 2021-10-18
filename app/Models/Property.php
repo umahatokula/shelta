@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\EstatePropertyGroup;
+use App\Models\EstatePropertyType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -15,7 +15,7 @@ class Property extends Model
      *
      * @return void
      */
-    public function estatePropertyGroup() {
-        return $this->belongsTo(EstatePropertyGroup::class);
+    public function estatePropertyType() {
+        return $this->belongsTo(EstatePropertyType::class);
     }
 }

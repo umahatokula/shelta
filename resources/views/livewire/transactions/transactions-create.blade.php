@@ -56,7 +56,7 @@
                                         @foreach ($client->properties as $property)
                                             <option value="{{ $property->id }}">
                                                 
-                                                {{ $property->estatePropertyType ? $property->estatePropertyType->propertyGroup ? $property->estatePropertyType->propertyGroup->name: null : null }} 
+                                                {{ $property->estatePropertyType ? $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name: null : null }} 
 
                                                 [{{ $property->estatePropertyType ? $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name: null : null }}]
 

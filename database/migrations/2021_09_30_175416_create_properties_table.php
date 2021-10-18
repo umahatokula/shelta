@@ -15,7 +15,7 @@ class CreatePropertiesTable extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->string('estate_property_group_id')->nullable();
+            $table->string('estate_property_type_id')->nullable();
             $table->integer('client_id')->nullable();
             $table->string('unique_number')->nullable();
             $table->timestamps();

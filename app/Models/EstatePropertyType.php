@@ -18,7 +18,7 @@ class EstatePropertyType extends Model
      *
      * @return void
      */
-    public function propertyGroup() {
+    public function propertyType() {
         return $this->belongsTo(PropertyType::class);
     }
     

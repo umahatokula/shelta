@@ -21,13 +21,17 @@ class CreatePropertyType extends Component
             'photos.*' => 'image|max:1024', // 1MB Max
         ]);
 
-        PropertyType::create([
+        $propertytype = PropertyType::create([
             'name' => $this->name,
             'description' => $this->description,
         ]);
 
-        foreach ($this->photos as $photo) {
-            $photo->storePublicly('photos');
+        foreach($this->photos as $photo) {
+            $propertytype
+                ->addMedia($photo->getRealPath())
+                ->usingName($photo->getClientOriginalName())
+                ->toMediaCollection('propertyTypephotos', 'public');
+
         }
         
         session()->flash('message', 'Property Type successfully added.');

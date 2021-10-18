@@ -19,7 +19,7 @@ class TransactionsCreate extends Component
  
     public function mount(Client $client) {
         $this->client_id = $client->id;
-        $this->client = $client->load(['properties.estatePropertyType.propertyGroup', 'properties.estatePropertyType.estate']);
+        $this->client = $client->load(['properties.estatePropertyType.propertyType', 'properties.estatePropertyType.estate']);
     }
  
     public function save()
