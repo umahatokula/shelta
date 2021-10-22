@@ -10,10 +10,21 @@ class ListEstates extends Component
 {
     use WithPagination;
 
+    protected $listeners = ['affirmationAction' => 'destroy'];
+
     public function render()
     {
         return view('livewire.estates.list-estates', [
             'estates' => Estate::paginate(10)
+        ]);
+    }
+
+    public function confirm($id) {
+
+        $this->dispatchBrowserEvent('modal:confirmation', [
+            'title'   => 'Confirm this action',
+            'content' => 'Delete this Estate?',
+            'id'      => $id,
         ]);
     }
 

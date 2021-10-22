@@ -12,7 +12,8 @@
                                     <i class="mdi mdi-home-outline"></i>
                                 </a>
                             </li>
-                            <li class="breadcrumb-item" aria-current="page"><a href="{{ route('clients.index') }}">Clients</a></li>
+                            <li class="breadcrumb-item" aria-current="page"><a
+                                    href="{{ route('clients.index') }}">Clients</a></li>
                             <li class="breadcrumb-item active" aria-current="page">{{ $client->name }}</li>
                         </ol>
                     </nav>
@@ -27,32 +28,51 @@
 
         <div class="row">
 
+            <div class="col-lg-3">
+                <div class="box p-15">
 
-            <div class="col-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4 class="box-title">Client's Profile</h4>
-                            </div>
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <a href="{{ route('transactions.create', $client) }}" class="btn btn-success">Make Payment</a>
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <p>
+                                    <h3>{{ $client->name }}</h3>
+                                </p>
+                                <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
+                                </p>
+                                <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
+                                <p>Address :<span class="text-gray ps-10"> {{ $client->aadress }}</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-6">
+
+            <div class="col-lg-9">
                 <div class="box p-15">
 
-                    <h3>Payments</h3>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="box-title">Payments</h4>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ route('transactions.create', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right">Make
+                                Payment</a>
 
+                            <!-- Taking namespace into account for component Admin/Actions/EditUser -->
+                            {{-- <button x-data="{}" x-on:click="$wire.emitTo('transactions.transactions-create', 'show')">Make Payment</button> --}}
+                            <button wire:click="$emit('openModal', 'transactions.transactions-create')">Open Modal</button>
+
+
+                        </div>
+                    </div>
+
+                    @if ($client->transactions->isNotEmpty())
                     <div class="table-responsive-sm">
                         <table class="table mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
+                                    <th class="text-left">Property</th>
                                     <th class="text-right">Amount</th>
                                     <th class="text-center">Type</th>
                                     <th class="text-center">Date</th>
@@ -61,14 +81,22 @@
                             </thead>
                             <tbody>
                                 @foreach ($client->transactions as $transaction)
+
                                 <tr>
                                     <th scope="row" class="text-center">{{ $loop->iteration }}</th>
 
-                                    <td class="text-right">
-                                        {{ number_format($transaction->amount, 2) }}</td>
+                                    <td>
+                                        @if ($transaction->property)
+                                            @if ($transaction->property->estatePropertyType)
+                                                <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
+                                            @endif
+                                        @endif
+                                    </td>
+
+                                    <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
 
                                     <td class="text-center">
-                                        <span class="badge badge-pill badge-success">{{ $transaction->type }}</span>
+                                        <span class="badge badge-primary">{{ $transaction->type }}</span>
                                     </td>
 
                                     <td class="text-center">
@@ -77,11 +105,11 @@
 
                                     <td class="text-center">
                                         <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                            href="#" class="default p-0" data-original-title="" title="">
+                                            href="#" class="text-primary p-0" data-original-title="" title="Download">
                                             <i class="fa fa-download font-medium-3 mr-2"></i>
                                         </a>
-                                        <a href="{{ route('clients.show', $client) }}"
-                                            class="default p-0" data-original-title="" title="">
+                                        <a href="{{ route('clients.show', $client) }}" class="text-danger p-0"
+                                            data-original-title="" title="Print">
                                             <i class="fa fa-print font-medium-3 mr-2"></i>
                                         </a>
                                     </td>
@@ -90,58 +118,18 @@
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> 
+                    @else
+                    <p>
+                        No payments yet
+                    </p>
+                    @endif
+
+                    
                 </div>
             </div>
 
-            
-            <div class="col-6">
-                <div class="box p-15">
-                            
-                    <div class="row">
-                        <div class="col-12">
-                            <div>
-                                <p><h3>{{ $client->name }}</h3></p>
-                                <p>Email :<span
-                                        class="text-gray ps-10">David@yahoo.com</span>
-                                </p>
-                                <p>Phone :<span class="text-gray ps-10">+11 123 456
-                                        7890</span></p>
-                                <p>Address :<span class="text-gray ps-10">123, Lorem
-                                        Ipsum, Florida, USA</span></p>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="pb-15">
-                                <p class="mb-10">Social Profile</p>
-                                <div class="user-social-acount">
-                                    <button
-                                        class="btn btn-circle btn-social-icon btn-facebook"><i
-                                            class="fa fa-facebook"></i></button>
-                                    <button
-                                        class="btn btn-circle btn-social-icon btn-twitter"><i
-                                            class="fa fa-twitter"></i></button>
-                                    <button
-                                        class="btn btn-circle btn-social-icon btn-instagram"><i
-                                            class="fa fa-instagram"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div>
-                                <div class="map-box">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2805244.1745767146!2d-86.32675167439648!3d29.383165774894163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88c1766591562abf%3A0xf72e13d35bc74ed0!2sFlorida%2C+USA!5e0!3m2!1sen!2sin!4v1501665415329"
-                                        style="border:0; width:100%; height:100px;"
-                                        allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            
             <div class="col-12">
                 <div class="box p-15">
 
@@ -152,30 +140,73 @@
                     <div class="row">
 
                         @foreach ($chunk as $property)
-                        <div class="col-4">
-                            <div class="card-deck">
-                                <div class="card">
-                                    <img class="card-img-top"
-                                        src="{{ asset('assets/images/img1.jpg') }}"
-                                        alt="Card image cap">
-                                    <div class="card-body">
-                                        <div class="card-block">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with
-                                                supporting
-                                                text below as a natural lead-in to additional
-                                                content.
-                                                This content is a little bit longer.</p>
+                        <div class="col-12">
+                            <div class="row">
+
+                                <div class="col-lg-12 col-12">
+                                    <div class="box">
+                                        <div class="box-header">
+                                            <h4 class="box-title">
+                                                @if ($property->estatePropertyType)
+                                                {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }} 
+                                                
+                                                    <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
+
+                                                    @if ($property->estatePropertyType)
+                                                        <span class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
+                                                    @endif
+                                                @else
+                                                Property
+                                                @endif
+                                            </h4>
                                         </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                        <!-- /.box-header -->
+                                        <div class="box-body">
+                                            <!-- Place somewhere in the <body> of your page -->
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="flexslider2">
+                                                        <ul class="slides">
+
+                                                            @if ($property->estatePropertyType->propertyType)
+
+                                                                @foreach ($property->estatePropertyType->propertyType->getMedia('propertyTypephotos') as $photo)
+                                                                    <li
+                                                                        data-thumb="{{ $photo->getUrl('thumb') }}">
+                                                                        <img src="{{ $photo->getUrl() }}"
+                                                                            alt="slide" />
+                                                                    </li>
+                                                                @endforeach
+                                                                
+                                                            @endif
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6 col-12">
+                                                    <p>
+                                                        @if ($property->estatePropertyType)
+                                                            <div class="d-block">
+                                                                <span class="lead font-weight-bold">Estate:</span> {{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}
+                                                            </div>
+                                                            <div class="d-block">
+                                                                <span class="lead font-weight-bold">Price:</span> &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }}
+                                                            </div>
+                                                        @endif
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <!-- /.box-body -->
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
                         @endforeach
+
                     </div>
 
                     @endforeach

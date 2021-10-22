@@ -12,7 +12,12 @@ class Show extends Component
     public Client $client;
 
     public function mount(Client $client) {
-        $this->client = $client;
+        $this->client = $client->load([
+            'transactions.property.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.estate', 
+            'properties.estatePropertyType.propertyType', 
+            'properties.estatePropertyType.estate'
+        ]);
     }
 
     public function downloadReciept($clientId, $transactionId) {

@@ -1,21 +1,27 @@
 
-<link href="{{ public_path('assets/vendor_components/bootstrap/dist/css/bootstrap.css') }}" rel="stylesheet">
+<link href="{{ public_path('assets/vendor_components/bootstrap/dist/css/bootstrap.css') }}" rel="stylesheet"><link href="{{ public_path('assets/css/style.css') }}" rel="stylesheet">
+
+<style>
+  .invoice{
+    font-size: 11px
+  }
+</style>
 
 
 <div class="invoice printableArea">
     <div class="row">
       <div class="col-12">
         <div class="page-header">
-          <h2 class="d-inline"><span class="fs-30">Invoice</span></h2>
+          <h4 class="d-inline"><span class="fs-30">Invoice</span></h4>
           <div class="pull-right text-end">
-              <h3>{{date('d-m-Y')}}</h3>
+              <h5>{{date('d-m-Y')}}</h5>
           </div>	
         </div>
       </div>
       <!-- /.col -->
     </div>
     <div class="row invoice-info">
-      <div class="col-md-6 invoice-col">
+      <div class="col-md-6">
         <strong>From</strong>	
         <address>
           <strong class="text-blue fs-24">Ochacho Homes</strong><br>
@@ -24,7 +30,7 @@
         </address>
       </div>
       <!-- /.col -->
-      <div class="col-md-6 invoice-col text-end">
+      <div class="col-md-6 d-flex justify-content-end">
         <strong>To</strong>
         <address>
           <strong class="text-blue fs-24">{{$client->name}}</strong><br>
@@ -70,7 +76,7 @@
       <!-- /.col -->
     </div>
     <div class="row">
-      <div class="col-12 text-end">
+      <div class="col-12 justify-content-end">
           <p class="lead"><b>Payment Due</b><span class="text-danger"> 14/08/2018 </span></p>
 
           <div>

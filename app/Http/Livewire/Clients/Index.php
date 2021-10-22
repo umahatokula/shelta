@@ -10,6 +10,13 @@ class Index extends Component
 {
     
     use WithPagination;
+
+    protected $listeners = ['affirmationAction' => 'destroy'];
+    
+    public function destroy($id) {
+        Client::findOrFail($id)->delete();
+        session()->flash('message', 'Client deleted.');
+    }
     
     public function render()
     {

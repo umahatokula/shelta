@@ -41,8 +41,8 @@ class PropertyType extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-              ->width(368)
-              ->height(232)
+              ->width(150)
+              ->height(150)
               ->sharpen(10);
     }
 }

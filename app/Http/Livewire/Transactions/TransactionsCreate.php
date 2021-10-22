@@ -5,8 +5,10 @@ namespace App\Http\Livewire\Transactions;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Transaction;
+use App\Http\Livewire\Modal;
+use LivewireUI\Modal\ModalComponent;
 
-class TransactionsCreate extends Component
+class TransactionsCreate extends ModalComponent
 {
     public $client_id, $property_id, $amount, $date;
     public Client $client;
@@ -15,6 +17,11 @@ class TransactionsCreate extends Component
         'client_id'   => 'required',
         'property_id' => 'required',
         'amount'      => 'required',
+    ];
+ 
+    protected $messages = [
+        'property_id.required' => 'Please select a property',
+        'amount.required' => 'Please enter an amount',
     ];
  
     public function mount(Client $client) {
@@ -41,6 +48,8 @@ class TransactionsCreate extends Component
 
     public function render()
     {
-        return view('livewire.transactions.transactions-create');
+        return view('livewire.transactions.transactions-create', [
+            'client' => Client::first()
+        ]);
     }
 }

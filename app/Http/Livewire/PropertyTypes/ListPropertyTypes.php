@@ -10,7 +10,7 @@ class ListPropertyTypes extends Component
 {
     use WithPagination;
 
-    public $confirmationModal = false;
+    protected $listeners = ['affirmationAction' => 'destroy'];
 
     public function render()
     {
@@ -19,15 +19,18 @@ class ListPropertyTypes extends Component
         ]);
     }
 
-    public function destroy() {
+    public function confirm($id) {
 
-        $this->dispatchBrowserEvent('show-confirmation-modal');
+        $this->dispatchBrowserEvent('modal:confirmation', [
+            'title'   => 'Confirm this action',
+            'content' => 'Delete this Property Type?',
+            'id'      => $id,
+        ]);
     }
 
-    public function affirmAction() {
-        dd('sdsdsd');
+    public function destroy($id) {
 
-        // PropertyType::findOrFail($id)->delete();
-        // session()->flash('message', 'Property Type deleted.');
+        PropertyType::findOrFail($id)->delete();
+        session()->flash('message', 'Property Type deleted.');
     }
 }

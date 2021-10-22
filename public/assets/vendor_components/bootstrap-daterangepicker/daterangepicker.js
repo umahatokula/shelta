@@ -59,7 +59,7 @@
         if (this.element.hasClass('dropup'))
             this.drops = 'up';
 
-        this.buttonClasses = 'btn btn-sm';
+        this.buttonClasses = 'btn btn-sm btn-rounded';
         this.applyClass = 'btn-primary';
         this.cancelClass = 'btn-danger';
 

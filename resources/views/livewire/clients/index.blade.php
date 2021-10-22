@@ -32,7 +32,7 @@
                             <div class="col-md-6">
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <a href="{{ route('clients.create') }}" class="btn btn-success">Add Client</a>
+                                <a href="{{ route('clients.create') }}" class="btn btn-primary">Add Client</a>
                             </div>
                         </div>
                     </div>
@@ -46,12 +46,8 @@
                                 </div>
                             @endif
                         </div>
-
-                        <div wire:loading>
-                            Loading Clients ...
-                        </div>
                         
-                        <div class="table-responsive-sm" wire:loading.remove>
+                        <div class="table-responsive-sm">
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
@@ -70,16 +66,16 @@
                                         <td>{{ $client->email }}</td>
                                         <td>{{ $client->phone }}</td>
                                         <td>
-                                            <a href="{{ route('clients.show', $client) }}" class="success p-0" data-original-title=""
-                                                title="">
+                                            <a href="{{ route('clients.show', $client) }}" class="text-primary p-0" data-original-title="View"
+                                                title="View">
                                             <i class="fa fa-eye font-medium-3 mr-2"></i>
                                             </a>
-                                            <a href="{{ route('clients.edit', $client) }}" class="primary p-0" data-original-title=""
-                                                title="">
+                                            <a href="{{ route('clients.edit', $client) }}" class="text-warning p-0" data-original-title=""
+                                                title="Edit">
                                             <i class="fa fa-pencil font-medium-3 mr-2"></i>
                                             </a>
-                                            <a href="{{ route('clients.destroy', $client) }}" class="danger p-0"
-                                                data-original-title="" title="">
+                                            <a wire:click.prevent="destroy({{ $client->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()" href="#" class="text-danger p-0"
+                                                data-original-title="" title="Delete">
                                             <i class="fa fa-trash-o font-medium-3 mr-2"></i>
                                             </a>
                                         </td>

@@ -32,7 +32,7 @@
                             <div class="col-md-6">
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <a href="{{ route('estates.create') }}" class="btn btn-success">Add Estate</a>
+                                <a href="{{ route('estates.create') }}" class="btn btn-primary">Add Estate</a>
                             </div>
                         </div>
                     </div>
@@ -72,12 +72,12 @@
                                             </ol>   
                                         </td>
                                         <td>
-                                            <a href="{{ route('estates.edit', $estate) }}" class="primary p-0" data-original-title=""
-                                                title="">
+                                            <a href="{{ route('estates.edit', $estate) }}" class="text-warning p-0" data-original-title=""
+                                                title="Edit">
                                             <i class="fa fa-pencil font-medium-3 mr-2"></i>
                                             </a>
-                                            <a wire:click="destroy({{ $estate->id }})"  href="#" class="danger p-0"
-                                                data-original-title="" title="">
+                                            <a wire:click="destroy({{ $estate->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
+                                                data-original-title="" title="Delete">
                                             <i class="fa fa-trash-o font-medium-3 mr-2"></i>
                                             </a>
                                         </td>
