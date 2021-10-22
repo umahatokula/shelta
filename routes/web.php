@@ -8,6 +8,7 @@ use App\Http\Livewire\Clients\Create;
 use App\Http\Livewire\Clients\Update;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Clients\Destroy;
+use App\Http\Livewire\Users\ListUsers;
 use App\Http\Livewire\Estates\EditEstate;
 use App\Http\Livewire\Estates\ListEstates;
 use App\Http\Livewire\Estates\CreateEstate;
@@ -68,4 +69,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     Route::get('property-types', ListPropertyTypes::class)->name('property-types.index');
     Route::get('property-types/create', CreatePropertyType::class)->name('property-types.create');
     Route::get('property-types/{propertytype}/edit', EditPropertyType::class)->name('property-types.edit');
+
+    // users
+    Route::get('user', ListUsers::class)->name('property-types.index');
 

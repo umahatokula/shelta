@@ -47,11 +47,11 @@
                 <!-- Logo -->
                 <a href="index.html" class="logo">
                     <!-- logo-->
-                    <div class="logo-lg">
-                        <span class="light-logo"><img src="{{ asset('assets/images/logo-light-text.png') }}"
-                                alt="logo"></span>
-                        <span class="dark-logo"><img src="{{ asset('assets/images/logo-dark-text.png') }}"
-                                alt="logo"></span>
+                    <div class="logo-lg ma-5">
+                        <span class="light-logo"><img src="{{ asset('assets/images/logo-dark.png') }}"
+                                alt="logo" width="120px"></span>
+                        <span class="dark-logo"><img src="{{ asset('assets/images/logo-dark.png') }}"
+                                alt="logo" width="120px"></span>
                     </div>
                 </a>
             </div>

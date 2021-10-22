@@ -28,26 +28,28 @@
 
         <div class="row">
 
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 <div class="box p-15">
-
                     <div class="row">
+                        <div class="col-12 float-right">
+                            <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit</a>
+                        </div>
                         <div class="col-12">
                             <div>
                                 <p>
-                                    <h3>{{ $client->name }}</h3>
+                                    <h5>{{ $client->name }}</h5>
                                 </p>
                                 <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
                                 </p>
                                 <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
-                                <p>Address :<span class="text-gray ps-10"> {{ $client->aadress }}</span></p>
+                                <p>Address :<span class="text-gray ps-10"> {{ $client->address }}</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-9">
+            <div class="col-lg-8">
                 <div class="box p-15">
 
                     <div class="row mb-4">
@@ -59,8 +61,8 @@
                                 Payment</a>
 
                             <!-- Taking namespace into account for component Admin/Actions/EditUser -->
-                            {{-- <button x-data="{}" x-on:click="$wire.emitTo('transactions.transactions-create', 'show')">Make Payment</button> --}}
-                            <button wire:click="$emit('openModal', 'transactions.transactions-create')">Open Modal</button>
+                            {{-- <button x-data="{}" x-on:click="$wire.emitTo('transactions.transactions-create', 'openModal')">Make Payment</button> --}}
+                            {{-- <button wire:click="$emit('openModal', 'transactions.transactions-create')" class="waves-effect waves-light btn btn-primary btn-sm float-right">Open Modal</button> --}}
 
 
                         </div>
@@ -105,7 +107,7 @@
 
                                     <td class="text-center">
                                         <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                            href="#" class="text-primary p-0" data-original-title="" title="Download">
+                                            href="#" class="text-primary p-0" data-original-title="" title="Download" download>
                                             <i class="fa fa-download font-medium-3 mr-2"></i>
                                         </a>
                                         <a href="{{ route('clients.show', $client) }}" class="text-danger p-0"

@@ -12,6 +12,8 @@ class Transaction extends Model
 
     protected $fillable = ['client_id', 'property_id', 'amount', 'type', 'date'];
 
+    protected $dates = ['date'];
+
     public function property() {
         return $this->belongsTo(Property::class);
     }

@@ -8,7 +8,7 @@ use App\Models\Transaction;
 use App\Http\Livewire\Modal;
 use LivewireUI\Modal\ModalComponent;
 
-class TransactionsCreate extends ModalComponent
+class TransactionsCreate extends Modal
 {
     public $client_id, $property_id, $amount, $date;
     public Client $client;
