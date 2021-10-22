@@ -1,8 +1,13 @@
 <div>
     <x-modal wire:model="show">
 
-        {{-- <livewire:transactions.transactions-create /> --}}
-        <livewire:dynamic-component component="{{$comp}}" />
+        @if ($show)
+
+            {{-- <livewire:transactions.transactions-create /> --}}
+            <livewire:dynamic-component component="{{$comp}}" />
+
+        @endif
+
 
 
     </x-modal>
