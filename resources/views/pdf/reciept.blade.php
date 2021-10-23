@@ -13,9 +13,9 @@
               <div class="row">
                   <div class="col-md-6">
                       <h1 class="text-uppercase">Invoice</h1>
-                      <div class="billed"><span class="font-weight-bold text-uppercase">Billed:</span><span class="ml-1"> {{ $client->name }}</span></div>
+                      <div class="billed"><span class="font-weight-bold text-uppercase">Billed:</span><span class="ml-1"> {{ $client->sname }}, {{ $client->onames }}</span></div>
                       <div class="billed"><span class="font-weight-bold text-uppercase">Date:</span><span class="ml-1"> {{ $transaction->date ? $transaction->date->toFormattedDateString()  : null }}</span></div>
-                      <div class="billed"><span class="font-weight-bold text-uppercase">Order ID:</span><span class="ml-1"> #1345345</span></div>
+                      <div class="billed"><span class="font-weight-bold text-uppercase">Order ID:</span><span class="ml-1"> #{{ $transaction->transaction_number }}</span></div>
                   </div>
                   <div class="col-md-6 text-right mt-3">
                       <img src="{{ public_path('assets/images/logo-light.png') }}" alt="" class="img-fluid" width="150px">
@@ -29,8 +29,8 @@
                               <tr>
                                   <th>Product</th>
                                   <th>Unit</th>
-                                  <th class="text-right">Price (NGN;)</th>
-                                  <th class="text-right">Total (NGN;)</th>
+                                  <th class="text-right">Price (NGN)</th>
+                                  <th class="text-right">Total (NGN)</th>
                               </tr>
                           </thead>
                           <tbody>

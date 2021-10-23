@@ -34,11 +34,12 @@ class TransactionsCreate extends Modal
         $this->validate();
  
         Transaction::create([
-            'client_id'   => $this->client_id,
-            'property_id' => $this->property_id,
-            'amount'      => $this->amount,
-            'type'        => 'cr',
-            'date'        => $this->date,
+            'client_id'          => $this->client_id,
+            'property_id'        => $this->property_id,
+            'amount'             => $this->amount,
+            'type'               => 'cr',
+            'transaction_number' => substr(hash('sha256', mt_rand() . microtime()), 0, 20),
+            'date'               => $this->date,
         ]);
 
         session()->flash('message', 'Client successfully added.');

@@ -92,6 +92,9 @@
     <script src="{{ asset('assets/js/template.js') }}"></script>
     <script src="{{ asset('assets/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('assets/js/pages/slider.js') }}"></script>
+	
+	<script src="{{ asset('assets/js/pages/advanced-form-element.js') }}"></script>
+	<script src="{{ asset('assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
 
     @livewire('modal')
     @livewireScripts

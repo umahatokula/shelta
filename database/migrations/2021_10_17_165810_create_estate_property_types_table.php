@@ -15,8 +15,10 @@ class CreateEstatePropertyTypesTable extends Migration
     {
         Schema::create('estate_property_type', function (Blueprint $table) {
             $table->id();
-            $table->string('estate_id')->nullable();
-            $table->integer('property_type_id')->nullable();
+            $table->foreignId('estate_id')->nullable();
+            $table->foreignId('property_type_id')->nullable();
+            // $table->foreign('estate_id')->references('id')->on('estates')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('property_type_id')->references('id')->on('property_types')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('price')->nullable();
             $table->timestamps();
         });

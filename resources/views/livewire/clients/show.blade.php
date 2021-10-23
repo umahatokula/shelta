@@ -37,7 +37,7 @@
                         <div class="col-12">
                             <div>
                                 <p>
-                                    <h5>{{ $client->name }}</h5>
+                                    <h5>{{ $client->sname }}, {{ $client->onames }}</h5>
                                 </p>
                                 <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
                                 </p>
@@ -194,6 +194,9 @@
                                                             </div>
                                                             <div class="d-block">
                                                                 <span class="lead font-weight-bold">Price:</span> &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }}
+                                                            </div>
+                                                            <div class="d-block">
+                                                                <span class="lead font-weight-bold">House number:</span> {{ $property->unique_number }}
                                                             </div>
                                                         @endif
                                                     </p>

@@ -76,6 +76,22 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Payment Plans
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('payment-plans.index') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>All Payment Plans</a>
+                            </li>
+                            <li><a href="{{ route('payment-plans.create') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Add Payment Plans</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
                                     class="path2"></span></i>Badges</a></li>
 					

@@ -2,25 +2,65 @@
 
 namespace App\Http\Livewire\Clients;
 
+use App\Models\Staff;
+use App\Models\State;
 use App\Models\Client;
 use App\Models\Estate;
+use App\Models\Gender;
 use Livewire\Component;
 use App\Models\Property;
+use App\Models\PaymentPlan;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
+use PragmaRX\Countries\Package\Countries;
 
 class Edit extends Component
 {
-    public $name, $phone, $email, $address, $client_id;
-    public Client $client;
+    public  $sname,
+            $onames,
+            $phone,
+            $email,
+            $gender,
+            $dob,
+            $city,
+            $state_id,
+            $address,
+            $nok_name,
+            $nok_address,
+            $nok_city,
+            $nok_state_id,
+            $relationship_with_nok,
+            $employer_name,
+            $employer_address,
+            $employer_city,
+            $employer_state_id,
+            $employer_country_id = 'NGA',
+            $employer_phone,
+            $payment_plan_id,
+            $agent_id,
+            $countries;
+
+    public $genders;
+    public $staffs;
+    public $paymentPlans;
     public $estates;
+    public $states;
     public $propertyTypes;
     public $clientProperties = [];
-    public $properties = [];
+    public $properties = [
+        [
+            'estate_id' => null,
+            'property_type_id' => null,
+            'unique_number' => null,
+        ]
+    ];
+    public Client $client;
 
     protected $rules = [
-        'name' => 'required|string|min:6',
+        'sname' => 'required|string|min:6',
+        'onames' => 'required|string|min:6',
         'phone' => 'required|string|max:500',
+        'email' => 'email',
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
         'clientProperties.*.unique_number' => 'required',
@@ -33,22 +73,49 @@ class Edit extends Component
      * @return void
      */
     public function mount(Client $client) {
-        $this->name      = $client->name;
-        $this->phone     = $client->phone;
-        $this->email     = $client->email;
-        $this->address   = $client->address;
-        $this->client_id = $client->id;
+        $this->client_id             = $client->id;
+        $this->sname                 = $client->sname;
+        $this->onames                = $client->onames;
+        $this->phone                 = $client->phone;
+        $this->email                 = $client->email;
+        $this->gender                = $client->gender;
+        $this->dob                   = $client->dob;
+        $this->city                  = $client->city;
+        $this->state_id              = $client->state_id;
+        $this->address               = $client->address;
+        $this->nok_name              = $client->nok_name;
+        $this->nok_address           = $client->nok_address;
+        $this->nok_city              = $client->nok_city;
+        $this->nok_state_id          = $client->nok_state_id;
+        $this->relationship_with_nok = $client->relationship_with_nok;
+        $this->employer_name         = $client->employer_name;
+        $this->employer_address      = $client->employer_address;
+        $this->employer_city         = $client->employer_city;
+        $this->employer_state_id     = $client->employer_state_id;
+        $this->employer_country_id   = $client->employer_country_id;
+        $this->employer_phone        = $client->employer_phone;
+        $this->payment_plan_id       = $client->payment_plan_id;
+        $this->agent_id              = $client->agent_id;
         
         $this->clientProperties = $this->properties = $client->properties->map(function($property) {
             return [
-                'estate_id' => $property->estatePropertyType->propertyType->id,
-                'property_type_id' => $property->estatePropertyType->estate->id,
+                'property_type_id' => $property->estatePropertyType->propertyType->id,
+                'estate_id' => $property->estatePropertyType->estate->id,
                 'unique_number' => $property->unique_number,
             ];
-        });
+        })->toArray();
+
+        $this->paymentPlans = PaymentPlan::all();
+        $this->staffs = Staff::all();
+        $this->genders = Gender::all();
+        $this->states = State::all();
         $this->estates = Estate::all();
         $this->propertyTypes = PropertyType::all();
-        // dd($this->clientProperties);
+        $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
+        // dd($this->countries);
+        
+
+        $this->propertyTypes = [];
     }
     
     /**
@@ -80,6 +147,7 @@ class Edit extends Component
 
 
     public function addProperty() {
+        // dd($this->properties);
         $this->properties[] = [
             'estate_id' => null,
             'property_type_id' => null,
@@ -103,10 +171,28 @@ class Edit extends Component
         $this->validate();
  
         $client = Client::findOrFail($this->client_id);
-        $client->name    = $this->name;
-        $client->phone   = $this->phone;
-        $client->email   = $this->email;
-        $client->address = $this->address;
+        $client->sname                 = $this->sname;
+        $client->onames                = $this->onames;
+        $client->phone                 = $this->phone;
+        $client->email                 = $this->email;
+        $client->gender                = $this->gender;
+        $client->dob                   = $this->dob;
+        $client->city                  = $this->city;
+        $client->state_id              = $this->state_id;
+        $client->address               = $this->address;
+        $client->nok_name              = $this->nok_name;
+        $client->nok_address           = $this->nok_address;
+        $client->nok_city              = $this->nok_city;
+        $client->nok_state_id          = $this->nok_state_id;
+        $client->relationship_with_nok = $this->relationship_with_nok;
+        $client->employer_name         = $this->employer_name;
+        $client->employer_address      = $this->employer_address;
+        $client->employer_city         = $this->employer_city;
+        $client->employer_state_id     = $this->employer_state_id;
+        $client->employer_country_id   = $this->employer_country_id;
+        $client->employer_phone        = $this->employer_phone;
+        $client->payment_plan_id       = $this->payment_plan_id;
+        $client->agent_id              = $this->agent_id;
         $client->save();
 
         Property::where('client_id', $client->id)->delete(); // delete clients existing properties

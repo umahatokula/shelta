@@ -52,7 +52,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th class="text-left">Name</th>
+                                        <th class="text-left">Surname Name</th>
+                                        <th class="text-left">Other Names</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Actions</th>
@@ -62,7 +63,8 @@
                                     @foreach ($clients as $client)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="text-left">{{ $client->name }}</td>
+                                        <td class="text-left">{{ $client->sname }}</td>
+                                        <td class="text-left">{{ $client->onames }}</td>
                                         <td>{{ $client->email }}</td>
                                         <td>{{ $client->phone }}</td>
                                         <td>

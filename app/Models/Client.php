@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Staff;
+use App\Models\State;
 use App\Models\Property;
+use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
+use PragmaRX\Countries\Package\Countries;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
@@ -22,7 +26,7 @@ class Client extends Model
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
+            ->generateSlugsFrom(['sname', 'onames'])
             ->saveSlugsTo('slug');
     }
 
@@ -52,5 +56,59 @@ class Client extends Model
      */
     public function properties() {
         return $this->hasMany(Property::class);
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function state() {
+        return $this->belongsTo(State::class);
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function nokState() {
+        return $this->belongsTo(State::class, 'nok_state_id', 'id');
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function employerState() {
+        return $this->belongsTo(State::class, 'employer_state_id', 'id');
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function employerCountry() {
+        return $this->belongsTo(Countries::class, 'employer_country_id', 'id');
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function paymentPlan() {
+        return $this->belongsTo(PaymentPlan::class);
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function agent() {
+        return $this->belongsTo(Staff::class, 'agent_id', 'id');
     }
 }

@@ -12,6 +12,8 @@ class EstatePropertyType extends Model
     use HasFactory;
 
     protected $table = 'estate_property_type';
+
+    protected $fillable = ['estate_id', 'property_type_id'];
     
     /**
      * properties

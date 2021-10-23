@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Clients\Destroy;
 use App\Http\Livewire\Users\ListUsers;
 use App\Http\Livewire\Estates\EditEstate;
+use App\Http\Livewire\PaymentPlans\Plans;
 use App\Http\Livewire\Estates\ListEstates;
 use App\Http\Livewire\Estates\CreateEstate;
+use App\Http\Livewire\PaymentPlans\EditPlan;
+use App\Http\Livewire\PaymentPlans\CreatePlan;
 use App\Http\Livewire\PropertyTypes\EditPropertyType;
 use App\Http\Livewire\Transactions\TransactionsIndex;
 use App\Http\Livewire\Transactions\TransactionsStore;
@@ -70,6 +73,14 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     Route::get('property-types/create', CreatePropertyType::class)->name('property-types.create');
     Route::get('property-types/{propertytype}/edit', EditPropertyType::class)->name('property-types.edit');
 
+    // payment-plans
+    Route::get('payment-plans', Plans::class)->name('payment-plans.index');
+    Route::get('payment-plans/create', CreatePlan::class)->name('payment-plans.create');
+    Route::get('payment-plans/{paymentPlan}/edit', EditPlan::class)->name('payment-plans.edit');
+
     // users
-    Route::get('user', ListUsers::class)->name('property-types.index');
+    // Route::get('user', ListUsers::class)->name('property-types.index');
+
+    //routes
+    require __DIR__.'/auth.php';
 
