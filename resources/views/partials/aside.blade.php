@@ -107,7 +107,7 @@
                         <ul class="treeview-menu">
 							<li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Users</a></li>
-							<li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
+							<li><a href="{{ route('settings.index') }}"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Company Profile</a></li>
                         </ul>
                     </li>

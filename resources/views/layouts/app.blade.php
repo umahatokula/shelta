@@ -34,6 +34,12 @@
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
 
+    @php
+        $settings = App\Models\Setting::first();
+        $logoLight = $settings->getFirstMediaUrl('logoLight');
+        $logoDark = $settings->getFirstMediaUrl('logoDark');
+    @endphp
+
     <div class="wrapper">
 
         <header class="main-header">
@@ -48,9 +54,9 @@
                 <a href="index.html" class="logo">
                     <!-- logo-->
                     <div class="logo-lg ma-5">
-                        <span class="light-logo"><img src="{{ asset('assets/images/logo-dark.png') }}"
+                        <span class="light-logo"><img src="{{ $logoDark }}"
                                 alt="logo" width="120px"></span>
-                        <span class="dark-logo"><img src="{{ asset('assets/images/logo-dark.png') }}"
+                        <span class="dark-logo"><img src="{{ $logoLight }}"
                                 alt="logo" width="120px"></span>
                     </div>
                 </a>

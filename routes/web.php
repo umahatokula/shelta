@@ -9,11 +9,13 @@ use App\Http\Livewire\Clients\Update;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Clients\Destroy;
 use App\Http\Livewire\Users\ListUsers;
+use App\Http\Livewire\Settings\Settings;
 use App\Http\Livewire\Estates\EditEstate;
 use App\Http\Livewire\PaymentPlans\Plans;
 use App\Http\Livewire\Estates\ListEstates;
 use App\Http\Livewire\Estates\CreateEstate;
 use App\Http\Livewire\PaymentPlans\EditPlan;
+use App\Http\Livewire\Settings\EditSettings;
 use App\Http\Livewire\PaymentPlans\CreatePlan;
 use App\Http\Livewire\PropertyTypes\EditPropertyType;
 use App\Http\Livewire\Transactions\TransactionsIndex;
@@ -77,6 +79,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     Route::get('payment-plans', Plans::class)->name('payment-plans.index');
     Route::get('payment-plans/create', CreatePlan::class)->name('payment-plans.create');
     Route::get('payment-plans/{paymentPlan}/edit', EditPlan::class)->name('payment-plans.edit');
+
+    // settings
+    Route::get('settings', Settings::class)->name('settings.index');
+    Route::get('settings/edit', EditSettings::class)->name('settings.edit');
 
     // users
     // Route::get('user', ListUsers::class)->name('property-types.index');

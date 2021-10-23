@@ -33,10 +33,18 @@
                             <input type="hidden" wire:model="client_id" />
                             
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2" id="name">Name <span class="text-danger">*</span></label>
+                                <label class="col-form-label col-md-2" id="sname">Surname Name <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
-                                    <input value="{{ $client->name }}" class="form-control" type="text" readonly>
-                                    @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <input value="{{ $client->sname }}" class="form-control" type="text" readonly>
+                                    @error('sname') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2" id="onames">Other Names <span class="text-danger">*</span></label>
+                                <div class="col-md-10">
+                                    <input value="{{ $client->onames }}" class="form-control" type="text" readonly>
+                                    @error('onames') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             

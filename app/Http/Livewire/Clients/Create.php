@@ -59,6 +59,12 @@ class Create extends Component
         'onames' => 'required|string|min:6',
         'phone' => 'required|string|max:500',
     ];
+
+    protected $messages = [
+        'sname.required' => 'This field is required',
+        'onames.required' => 'This field is required',
+        'phone.required' => 'This field is required',
+    ];
      
     /**
      * mount

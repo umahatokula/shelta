@@ -61,9 +61,16 @@ class Edit extends Component
         'onames' => 'required|string|min:6',
         'phone' => 'required|string|max:500',
         'email' => 'email',
+        'clientProperties' => 'array',
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
         'clientProperties.*.unique_number' => 'required',
+    ];
+
+    protected $messages = [
+        'sname.required' => 'This field is required',
+        'onames.required' => 'This field is required',
+        'phone.required' => 'This field is required',
     ];
     
     /**
