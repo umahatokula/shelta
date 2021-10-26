@@ -57,7 +57,7 @@ class Client extends Model
      * @return void
      */
     public function transactions() {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class)->orderBy('created_at', 'DESC');
     }
     
     /**

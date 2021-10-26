@@ -37,7 +37,6 @@
                 </div>
                 @endif
             </div>
-            
 
             <div class="col-lg-12">
                 <div class="box p-15">
