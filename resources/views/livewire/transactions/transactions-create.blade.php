@@ -59,7 +59,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2" id="address">Property <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
-                                    <select wire:model.lazy="property_id" class="form-control">
+                                    <select wire:model.lazy="property_id" wire:change="onSelectProperty($event.target.value)" class="form-control">
                                         <option value="">Please select one</option>
                                         @foreach ($client->properties as $property)
                                             <option value="{{ $property->id }}">
@@ -81,7 +81,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2" id="amount">Amount <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
-                                    <input wire:model="amount" class="form-control" type="number">
+                                    <input wire:model="amount" class="form-control" type="number" max="{{ $propertybalance }}">
                                     @error('amount') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>

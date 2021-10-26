@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Transactions;
 
 use App\Models\Client;
 use Livewire\Component;
+use App\Models\Property;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
 use Livewire\WithFileUploads;
@@ -14,6 +15,7 @@ class TransactionsCreate extends Modal
     use WithFileUploads;
 
     public $client_id, $property_id, $amount, $date, $proof;
+    public $propertybalance = 0;
     public Client $client;
 
     protected $rules = [
@@ -28,6 +30,11 @@ class TransactionsCreate extends Modal
         'amount.required' => 'Please enter an amount',
         'proof.required' => 'Please upload a proof of payment',
     ];
+
+    public function onSelectProperty(Property $property) {
+        $price = $property->estatePropertyType ? $property->estatePropertyType->price : null;
+        $this->propertybalance = $price - $property->totalPaid();
+    }
  
     public function mount(Client $client) {
         $this->client_id = $client->id;
