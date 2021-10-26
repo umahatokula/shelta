@@ -58,6 +58,7 @@ class Create extends Component
         'sname' => 'required|string|min:6',
         'onames' => 'required|string|min:6',
         'phone' => 'required|string|max:500',
+        'email' => 'email',
     ];
 
     protected $messages = [
@@ -177,6 +178,7 @@ class Create extends Component
                 'estate_property_type_id' => $estatePropertyType->id,
                 'unique_number' => $clientProperty['unique_number'],
                 'client_id' => $client->id,
+                'payment_plan_id' => $property->payment_plan_id,
             ]);
         }
 

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Staff;
 use App\Models\State;
 use App\Models\Property;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
+use App\Models\OnlinePayment;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +40,15 @@ class Client extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+    
+    /**
+     * transactions
+     *
+     * @return void
+     */
+    public function user() {
+        return $this->hasOne(User::class);
     }
     
     /**
@@ -108,7 +119,26 @@ class Client extends Model
      *
      * @return void
      */
+    public function onlinePayment() {
+        return $this->hasMany(OnlinePayment::class);
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
     public function agent() {
         return $this->belongsTo(Staff::class, 'agent_id', 'id');
+    }
+    
+    public static function boot() {
+
+        parent::boot();
+        
+        self::deleting(function($client) { 
+             $client->user()->delete(); 
+        });
+
     }
 }

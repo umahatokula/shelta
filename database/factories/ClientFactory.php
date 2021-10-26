@@ -26,7 +26,7 @@ class ClientFactory extends Factory
             'sname' => $this->faker->lastName(),
             'onames' => $this->faker->firstName(),
             'phone' => $this->faker->e164PhoneNumber(),
-            'email' => $this->faker->safeEmailDomain(),
+            'email' => $this->faker->freeEmail(),
             'dob' => $this->faker->dateTimeThisCentury->format('Y-m-d'),
             'gender' => rand(1, 2),
             'address' => $this->faker->address(),

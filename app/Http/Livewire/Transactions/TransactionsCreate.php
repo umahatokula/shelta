@@ -6,22 +6,27 @@ use App\Models\Client;
 use Livewire\Component;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
+use Livewire\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
 
 class TransactionsCreate extends Modal
 {
-    public $client_id, $property_id, $amount, $date;
+    use WithFileUploads;
+
+    public $client_id, $property_id, $amount, $date, $proof;
     public Client $client;
 
     protected $rules = [
         'client_id'   => 'required',
         'property_id' => 'required',
         'amount'      => 'required',
+        'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
     ];
  
     protected $messages = [
         'property_id.required' => 'Please select a property',
         'amount.required' => 'Please enter an amount',
+        'proof.required' => 'Please upload a proof of payment',
     ];
  
     public function mount(Client $client) {
@@ -33,7 +38,7 @@ class TransactionsCreate extends Modal
     {
         $this->validate();
  
-        Transaction::create([
+        $transaction = Transaction::create([
             'client_id'          => $this->client_id,
             'property_id'        => $this->property_id,
             'amount'             => $this->amount,
@@ -42,7 +47,12 @@ class TransactionsCreate extends Modal
             'date'               => $this->date,
         ]);
 
-        session()->flash('message', 'Client successfully added.');
+        $transaction
+            ->addMedia($this->proof->getRealPath())
+            ->usingName($this->proof->getClientOriginalName())
+            ->toMediaCollection('proofOfPayment', 'public');
+
+        session()->flash('message', 'Payment successful.');
 
         redirect()->route('clients.show', $this->client->slug);
     }

@@ -65,7 +65,7 @@
                                             title="">
                                         <i class="fa fa-pencil font-medium-3 mr-2"></i>
                                         </a> &nbsp
-                                        <a wire:click="destroy({{ $propertyType->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
+                                        <a wire:click.prevent="destroy({{ $propertyType->id }})"  onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
                                             data-original-title="" title="Delete">
                                         <i class="fa fa-trash-o font-medium-3 mr-2"></i>
                                         </a>

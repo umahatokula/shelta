@@ -85,7 +85,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Price</label>
                                         <input wire:model.lazy="addedProperties.{{$key}}.price" class="form-control"
-                                            type="text" required>
+                                            type="number" required>
                                         @error('price') <span class="error">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
@@ -101,12 +101,8 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" class="btn btn-warning me-1">
-                                <i class="ti-trash"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="ti-save-alt"></i> Save
-                            </button>
+                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
+                            <input type="submit" class="btn btn-primary" value="Save">
                         </div>
                     </form>
                 </div>

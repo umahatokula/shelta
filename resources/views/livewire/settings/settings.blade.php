@@ -28,6 +28,7 @@
                             <a href="{{ route('settings.edit', $settings) }}"
                                 class="waves-effect waves-light btn btn-primary btn-sm float-right">Edit</a>
                         </div>
+                        @if ($settings)
                         <div class="col-6">
                             <div>
                                 <p>
@@ -46,6 +47,10 @@
                             <img src=" {{ $settings->getFirstMediaUrl('logoLight') }}"
                             alt="{{ $settings->company_name }}" width="300px">
                         </div>
+                        @else
+                            <p>Kindly update settings</p> 
+                        @endif
+                        
                     </div>
                 </div>
             </div>

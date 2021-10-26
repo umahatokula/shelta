@@ -65,6 +65,7 @@ class Edit extends Component
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
         'clientProperties.*.unique_number' => 'required',
+        'clientProperties.*.payment_plan_id' => 'required',
     ];
 
     protected $messages = [
@@ -104,13 +105,16 @@ class Edit extends Component
         $this->payment_plan_id       = $client->payment_plan_id;
         $this->agent_id              = $client->agent_id;
         
-        $this->clientProperties = $this->properties = $client->properties->map(function($property) {
+        
+        $this->clientProperties = $this->properties = $client->properties->map(function($property) {;
             return [
                 'property_type_id' => $property->estatePropertyType->propertyType->id,
                 'estate_id' => $property->estatePropertyType->estate->id,
                 'unique_number' => $property->unique_number,
+                'payment_plan_id' => $property->payment_plan_id,
             ];
         })->toArray();
+        // dd($this->clientProperties);
 
         $this->paymentPlans = PaymentPlan::all();
         $this->staffs = Staff::all();
@@ -118,11 +122,8 @@ class Edit extends Component
         $this->states = State::all();
         $this->estates = Estate::all();
         $this->propertyTypes = PropertyType::all();
-        $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
-        // dd($this->countries);
-        
+        $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();      
 
-        $this->propertyTypes = [];
     }
     
     /**
@@ -133,8 +134,11 @@ class Edit extends Component
      */
     public function getPropertyTypes($estateId) {
 
-        $estate = Estate::findOrFail($estateId);
-        $this->propertyTypes = $estate->propertyTypes;  
+        if (empty($estateId)) {
+            return $this->propertyTypes = [];
+        }
+
+        $this->propertyTypes = Estate::findOrFail($estateId)->propertyTypes;
 
     }
     
@@ -159,6 +163,7 @@ class Edit extends Component
             'estate_id' => null,
             'property_type_id' => null,
             'unique_number' => null,
+            'payment_plan_id' => null,
         ];
     }
     

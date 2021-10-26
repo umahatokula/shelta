@@ -42,4 +42,17 @@ class Estate extends Model
     {
         return $this->belongsToMany(PropertyType::class)->withTimestamps()->withPivot('price');
     }
+
+    
+    // public static function boot() {
+
+    //     parent::boot();
+        
+    //     self::deleting(function($estate) { 
+    //          $estate->propertyTypes()->each(function($propertyType) {
+    //             $propertyType->delete(); 
+    //          });
+    //     });
+
+    // }
 }

@@ -5,12 +5,11 @@ namespace App\Http\Livewire\Estates;
 use App\Models\Estate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\EstatePropertyType;
 
 class ListEstates extends Component
 {
     use WithPagination;
-
-    protected $listeners = ['affirmationAction' => 'destroy'];
 
     public function render()
     {
@@ -19,17 +18,16 @@ class ListEstates extends Component
         ]);
     }
 
-    public function confirm($id) {
-
-        $this->dispatchBrowserEvent('modal:confirmation', [
-            'title'   => 'Confirm this action',
-            'content' => 'Delete this Estate?',
-            'id'      => $id,
-        ]);
-    }
-
     public function destroy($id) {
+
         Estate::findOrFail($id)->delete();
+
+        $estatePropertyTypes = EstatePropertyType::where('estate_id', $id)->each(function($estatePropertyType) {
+            $estatePropertyType->properties()->delete();
+        });
+        
+        EstatePropertyType::where('estate_id', $id)->delete();
+
         session()->flash('message', 'Estate deleted.');
     }
 }

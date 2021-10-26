@@ -20,10 +20,10 @@ class EditSettings extends Component
 
     public function mount() {
         $settings = Setting::first(); 
-        $this->company_name = $settings->company_name; 
-        $this->company_email = $settings->company_email; 
-        $this->company_phone = $settings->company_phone;
-        $this->company_address = $settings->company_address;
+        $this->company_name = $settings ? $settings->company_name : '';
+        $this->company_email = $settings ? $settings->company_email : '';
+        $this->company_phone = $settings ? $settings->company_phone : '';
+        $this->company_address = $settings ? $settings->company_address : '';
     }
  
     public function save()
@@ -46,6 +46,16 @@ class EditSettings extends Component
             ]
         );
 
+        // delete existing logos
+        if ($this->logo_light) {
+            $setting->getFirstMedia('logoLight')->delete();
+        }
+        
+        if ($this->logo_dark) {
+            $setting->getFirstMedia('logoDark')->delete();
+        }
+
+        // add logos
         $setting
             ->addMedia($this->logo_light->getRealPath())
             ->usingName($this->logo_light->getClientOriginalName())

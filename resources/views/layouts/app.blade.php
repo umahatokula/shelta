@@ -36,8 +36,8 @@
 
     @php
         $settings = App\Models\Setting::first();
-        $logoLight = $settings->getFirstMediaUrl('logoLight');
-        $logoDark = $settings->getFirstMediaUrl('logoDark');
+        $logoLight = $settings ? $settings->getFirstMediaUrl('logoLight') : '';
+        $logoDark = $settings ? $settings->getFirstMediaUrl('logoDark') : '';
     @endphp
 
     <div class="wrapper">

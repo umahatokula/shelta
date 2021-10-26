@@ -52,7 +52,6 @@
                       </table>
                   </div>
               </div>
-              <div class="text-right mb-3"><button class="btn btn-danger btn-sm mr-5" type="button">Pay Now</button></div>
           </div>
       </div>
   </div>

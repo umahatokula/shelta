@@ -325,6 +325,18 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Plan</label>
+                                        <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
+                                            class="form-select" required>
+                                            <option value="">Please select one</option>
+                                            @foreach ($paymentPlans as $paymentPlan)
+                                            <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="form-label">Property Number</label>
@@ -345,12 +357,8 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" class="btn btn-warning me-1">
-                                <i class="ti-trash"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="ti-save-alt"></i> Save
-                            </button>
+                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
+                            <input type="submit" class="btn btn-primary" value="Save">
                         </div>
                     </form>
                 </div>

@@ -25,6 +25,7 @@ class PropertyFactory extends Factory
             'estate_property_type_id' => rand(1, 10),
             'client_id' => rand(1, 50),
             'unique_number' => $this->faker->unique()->ean8,
+            'payment_plan_id' => rand(1, 4),
         ];
     }
 }

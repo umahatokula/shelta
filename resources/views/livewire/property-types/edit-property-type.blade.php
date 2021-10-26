@@ -100,12 +100,8 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" class="btn btn-warning me-1">
-                                <i class="ti-trash"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="ti-save-alt"></i> Save
-                            </button>
+                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
+                            <input type="submit" class="btn btn-primary" value="Save">
                         </div>
                     </form>
                 </div>

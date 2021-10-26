@@ -17,7 +17,7 @@ $(function () {
     });
 	
 	
-	$('#example').DataTable( {
+	$('#payments').DataTable( {
 		dom: 'Bfrtip',
 		buttons: [
 			'copy', 'csv', 'excel', 'pdf', 'print'

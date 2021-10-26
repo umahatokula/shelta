@@ -303,8 +303,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Estate</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id"
-                                            wire:change="getPropertyTypes($event.target.value)" class="form-select"
+                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id" class="form-select"
                                             required>
                                             <option value="">Please select one</option>
                                             @foreach ($estates as $estate)
@@ -321,6 +320,18 @@
                                             <option value="">Please select one</option>
                                             @foreach ($propertyTypes as $propertyType)
                                             <option value="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Plan</label>
+                                        <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
+                                            class="form-select" required>
+                                            <option value="">Please select one</option>
+                                            @foreach ($paymentPlans as $paymentPlan)
+                                            <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -345,12 +356,8 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" class="btn btn-warning me-1">
-                                <i class="ti-trash"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="ti-save-alt"></i> Save
-                            </button>
+                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
+                            <input type="submit" class="btn btn-primary" value="Save">
                         </div>
                     </form>
                 </div>

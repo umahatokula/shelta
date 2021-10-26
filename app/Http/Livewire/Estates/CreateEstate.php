@@ -15,6 +15,7 @@ class CreateEstate extends Component
 
     protected $rules = [
         'name' => 'required|string|min:6',
+        'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
     ];
     
     /**
