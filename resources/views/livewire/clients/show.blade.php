@@ -42,7 +42,7 @@
                 <div class="box p-15">
                     <div class="row">
                         <div class="col-12 float-right">
-                            <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit</a>
+                            <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
                         </div>
                         <div class="col-12">
                             <div>
@@ -114,7 +114,7 @@
                                                 <label class="col-form-label col-md-2">Property</label>
                                                 <div class="col-md-10">
                                                     
-                                                    <select class="form-control" id="payingPropertyId">
+                                                    <select class="form-control" wire:change="onSelectProperty($event.target.value)" id="payingPropertyId">
                                                         <option value="">Please select one</option>
                                                         @foreach ($client->properties as $property)
                                                             <option value="{{ $property->id }}">
@@ -136,7 +136,8 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-md-2">Amount</label>
                                                 <div class="col-md-10">
-                                                    <input class="form-control" type="number" id="payingAmount" required value="">
+                                                    <input class="form-control" type="number" max="{{ $propertybalance }}" {{ $propertybalance == 0 ? 'disabled' : '' }} id="payingAmount">
+                                                    <small>Max: {{ $propertybalance }}</small>
                                                 </div>
                                             </div>
 
@@ -186,7 +187,12 @@
                                 <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
 
                                 <td class="text-center">
-                                    <span class="badge badge-primary">{{ $transaction->type }}</span>
+                                    
+                                    @if ($transaction->onlinePayment)
+                                    <span class="badge badge-primary">online</span>
+                                    @else
+                                    <span class="badge badge-warning">recorded</span>
+                                    @endif
                                 </td>
 
                                 <td class="text-center">
@@ -195,15 +201,19 @@
 
                                 <td class="text-center">
                                     <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                        href="#" class="text-primary p-0" data-original-title="" title="Download" download>
+                                        href="#" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
                                         <i class="fa fa-download font-medium-3 mr-2"></i>
                                     </a>
+
+                                    @if (!$transaction->onlinePayment)
                                     <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
-                                        data-original-title="" title="File" target="_blank">
+                                        data-original-title="" title="Proof of Payment" target="_blank">
                                         <i class="fa fa-file-pdf-o font-medium-3 mr-2"></i>
-                                    </a>
+                                    </a>    
+                                    @endif
+                                    
                                     <a wire:click.prevent="mailReciept({{$client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
-                                        data-original-title="" title="Mail">
+                                        data-original-title="" title="Email Reciept">
                                         <i class="fa fa-envelope-open-o font-medium-3 mr-2"></i>
                                     </a>
                                 </td>
@@ -235,7 +245,14 @@
             <div class="col-lg-12">
                 <div class="box p-15">
 
-                    <h3>Properties</h3>
+                    <div class="row">
+                        <div class="col-md-6 float-right">
+                            <h3>Properties</h3>
+                        </div>
+                        <div class="col-md-6 float-right">
+                            <a href="{{ route('clients.add-property', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Add properties</a>
+                        </div>
+                    </div>
 
                     @forelse ($client->properties->chunk(3) as $chunk)
 

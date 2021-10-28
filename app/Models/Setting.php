@@ -12,7 +12,7 @@ class Setting extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['company_name', 'company_phone', 'company_email', 'company_address'];
+    protected $fillable = ['company_name', 'company_phone', 'company_email', 'company_address', 'company_website'];
 
     public function registerMediaConversions(Media $media = null): void
     {

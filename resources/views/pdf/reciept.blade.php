@@ -6,6 +6,15 @@
     font-size: 0.8rem
   }
 </style>
+
+@php
+$settings = App\Models\Setting::first();
+$logoLight = $settings ? $settings->getFirstMediaUrl('logoLight') : '';
+$logoDark = $settings ? $settings->getFirstMediaUrl('logoDark') : '';
+$companyName = $settings ? $settings->company_name : '';
+$companyWebsite = $settings ? $settings->company_website : '';
+@endphp
+
 <div class="container mt-5" id="invoice">
   <div class="d-flex justify-content-center row">
       <div class="col-md-8">
@@ -18,8 +27,8 @@
                       <div class="billed"><span class="font-weight-bold text-uppercase">Order ID:</span><span class="ml-1"> #{{ $transaction->transaction_number }}</span></div>
                   </div>
                   <div class="col-md-6 text-right mt-3">
-                      <img src="{{ public_path('assets/images/logo-light.png') }}" alt="" class="img-fluid" width="150px">
-                      <h5 class="text-danger mb-0">Ochacho Real Homes</h5><small>https://www.ochachorealhomes.com/</small>
+                      <img src="{{ $logoLight ?? $logoDark }}" alt="" class="img-fluid" width="150px">
+                      <h5 class="text-danger mb-0">{{ $companyName }}</h5><small>{{ $companyWebsite }}</small>
                   </div>
               </div>
               <div class="mt-3">

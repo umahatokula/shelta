@@ -24,9 +24,9 @@ class StaffFactory extends Factory
         return [
             'name' => $this->faker->lastName(),
             'phone' => $this->faker->e164PhoneNumber(),
-            'email' => $this->faker->safeEmailDomain(),
+            'email' => $this->faker->freeEmail(),
             'dob' => $this->faker->dateTimeThisCentury->format('Y-m-d'),
-            'gender' => rand(1, 2),
+            'gender_id' => rand(1, 2),
         ];
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Models\Property;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\OnlinePayment;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Transaction extends Model implements HasMedia
@@ -19,5 +20,14 @@ class Transaction extends Model implements HasMedia
 
     public function property() {
         return $this->belongsTo(Property::class);
+    }
+        
+    /**
+     * onlinePayment
+     *
+     * @return void
+     */
+    public function onlinePayment() {
+        return $this->hasOne(OnlinePayment::class);
     }
 }

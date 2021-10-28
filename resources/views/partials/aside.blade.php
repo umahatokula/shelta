@@ -92,6 +92,20 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Staff
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('staff.index') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>All Staff</a></li>
+                            <li><a href="{{ route('staff.create') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Add Staff</a></li>
+                        </ul>
+                    </li>
                     <li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
                                     class="path2"></span></i>Badges</a></li>
 					
@@ -105,7 +119,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-							<li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
+							<li><a href="{{ route('users.index') }}"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Users</a></li>
 							<li><a href="{{ route('settings.index') }}"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Company Profile</a></li>

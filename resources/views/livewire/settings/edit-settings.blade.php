@@ -65,6 +65,12 @@
                             </div>
                             
                             <div class="form-group">
+                                <label class="form-label" id="company_website">Company Website</label>
+                                <input wire:model.lazy="company_website" class="form-control" type="text">
+                                @error('company_website') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            
+                            <div class="form-group">
                                 <label class="form-label" id="logo_light">Company Logo (Light)</label>
                                 <input wire:model.lazy="logo_light" class="form-control" type="file">
                                 @error('logo_light') <span class="text-danger">{{ $message }}</span> @enderror
@@ -79,7 +85,7 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" class="btn btn-warning me-1">
+                            <button type="cancel" class="btn btn-warning me-1">
                                 <i class="ti-trash"></i> Cancel
                             </button>
                             <button type="submit" class="btn btn-primary">

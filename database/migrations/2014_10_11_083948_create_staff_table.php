@@ -18,7 +18,7 @@ class CreateStaffTable extends Migration
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('phone')->nullable();
-            $table->string('gender')->nullable();
+            $table->foreignId('gender_id')->nullable();
             $table->string('dob')->nullable();
             $table->string('email')->nullable();
             $table->timestamps();

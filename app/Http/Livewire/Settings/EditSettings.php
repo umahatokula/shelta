@@ -14,6 +14,7 @@ class EditSettings extends Component
     public $company_phone;
     public $company_email;
     public $company_address;
+    public $company_website;
     public $logo_light;
     public $logo_dark;
 
@@ -24,6 +25,7 @@ class EditSettings extends Component
         $this->company_email = $settings ? $settings->company_email : '';
         $this->company_phone = $settings ? $settings->company_phone : '';
         $this->company_address = $settings ? $settings->company_address : '';
+        $this->company_website = $settings ? $settings->company_website : '';
     }
  
     public function save()
@@ -43,28 +45,39 @@ class EditSettings extends Component
                 'company_phone' => $this->company_phone,
                 'company_email' => $this->company_email,
                 'company_address' => $this->company_address,
+                'company_website' => $this->company_website,
             ]
         );
 
-        // delete existing logos
         if ($this->logo_light) {
-            $setting->getFirstMedia('logoLight')->delete();
+
+            // delete existing light logo
+            if ($setting->getFirstMedia('logoLight')) {
+                $setting->getFirstMedia('logoLight')->delete();
+            }
+            
+            // add logo
+            $setting
+                ->addMedia($this->logo_light->getRealPath())
+                ->usingName($this->logo_light->getClientOriginalName())
+                ->toMediaCollection('logoLight', 'public');
         }
         
         if ($this->logo_dark) {
-            $setting->getFirstMedia('logoDark')->delete();
-        }
 
-        // add logos
-        $setting
-            ->addMedia($this->logo_light->getRealPath())
-            ->usingName($this->logo_light->getClientOriginalName())
-            ->toMediaCollection('logoLight', 'public');
+            // delete existing dark logo
+            if ($setting->getFirstMedia('logoDark')) {
+                $setting->getFirstMedia('logoDark')->delete();
+            }
 
-        $setting
+            // add logo
+            $setting
             ->addMedia($this->logo_dark->getRealPath())
             ->usingName($this->logo_dark->getClientOriginalName())
             ->toMediaCollection('logoDark', 'public');
+        }
+
+        
         
         session()->flash('message', 'Company settings successfully updated.');
 

@@ -11,7 +11,7 @@ class Property extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id'];
+    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id'];
     
     /**
      * properties

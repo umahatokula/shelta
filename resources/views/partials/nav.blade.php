@@ -21,14 +21,7 @@
               <li class="btn-group d-lg-inline-flex d-none">
                   <div class="app-menu">
                       <div class="search-bx mx-5">
-                          <form>
-                              <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                  <button class="btn" type="submit" id="button-addon3"><i class="ti-search"></i></button>
-                                </div>
-                              </div>
-                          </form>
+                          <livewire:search.search-form />
                       </div>
                   </div>
               </li>

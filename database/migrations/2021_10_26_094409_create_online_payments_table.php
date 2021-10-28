@@ -15,11 +15,12 @@ class CreateOnlinePaymentsTable extends Migration
     {
         Schema::create('online_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id');
-            $table->string('message');
-            $table->string('reference');
-            $table->string('status');
-            $table->string('amount');
+            $table->foreignId('client_id')->nullable();
+            $table->foreignId('transaction_id')->nullable();
+            $table->string('message')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('status')->nullable();
+            $table->string('amount')->nullable();
             $table->timestamps();
         });
     }

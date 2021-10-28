@@ -303,7 +303,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Estate</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id" class="form-select"
+                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id"wire:change="getPropertyTypes($event.target.value)" class="form-select"
                                             required>
                                             <option value="">Please select one</option>
                                             @foreach ($estates as $estate)

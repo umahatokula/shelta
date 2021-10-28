@@ -7,6 +7,7 @@ use Mail;
 use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
+use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 
@@ -15,19 +16,17 @@ class Show extends Component
     public Client $client;
     public $showOnlinePaymentForm = false;
     public $payingName, $payingEmail, $payingAmount;
+    public $propertybalance = 0;
 
     protected $listeners = ['onlinePaymentSuccessful'];
 
+    public function onSelectProperty(Property $property) {
+        $price = $property->estatePropertyType ? $property->estatePropertyType->price : null;
+        $this->propertybalance = $price - $property->totalPaid();
+    }
+
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
-
-        OnlinePayment::create([
-            'client_id' => $data['client_id'],
-            'message'   => $data['message'],
-            'reference' => $data['reference'],
-            'status'    => $data['status'],
-            'amount'    => $data['amount'],
-        ]);
  
         if ($data['status'] === 'success') {
             $transaction = Transaction::create([
@@ -39,6 +38,15 @@ class Show extends Component
                 'date'               => Carbon::now(),
             ]);
         }
+
+        OnlinePayment::create([
+            'client_id'      => $data['client_id'],
+            'transaction_id' => $transaction ? $transaction->id : null,
+            'message'        => $data['message'],
+            'reference'      => $data['reference'],
+            'status'         => $data['status'],
+            'amount'         => $data['amount'],
+        ]);
 
         session()->flash('message', 'Payment successful.');
 

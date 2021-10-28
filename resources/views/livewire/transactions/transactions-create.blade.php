@@ -81,7 +81,8 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2" id="amount">Amount <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
-                                    <input wire:model="amount" class="form-control" type="number" max="{{ $propertybalance }}">
+                                    <input wire:model="amount" class="form-control" type="number" max="{{ $propertybalance }}" {{ $propertybalance == 0 ? 'disabled' : '' }}>
+                                    <small>Max: {{ $propertybalance }}</small>
                                     @error('amount') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>

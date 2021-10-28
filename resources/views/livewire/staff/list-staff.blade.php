@@ -2,7 +2,7 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="me-auto">
-                <h4 class="page-title">Ochacho Users</h4>
+                <h4 class="page-title">Ochacho Staff</h4>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
@@ -11,7 +11,7 @@
                                     <i class="mdi mdi-home-outline"></i>
                                 </Link>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                            <li class="breadcrumb-item active" aria-current="page">Staff</li>
                         </ol>
                     </nav>
                 </div>
@@ -32,7 +32,7 @@
                             <div class="col-md-6">
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <a href="{{ route('users.create') }}" class="btn btn-primary">Add Users</a>
+                                <a href="{{ route('staff.create') }}" class="btn btn-primary">Add Staff</a>
                             </div>
                         </div>
                     </div>
@@ -48,31 +48,29 @@
                         </div>
                         
                         <div class="table-responsive-sm">
-
-                            @if ($users->isNotEmpty())
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th class="text-left">Name</th>
                                         <th>Phone</th>
-                                        <th>Role(s)</th>
+                                        <th>Email</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
+                                    @foreach ($staffs as $staff)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="text-left">{{ $user->name }}</td>
-                                        <td>{{ $user->staff ? $user->staff->phone : $user->client->phone }}</td>
-                                        <td>{{ $user->email }}</td>
+                                        <td class="text-left">{{ $staff->name }}</td>
+                                        <td>{{ $staff->phone }}</td>
+                                        <td>{{ $staff->email }}</td>
                                         <td>
-                                            <a href="{{ route('users.edit', $user) }}" class="text-warning p-0" data-original-title=""
+                                            <a href="{{ route('staff.edit', $staff) }}" class="text-warning p-0" data-original-title=""
                                                 title="Edit">
                                             <i class="fa fa-pencil font-medium-3 mr-2"></i>
                                             </a>
-                                            <a wire:click="destroy({{ $user->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0" data-original-title="" title="Delete">
+                                            <a wire:click="destroy({{ $staff->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0" data-original-title="" title="Delete">
                                             <i class="fa fa-trash-o font-medium-3 mr-2"></i>
                                             </a>
                                         </td>
@@ -82,12 +80,7 @@
                                 </tbody>
                             </table>
 
-                            {{ $users->links() }}   
-                            
-                            @else
-                            <p>No users</p>
-                            @endif
-                            
+                            {{ $staffs->links() }}
 
                         </div>
                     </div>

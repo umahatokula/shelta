@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Staff;
+use App\Models\Client;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -27,7 +28,7 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'staff_id', 'client_id',
     ];
 
     /**
@@ -66,6 +67,15 @@ class User extends Authenticatable
      * @return void
      */
     public function staff() {
-        return $this->belongsTo(Staff::class);
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function client() {
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 }

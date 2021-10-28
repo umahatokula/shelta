@@ -220,6 +220,7 @@ class Edit extends Component
                 'estate_property_type_id' => $estatePropertyType->id,
                 'unique_number'           => $clientProperty['unique_number'],
                 'client_id'               => $client->id,
+                'payment_plan_id'         => $clientProperty['payment_plan_id'],
             ]);
         }
 
