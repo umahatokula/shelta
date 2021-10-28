@@ -41,8 +41,19 @@
                             <hr class="my-15">
 
                             <div class="row">
+                                <div class="col-12 float-right">
+                                    <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
+                                </div>
                                 <div class="col-12">
-                                    
+                                    <div>
+                                        <p>
+                                            <h5>{{ $client->sname }}, {{ $client->onames }}</h5>
+                                        </p>
+                                        <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
+                                        </p>
+                                        <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
+                                        <p>Address :<span class="text-gray ps-10"> {{ $client->address }}</span></p>
+                                    </div>
                                 </div>
                             </div>
 
