@@ -2,7 +2,7 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="me-auto">
-                <h4 class="page-title">Ochacho Clients</h4>
+                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">

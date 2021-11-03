@@ -2,7 +2,7 @@
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="mr-auto">
-            <h3 class="page-title">Property Types</h3>
+            <h3 class="page-title">{{ config('app.name', 'Real Estate App') }} Property Types</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
@@ -57,9 +57,9 @@
                                         
                                     </td>
                                     <td>
-                                        <a href="{{ route('property-types.edit', $propertyType) }}" class="text-primary p-0" data-original-title=""
+                                        <a href="{{ route('property-types.show', $propertyType) }}" class="text-primary p-0" data-original-title=""
                                             title="View">
-                                        <i class="fa fa-file-photo-o font-medium-3 mr-2"></i>
+                                        <i class="fa fa-eye font-medium-3 mr-2"></i>
                                         </a> &nbsp
                                         <a href="{{ route('property-types.edit', $propertyType) }}" class="text-warning p-0" data-original-title="Edit"
                                             title="">

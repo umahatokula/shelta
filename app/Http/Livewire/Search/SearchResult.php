@@ -6,30 +6,30 @@ use App\Models\Client;
 use App\Models\Estate;
 use Livewire\Component;
 use App\Models\PropertyType;
+use Livewire\WithPagination;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class SearchResult extends Component
 {    
-    public $results;
+    use WithPagination;
+    
+    public $query, $results;
 
     protected $listeners = [
         'searchResult'
     ];
 
     public function mount($query) {
-        
-        $this->results = Search::addMany([
-            [Client::class, ['sname', 'onames']],
-            // [Estate::class, 'name'],
-        ])
-        ->get($query);
-            
-        
-        // dd($this->results);
+
+        $this->query = $query;
+        $this->results = Search::add(Client::class, ['sname', 'onames'])->get($this->query);
+
     }
     
     public function render()
     {
-        return view('livewire.search.search-result');
+        return view('livewire.search.search-result', [
+            'results' => $this->results->toArray()
+        ]);
     }
 }

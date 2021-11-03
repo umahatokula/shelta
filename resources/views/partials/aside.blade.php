@@ -6,28 +6,11 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Dashboard</li>
-                    <li class="treeview">
-                        <a href="#">
+                    <li class="">
+                        <a href="{{ route('dashboard') }}">
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
                             <span>Dashboard</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href="index.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 1</a></li>
-                            <li><a href="index2.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 2</a></li>
-                            <li><a href="index3.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 3</a></li>
-                            <li><a href="index4.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 4</a></li>
-                            <li><a href="index5.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 5</a></li>
-                            <li><a href="index6.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 6</a></li>
-                        </ul>
                     </li>
 
                     <li class="header">Admin</li>

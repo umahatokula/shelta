@@ -3,7 +3,7 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="me-auto">
-                <h4 class="page-title">Ochacho Clients</h4>
+                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
@@ -191,7 +191,7 @@
                                     @if ($transaction->onlinePayment)
                                     <span class="badge badge-primary">online</span>
                                     @else
-                                    <span class="badge badge-warning">recorded</span>
+                                    <span class="badge badge-danger">recorded</span>
                                     @endif
                                 </td>
 
@@ -283,7 +283,7 @@
                                         <div class="box-body">
                                             <!-- Place somewhere in the <body> of your page -->
                                             <div class="row">
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-4">
                                                     <div class="flexslider2">
                                                         <ul class="slides">
 
@@ -303,7 +303,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6 col-12">
+                                                <div class="col-lg-8 col-12">
                                                     <table class="table table-hover">
                                                         <tbody>
                                                             <tr>

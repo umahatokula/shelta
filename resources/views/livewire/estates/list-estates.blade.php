@@ -2,7 +2,7 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="me-auto">
-                <h4 class="page-title">Ochacho Estates</h4>
+                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Estates</h4>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
@@ -65,11 +65,11 @@
                                         <td class="text-left">{{ $estate->name }}</td>
                                         <td>{{ $estate->address }}</td>
                                         <td>
-                                            <ol>
+                                            <ul>
                                                 @foreach ($estate->propertyTypes as $propertyType)
-                                                    <li>{{ $propertyType->name }}</li>
+                                                    <li>{{ ucfirst(strtolower($propertyType->name)) }}</li>
                                                 @endforeach     
-                                            </ol>   
+                                            </ul>   
                                         </td>
                                         <td>
                                             <a href="{{ route('estates.edit', $estate) }}" class="text-warning p-0" data-original-title=""

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Clients\Edit;
 use App\Http\Livewire\Clients\Show;
 use App\Http\Livewire\Clients\Index;
@@ -44,20 +45,13 @@ use App\Http\Livewire\PropertyTypes\CreatePropertyType;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('dashboard');
 })->name('home');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-// Route::group(['auth:sanctum', 'verified'],  function () {
-
-//     Route::get('/dashboard', function () {
-//         return Inertia::render('Dashboard');
-//     });
-
-// });
+Route::group(['middleware' => 'auth',],  function () {
+    
+    // dashboard
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
 
     // clients
     Route::get('clients', Index::class)->name('clients.index');
@@ -107,6 +101,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     // search
     Route::get('search/result/{query}', SearchResult::class)->name('search.result');
 
-    //routes
-    require __DIR__.'/auth.php';
+});
+
+//routes
+require __DIR__.'/auth.php';
 

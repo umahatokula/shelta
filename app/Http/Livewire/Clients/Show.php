@@ -73,9 +73,10 @@ class Show extends Component
     public function downloadReciept($clientId, $transactionId) {
 
         $data['client'] = Client::where('id', $clientId)->first();
-        $data['transaction'] = Transaction::where('id', $transactionId)->first();
+        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data)->output();
+        // dd($data['transaction'], $transactionId);
         
         return response()->streamDownload(
             fn () => print($pdfContent),
@@ -94,7 +95,7 @@ class Show extends Component
     public function mailReciept($clientId, $transactionId) {
 
         $data['client'] = Client::where('id', $clientId)->first();
-        $data['transaction'] = Transaction::where('id', $transactionId)->first();
+        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data);
 
