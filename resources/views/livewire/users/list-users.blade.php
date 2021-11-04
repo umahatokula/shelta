@@ -65,7 +65,13 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="text-left">{{ $user->name }}</td>
-                                        <td>{{ $user->staff ? $user->staff->phone : $user->client->phone }}</td>
+                                        <td>
+                                            @if ($user->staff)
+                                            {{ $user->staff->phone ?? '' }}
+                                            @else
+                                            {{ $user->client ? $user->client->phone : '' }}
+                                            @endif
+                                        </td>
                                         <td>{{ $user->email }}</td>
                                         <td>
                                             <a href="{{ route('users.edit', $user) }}" class="text-warning p-0" data-original-title=""

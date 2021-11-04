@@ -10,7 +10,7 @@ class ListUsers extends Component
     public function render()
     {
         return view('livewire.users.list-users', [
-            'users' => User::where('client_id', null)->paginate(10)
+            'users' => User::paginate(10)
         ]);
     }
 }

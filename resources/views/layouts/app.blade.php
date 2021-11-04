@@ -55,9 +55,9 @@
                     <!-- logo-->
                     <div class="logo-lg ma-5">
                         <span class="light-logo"><img src="{{ $logoDark }}"
-                                alt="logo" width="120px"></span>
+                                alt="logo" width="60px"></span>
                         <span class="dark-logo"><img src="{{ $logoLight }}"
-                                alt="logo" width="120px"></span>
+                                alt="logo" width="60px"></span>
                     </div>
                 </a>
             </div>

@@ -50,6 +50,9 @@ class CreateUser extends Component
             'password' => Hash::make($this->staff_password),
         ]);
 
+        // assign role
+        $user->assignRole('staff');
+
         redirect()->route('users.index');
     }
     
@@ -79,6 +82,9 @@ class CreateUser extends Component
             'client_id' => $this->client_id,
             'password'  => Hash::make($this->client_password),
         ]);
+
+        // assign role
+        $user->assignRole('client');
 
         redirect()->route('users.index');
     }

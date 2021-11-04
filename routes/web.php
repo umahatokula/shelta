@@ -48,20 +48,10 @@ Route::get('/', function () {
     return redirect('dashboard');
 })->name('home');
 
-Route::group(['middleware' => 'auth',],  function () {
+Route::group(['middleware' => ['auth', 'role:staff']],  function () {
     
     // dashboard
     Route::get('dashboard', Dashboard::class)->name('dashboard');
-
-    // clients
-    Route::get('clients', Index::class)->name('clients.index');
-    Route::get('clients/create', Create::class)->name('clients.create');
-    Route::post('clients', Store::class)->name('clients.store');
-    Route::get('clients/{client}/show', Show::class)->name('clients.show');
-    Route::get('clients/{client}/edit', Edit::class)->name('clients.edit');
-    Route::put('clients', Update::class)->name('clients.update');
-    Route::delete('clients', Destroy::class)->name('clients.destroy');
-    Route::get('clients/{client}/add-property', AddProperty::class)->name('clients.add-property');
 
     // payments
     Route::get('transactions', TransactionsIndex::class)->name('transactions.index');
@@ -100,6 +90,22 @@ Route::group(['middleware' => 'auth',],  function () {
 
     // search
     Route::get('search/result/{query}', SearchResult::class)->name('search.result');
+
+});
+
+
+
+Route::group(['middleware' => ['auth', 'role:staff|client']],  function () {
+
+    // clients
+    Route::get('clients', Index::class)->name('clients.index');
+    Route::get('clients/create', Create::class)->name('clients.create');
+    Route::post('clients', Store::class)->name('clients.store');
+    Route::get('clients/{client}/show', Show::class)->name('clients.show');
+    Route::get('clients/{client}/edit', Edit::class)->name('clients.edit');
+    Route::put('clients', Update::class)->name('clients.update');
+    Route::delete('clients', Destroy::class)->name('clients.destroy');
+    Route::get('clients/{client}/add-property', AddProperty::class)->name('clients.add-property');
 
 });
 
