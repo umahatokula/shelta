@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Clients;
 
+use App\Models\User;
 use App\Models\Staff;
 use App\Models\State;
 use App\Models\Client;
@@ -11,6 +12,7 @@ use Livewire\Component;
 use App\Models\Property;
 use App\Models\PaymentPlan;
 use App\Models\EstatePropertyType;
+use Illuminate\Support\Facades\Hash;
 use PragmaRX\Countries\Package\Countries;
 
 class Create extends Component
@@ -181,6 +183,16 @@ class Create extends Component
                 'payment_plan_id'         => $clientProperty['payment_plan_id'],
             ]);
         }
+
+        $user = User::create([
+            'name'      => $client->sname.' '.$client->onames,
+            'email'     => $client->email,
+            'client_id' => $this->client_id,
+            'password'  => Hash::make($this->client_password),
+        ]);
+
+        // assign role
+        $user->assignRole('client');
 
         session()->flash('message', 'Client successfully added.');
 

@@ -27,105 +27,73 @@
     <section class="content">
 
         <div class="row">
-
-            <div>
-                @if (session()->has('message'))
-                <div class="col-lg-12">
-                    <div class="alert alert-success">
-                        {{ session('message') }}
+            <div class="col-lg-12 col-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="box-title">
+                            {{ $propertyType->name }}
+                        </h4>
                     </div>
-                </div>
-                @endif
-            </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <!-- Place somewhere in the <body> of your page -->
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="flexslider2">
+                                    <ul class="slides">
 
-            <div class="col-lg-12">
-                <div class="box p-15">
+                                        @foreach($propertyType->getMedia('propertyTypephotos') as $photo)
+                                        <li data-thumb="{{ $photo->getUrl('thumb') }}">
+                                            <img src="{{ $photo->getUrl() }}" alt="slide" />
+                                        </li>
+                                        @endforeach
 
-                    @if ($propertyType->estates->isNotEmpty())
-                        
-					<div class="table-responsive">
-                    <table id="payments" class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
-                          <thead>
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th class="text-left">Property</th>
-                                    <th class="text-right">Amount</th>
-                                    <th class="text-center">Type</th>
-                                    <th class="text-center">Date</th>
-                                    <th class="text-center">Action(s)</th>
-                                </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($propertyType->estates as $estate)
-                            <tr>
-                                <th scope="row" class="text-center">{{ $loop->iteration }}</th>
+                                    </ul>
+                                </div>
+                            </div>
 
-                                <td>
-                                    @if ($transaction->property)
-                                        @if ($transaction->property->estatePropertyType)
-                                            <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
-                                        @endif
-                                    @endif
-                                </td>
+                            <div class="col-lg-8 col-12">
+                                @if ($estates->isNotEmpty())
+                                   <table class="table table-hover">
+                                        <tbody>
+                                            <thead>
+                                                <tr>
+                                                    <th>Estate</th>
+                                                    <th class="text-center">No of Units</th>
+                                                    <th class="text-right">Unit Price (&#x20A6;)</th>
+                                                    <th class="text-right">Total til date (&#x20A6;)</th>
+                                                </tr>
+                                            </thead>
 
-                                <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
+                                            @foreach ($estates as $estate)
+                                                <tr>
+                                                    <td>{{ $estate->name }}</td>
+                                                    <td class="text-center">{{ $estate->number_of_units }}</td>
+                                                    <td class="text-right">{{ number_format($estate->unit_price) }}</td>
+                                                    <td class="text-right">{{ number_format($estate->property_transaction_total) }}</td>
+                                                </tr>
+                                            @endforeach
 
-                                <td class="text-center">
-                                    
-                                    @if ($transaction->onlinePayment)
-                                    <span class="badge badge-primary">online</span>
-                                    @else
-                                    <span class="badge badge-warning">recorded</span>
-                                    @endif
-                                </td>
+                                            <tfoot>
+                                                <tr>
+                                                    <td><b>Total:</b></td>
+                                                    <td colspan="4" class="text-right"><b>&#x20A6; {{ number_format($propertyTypeTotal) }}</b></td>
+                                                </tr>
+                                            </tfoot>
+                                            
+                                        </tbody>
+                                    </table> 
+                                @else
+                                <p>Property type not assigned to estate</p>
+                                @endif
+                                
+                            </div>
 
-                                <td class="text-center">
-                                    {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
-                                </td>
-
-                                <td class="text-center">
-                                    <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                        href="#" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
-                                        <i class="fa fa-download font-medium-3 mr-2"></i>
-                                    </a>
-
-                                    @if (!$transaction->onlinePayment)
-                                    <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
-                                        data-original-title="" title="Proof of Payment" target="_blank">
-                                        <i class="fa fa-file-pdf-o font-medium-3 mr-2"></i>
-                                    </a>    
-                                    @endif
-                                    
-                                    <a wire:click.prevent="mailReciept({{$client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
-                                        data-original-title="" title="Email Reciept">
-                                        <i class="fa fa-envelope-open-o font-medium-3 mr-2"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                          </tbody>				  
-                          <tfoot>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-left">Property</th>
-                                <th class="text-right">Amount</th>
-                                <th class="text-center">Type</th>
-                                <th class="text-center">Date</th>
-                                <th class="text-center">Action(s)</th>
-                            </tr>
-                          </tfoot>
-                      </table>
-                      </div>
-                    @else
-                    <p>
-                        No estates yet
-                    </p>
-                    @endif
-
-                    
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
                 </div>
             </div>
-
         </div>
 
     </section>

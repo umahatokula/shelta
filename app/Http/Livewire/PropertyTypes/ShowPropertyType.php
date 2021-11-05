@@ -8,6 +8,8 @@ use App\Models\PropertyType;
 class ShowPropertyType extends Component
 {
     public PropertyType $propertyType;
+    public $estates;
+    public $propertyTypeTotal = 0;
     
     /**
      * mount
@@ -15,8 +17,18 @@ class ShowPropertyType extends Component
      * @return void
      */
     public function mount(PropertyType $propertyType) {
-        $this->propertyType = $propertyType->load('estates');
-        dd($this->propertyType);
+        $this->propertyType = $propertyType;
+        $this->estates = $propertyType->estates->each( function($estate) {
+
+            $estate->unit_price = $estate->onePropertyType($this->propertyType->id);
+            $estate->number_of_units = $estate->properties->count();
+
+            $estate->properties->each(function($property) use($estate) {
+                $estate->property_transaction_total = ($estate->property_transaction_total + $property->transactionTotal());
+                $this->propertyTypeTotal = $this->propertyTypeTotal + $property->transactionTotal();
+            });
+
+        });
     }
 
     public function render()

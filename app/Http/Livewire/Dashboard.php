@@ -13,7 +13,11 @@ class Dashboard extends Component
     public $propertyTypes;
 
     public function mount() {
-        // $this->monthsPayments = Transaction::whereMonth('created_at', Carbon::now()->format('m'))->sum('amount');
+
+        $user = auth()->user();
+        if ($user->hasRole('client')) {
+            redirect()->route('clients.show', $user->client);
+        }
 
         $this->propertyTypes = PropertyType::with('properties.transactions')->get()->each(function($propertyType) {
 

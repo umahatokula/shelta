@@ -19,8 +19,8 @@
                       <div class="billed"><span class="font-weight-bold text-uppercase">Order ID:</span><span class="ml-1"> #{{ $transaction->transaction_number }}</span></div>
                   </div>
                   <div class="col-md-6 text-right mt-3">
-                      <img src="{{ asset('assets/images/user7-128x128.jpg') }}" alt="" class="img-fluid" width="150px">
-                      <h5 class="text-danger mb-0">Ochacho Real Homes</h5><small>www.</small>
+                      {{-- <img src="{{ asset('assets/images/user7-128x128.jpg') }}" alt="" class="img-fluid" width="150px"> --}}
+                      <h5 class="text-danger mb-0">{{ config('app.name', 'Real Estate App') }}</h5><small>www.</small>
                   </div>
               </div>
               <div class="mt-3">

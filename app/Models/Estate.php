@@ -36,11 +36,28 @@ class Estate extends Model
     }
 
     /**
-     * The roles that belong to the user.
+     * The propertyTypes that belong to the estate.
      */
     public function propertyTypes()
     {
         return $this->belongsToMany(PropertyType::class)->withTimestamps()->withPivot('price');
+    }
+
+    /**
+     * Get the price of a particular propertyType in this estate.
+     */
+    public function onePropertyType($property_type_id)
+    {
+        $estatePropertyType = EstatePropertyType::where(['estate_id' => $this->id, 'property_type_id' => $property_type_id])->first();
+        return $estatePropertyType ? $estatePropertyType->price : null;
+    }
+
+    /**
+     * Get all of the properties in this estate
+     */
+    public function properties()
+    {
+        return $this->hasManyThrough(Property::class, EstatePropertyType::class);
     }
 
     

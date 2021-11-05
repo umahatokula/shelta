@@ -41,9 +41,13 @@
             <div class="col-lg-12">
                 <div class="box p-15">
                     <div class="row">
-                        <div class="col-12 float-right">
-                            <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
-                        </div>
+
+                        @can('manage clients')
+                            <div class="col-12 float-right">
+                                <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
+                            </div>  
+                        @endcan
+                        
                         <div class="col-12">
                             <div>
                                 <p>
@@ -251,6 +255,7 @@
                 </div>
             </div>
 
+            
             <div class="col-lg-12">
                 <div class="box p-15">
 
@@ -259,7 +264,9 @@
                             <h3>Properties</h3>
                         </div>
                         <div class="col-md-6 float-right">
+                            @if (auth()->user()->hasRole('staff'))
                             <a href="{{ route('clients.add-property', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Add properties</a>
+                            @endif
                         </div>
                     </div>
 
@@ -296,16 +303,18 @@
                                                     <div class="flexslider2">
                                                         <ul class="slides">
 
-                                                            @if ($property->estatePropertyType->propertyType)
+                                                            @if ($property->estatePropertyType)
+                                                                @if ($property->estatePropertyType->propertyType)
 
-                                                                @foreach ($property->estatePropertyType->propertyType->getMedia('propertyTypephotos') as $photo)
-                                                                    <li
-                                                                        data-thumb="{{ $photo->getUrl('thumb') }}">
-                                                                        <img src="{{ $photo->getUrl() }}"
-                                                                            alt="slide" />
-                                                                    </li>
-                                                                @endforeach
-                                                                
+                                                                    @foreach ($property->estatePropertyType->propertyType->getMedia('propertyTypephotos') as $photo)
+                                                                        <li
+                                                                            data-thumb="{{ $photo->getUrl('thumb') }}">
+                                                                            <img src="{{ $photo->getUrl() }}"
+                                                                                alt="slide" />
+                                                                        </li>
+                                                                    @endforeach
+                                                                    
+                                                                @endif
                                                             @endif
                                                             
                                                         </ul>
@@ -320,11 +329,19 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>Estate:</td>
-                                                                <td>{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</td>
+                                                                <td>
+                                                                    @if ($property->estatePropertyType)
+                                                                    {{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }} 
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Price:</td>
-                                                                <td> &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }}</td>
+                                                                <td> 
+                                                                    @if ($property->estatePropertyType)
+                                                                    &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }} 
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>House number:</td>
@@ -356,7 +373,6 @@
                                 </div>
                             </div>
                         </div>
-
                         @endforeach
 
                     </div>
@@ -367,7 +383,8 @@
 
                     @endforelse
                 </div>
-            </div>
+            </div>    
+            
 
         </div>
 
@@ -399,7 +416,7 @@
         var property_id = document.getElementById('payingPropertyId').value;
 
         let handler = PaystackPop.setup({
-                key: 'pk_test_57594caa2c9282d668487b60efe3fd8419f69cb7', // Replace with your public key
+                key: 'pk_test_1868497b412662f1ab265218caffa56830eb32be', // Replace with your public key
                 email: email,
                 amount: amount * 100,
             onClose: function(){

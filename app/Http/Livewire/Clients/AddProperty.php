@@ -51,11 +51,22 @@ class AddProperty extends Component
         $this->estates = Estate::all();
         $this->propertyTypes = PropertyType::all();
 
-        $this->clientProperties = $this->properties = $client->properties->map(function($property) {;
+        $this->clientProperties = $this->properties = $client->properties->map(function($property) {
+
+            $property_type_id = null;
+            $estate_id = null;
+            
+            if($property->estatePropertyType) {
+                $property_type_id = $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->id : null;
+            }
+
+            if($property->estatePropertyType) {
+                $estate_id = $property->estatePropertyType->estate ? $property->estatePropertyType->estate->id : null;
+            }
 
             return [
-                'property_type_id' => $property->estatePropertyType->propertyType->id,
-                'estate_id' => $property->estatePropertyType->estate->id,
+                'property_type_id' => $property_type_id,
+                'estate_id' => $estate_id,
                 'unique_number' => $property->unique_number,
                 'payment_plan_id' => $property->payment_plan_id,
             ];

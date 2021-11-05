@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Clients;
 
-use PDF;
 use Mail;
 use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Property;
+use PDF;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 
@@ -55,6 +55,12 @@ class Show extends Component
     }
 
     public function mount(Client $client) {
+        
+        $user = auth()->user();
+        if ($user->hasRole('client')) {
+            redirect()->route('clients.show', $user->client);
+        }
+
         $this->client = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
             'transactions.property.estatePropertyType.estate', 
