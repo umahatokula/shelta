@@ -11,6 +11,7 @@ use App\Models\Gender;
 use Livewire\Component;
 use App\Models\Property;
 use App\Models\PaymentPlan;
+use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Countries\Package\Countries;
@@ -83,8 +84,7 @@ class Create extends Component
         $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
         // dd($this->countries);
         
-
-        $this->propertyTypes = [];
+        $this->propertyTypes[] = PropertyType::all()->toArray();
     }
     
     /**
@@ -93,10 +93,12 @@ class Create extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypes($estateId) {
+    public function getPropertyTypes($estateId, $key) {
 
         $estate = Estate::findOrFail($estateId);
-        $this->propertyTypes = $estate->propertyTypes;  
+
+        // add property types to array
+        $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray(); 
 
     }
     
@@ -121,6 +123,9 @@ class Create extends Component
             'property_type_id' => null,
             'unique_number' => null,
         ];
+        
+        // add property types to array
+        $this->propertyTypes[] = PropertyType::all()->toArray();
     }
     
     /**
@@ -132,6 +137,9 @@ class Create extends Component
     public function removeProperty($key) {
         array_splice($this->properties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
+        
+        // remove property types from array
+        array_splice($this->propertyTypes, $key, 1);
     }
     
     /**
@@ -187,8 +195,8 @@ class Create extends Component
         $user = User::create([
             'name'      => $client->sname.' '.$client->onames,
             'email'     => $client->email,
-            'client_id' => $this->client_id,
-            'password'  => Hash::make($this->client_password),
+            'client_id' => $client->id,
+            'password'  => Hash::make('12345678'),
         ]);
 
         // assign role

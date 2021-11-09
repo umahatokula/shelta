@@ -24,14 +24,6 @@
     <section class="content">
         <div class="row">
             <div class="col-12">
-
-                <div>
-                    @if (session()->has('message'))
-                        <div class="alert alert-danger tada ">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                </div>
                 
                 <div class="box">
                     <form wire:submit.prevent="save">
@@ -70,7 +62,7 @@
 
                             @foreach ($this->properties as $key => $property)
                             <div class="row mb-5">
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Property Type</label>
                                         <select wire:model.lazy="addedProperties.{{$key}}.property_id"
@@ -82,7 +74,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Price</label>
                                         <input wire:model.lazy="addedProperties.{{$key}}.price" class="form-control"
@@ -90,7 +82,15 @@
                                         @error('price') <span class="error">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-2 pt-4 d-flex justify-content-end align-items-center">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Number of Units</label>
+                                        <input wire:model.lazy="addedProperties.{{$key}}.number_of_units" class="form-control"
+                                            type="number" required>
+                                        @error('number_of_units') <span class="error">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pt-4 d-flex justify-content-end align-items-center">
                                     <div class="form-group">
                                         <a wire:click.prevent="removeProperty({{ $key }})" href="#"
                                             class="text-white"> <span class="badge badge-danger">Remove</span> </a>
@@ -102,7 +102,7 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
+                            <a class="btn btn-warning me-1" href="{{ url()->previous() }}">Cancel</a>
                             <input type="submit" class="btn btn-primary" value="Save">
                         </div>
                     </form>

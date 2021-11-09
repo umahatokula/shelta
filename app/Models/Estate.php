@@ -40,16 +40,16 @@ class Estate extends Model
      */
     public function propertyTypes()
     {
-        return $this->belongsToMany(PropertyType::class)->withTimestamps()->withPivot('price');
+        return $this->belongsToMany(PropertyType::class)->withTimestamps()->withPivot(['price', 'number_of_units']);
     }
 
     /**
      * Get the price of a particular propertyType in this estate.
      */
-    public function onePropertyType($property_type_id)
+    public function onePropertyTypePrice($property_type_id)
     {
         $estatePropertyType = EstatePropertyType::where(['estate_id' => $this->id, 'property_type_id' => $property_type_id])->first();
-        return $estatePropertyType ? $estatePropertyType->price : null;
+        return $estatePropertyType ?? null;
     }
 
     /**

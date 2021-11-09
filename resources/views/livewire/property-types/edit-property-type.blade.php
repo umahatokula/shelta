@@ -24,14 +24,6 @@
     <section class="content">
         <div class="row">
             <div class="col-12">
-
-                <div>
-                    @if (session()->has('message'))
-                        <div class="alert alert-danger tada ">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                </div>
                 
                 <div class="box">
                     <form wire:submit.prevent="save">

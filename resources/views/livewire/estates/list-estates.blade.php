@@ -55,7 +55,8 @@
                                         <th class="text-left">Name</th>
                                         <th>Address</th>
                                         <th>Property Types</th>
-                                        <th>Actions</th>
+                                        <th>Number of Units</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,11 +68,12 @@
                                         <td>
                                             <ul>
                                                 @foreach ($estate->propertyTypes as $propertyType)
-                                                    <li>{{ ucfirst(strtolower($propertyType->name)) }}</li>
+                                                    <li><a href="{{ route('property-types.show', $propertyType) }}">{{ ucfirst(strtolower($propertyType->name)) }}</a></li>
                                                 @endforeach     
                                             </ul>   
                                         </td>
-                                        <td>
+                                        <td>{{ $estate->number_of_units }}</td>
+                                        <td class="text-center">
                                             <a href="{{ route('estates.edit', $estate) }}" class="text-warning p-0" data-original-title=""
                                                 title="Edit">
                                             <i class="fa fa-pencil font-medium-3 mr-2"></i>

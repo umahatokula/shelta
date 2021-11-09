@@ -54,6 +54,7 @@
 
                             <div class="col-lg-8 col-12">
                                 @if ($estates->isNotEmpty())
+                                <div class="table-responsive">
                                    <table class="table table-hover">
                                         <tbody>
                                             <thead>
@@ -67,7 +68,10 @@
 
                                             @foreach ($estates as $estate)
                                                 <tr>
-                                                    <td>{{ $estate->name }}</td>
+                                                    <td>
+                                                        {{ $estate->name }}
+                                                        <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a></small>
+                                                    </td>
                                                     <td class="text-center">{{ $estate->number_of_units }}</td>
                                                     <td class="text-right">{{ number_format($estate->unit_price) }}</td>
                                                     <td class="text-right">{{ number_format($estate->property_transaction_total) }}</td>
@@ -82,7 +86,9 @@
                                             </tfoot>
                                             
                                         </tbody>
-                                    </table> 
+                                    </table>  
+                                </div>
+                                   
                                 @else
                                 <p>Property type not assigned to estate</p>
                                 @endif

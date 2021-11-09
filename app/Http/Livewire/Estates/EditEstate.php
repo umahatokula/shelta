@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Estates;
 use App\Models\Estate;
 use Livewire\Component;
 use App\Models\PropertyType;
+use App\Models\EstatePropertyType;
 
 class EditEstate extends Component
 {
@@ -16,6 +17,8 @@ class EditEstate extends Component
 
     protected $rules = [
         'name' => 'required|string|min:6',
+        'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
+        'addedProperties.*.number_of_units' => 'numeric',
     ];
     
     /**
@@ -30,7 +33,8 @@ class EditEstate extends Component
         $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) {
             return [
                 'property_id' => $property->id,
-                'price' => $property->pivot->price
+                'price' => $property->pivot->price,
+                'number_of_units' => $property->pivot->number_of_units,
             ];
         })->toArray();
 
@@ -47,7 +51,8 @@ class EditEstate extends Component
     public function addProperty() {
         array_push($this->properties, [
             'property' => $this->propertyTypes,
-            'price' => ''
+            'price' => '',
+            'number_of_units' => '',
         ]);
     }
     
@@ -83,11 +88,18 @@ class EditEstate extends Component
         $estate->address = $this->address;
         $estate->save();
 
-        $estate->propertyTypes()->detach(); // detach existing properties
+        $updatedProperties = collect($this->addedProperties)->map(function($property) {
+            return $property['property_id'];
+        });
+
+        $estate->propertyTypes()->sync($updatedProperties); // detach existing properties
 
         // attach new properties
         foreach($this->addedProperties as $property) {
-            $estate->propertyTypes()->attach($property['property_id'], ['price' => $property['price']]);
+            EstatePropertyType::where(['estate_id' => $estate->id, 'property_type_id' => $property['property_id']])->update([
+                'price' => $property['price'], 
+                'number_of_units' => $property['number_of_units']
+            ]);
         }
 
         session()->flash('message', 'Estate successfully added.');

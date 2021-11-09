@@ -49,7 +49,8 @@ class AddProperty extends Component
         $this->client = $client;
         $this->paymentPlans = PaymentPlan::all();
         $this->estates = Estate::all();
-        $this->propertyTypes = PropertyType::all();
+        $this->propertyTypes[] = PropertyType::all()->toArray();
+        // dd($this->propertyTypes);
 
         $this->clientProperties = $this->properties = $client->properties->map(function($property) {
 
@@ -79,13 +80,15 @@ class AddProperty extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypes($estateId) {
+    public function getPropertyTypes($estateId, $key) {
 
         if (empty($estateId)) {
             return $this->propertyTypes = [];
         }
 
-        $this->propertyTypes = Estate::findOrFail($estateId)->propertyTypes;
+        // add property types to array
+        $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
+        // dd($estateId, $key, $this->propertyTypes);
 
     }
 
@@ -96,6 +99,9 @@ class AddProperty extends Component
             'unique_number' => null,
             'payment_plan_id' => null,
         ];
+        
+        // add property types to array
+        $this->propertyTypes[] = PropertyType::all()->toArray();
     }
     
     /**
@@ -107,6 +113,9 @@ class AddProperty extends Component
     public function removeProperty($key) {
         array_splice($this->properties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
+        
+        // remove property types from array
+        array_splice($this->propertyTypes, $key, 1);
     }
  
     public function save()

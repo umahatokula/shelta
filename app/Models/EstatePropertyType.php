@@ -14,7 +14,7 @@ class EstatePropertyType extends Model
 
     protected $table = 'estate_property_type';
 
-    protected $fillable = ['estate_id', 'property_type_id'];
+    protected $fillable = ['estate_id', 'property_type_id', 'price', 'number_of_units'];
     
     /**
      * properties

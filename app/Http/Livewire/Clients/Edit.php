@@ -106,10 +106,16 @@ class Edit extends Component
         $this->agent_id              = $client->agent_id;
         
         
-        $this->clientProperties = $this->properties = $client->properties->map(function($property) {;
+        $this->clientProperties = $this->properties = $client->properties->map(function($property) {
+
+            if ($property->estatePropertyType) {
+                $propertyType = $property->estatePropertyType->propertyType;
+                $estate = $property->estatePropertyType->estate;
+            }
+
             return [
-                'property_type_id' => $property->estatePropertyType->propertyType->id,
-                'estate_id' => $property->estatePropertyType->estate->id,
+                'property_type_id' => $propertyType ? $propertyType->id : null,
+                'estate_id' => $estate ? $estate->id : null,
                 'unique_number' => $property->unique_number,
                 'payment_plan_id' => $property->payment_plan_id,
             ];
@@ -121,7 +127,7 @@ class Edit extends Component
         $this->genders = Gender::all();
         $this->states = State::all();
         $this->estates = Estate::all();
-        $this->propertyTypes = PropertyType::all();
+        $this->propertyTypes[] = PropertyType::all()->toArray();
         $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();      
 
     }
@@ -132,13 +138,14 @@ class Edit extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypes($estateId) {
+    public function getPropertyTypes($estateId, $key) {
 
         if (empty($estateId)) {
             return $this->propertyTypes = [];
         }
 
-        $this->propertyTypes = Estate::findOrFail($estateId)->propertyTypes;
+        // add property types to array
+        $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
 
     }
     
@@ -165,6 +172,9 @@ class Edit extends Component
             'unique_number' => null,
             'payment_plan_id' => null,
         ];
+        
+        // add property types to array
+        $this->propertyTypes[] = PropertyType::all()->toArray();
     }
     
     /**
@@ -176,6 +186,9 @@ class Edit extends Component
     public function removeProperty($key) {
         array_splice($this->properties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
+        
+        // remove property types from array
+        array_splice($this->propertyTypes, $key, 1);
     }
  
     public function save()

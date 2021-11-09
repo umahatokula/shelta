@@ -14,8 +14,9 @@ class CreateEstate extends Component
     public $addedProperties = [];
 
     protected $rules = [
-        'name' => 'required|string|min:6',
+        'name' => 'required|string|min:2',
         'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
+        'addedProperties.*.number_of_units' => 'numeric',
     ];
     
     /**
@@ -27,7 +28,8 @@ class CreateEstate extends Component
         $this->propertyTypes = PropertyType::all();
         array_push($this->properties, [
             'property' => $this->propertyTypes,
-            'price' => ''
+            'price' => '',
+            'number_of_units' => '',
         ]);
     }
     
@@ -39,7 +41,8 @@ class CreateEstate extends Component
     public function addProperty() {
         array_push($this->properties, [
             'property' => $this->propertyTypes,
-            'price' => ''
+            'price' => '',
+            'number_of_units' => '',
         ]);
     }
     
@@ -75,7 +78,10 @@ class CreateEstate extends Component
         ]);
 
         foreach($this->addedProperties as $property) {
-            $estate->propertyTypes()->attach($property['property_id'], ['price' => $property['price']]);
+            $estate->propertyTypes()->attach($property['property_id'], [
+                'price' => $property['price'], 
+                'number_of_units' => $property['number_of_units']
+            ]);
         }
 
         session()->flash('message', 'Estate successfully added.');

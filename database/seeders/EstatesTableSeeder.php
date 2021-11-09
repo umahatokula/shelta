@@ -14,14 +14,45 @@ class EstatesTableSeeder extends Seeder
      */
     public function run()
     {
-        Estate::create([
-            'name' => 'Life Camp Estate',
-            'address' => 'Life Camp Abuja',
-        ]);
+        if (env('PHILEOTECH_CLIENT') == 'hall7') {
+            Estate::create([
+                'name' => 'Imperial Vista',
+                'address' => 'Abuja',
+            ]);
+    
+            Estate::create([
+                'name' => 'The Bridge',
+                'address' => 'Abuja',
+            ]);
+    
+            Estate::create([
+                'name' => 'Cubiq Residence',
+                'address' => 'Abuja',
+            ]);
+    
+            Estate::create([
+                'name' => 'Brookshore Residence',
+                'address' => 'Abuja',
+            ]);
+        }
 
-        Estate::create([
-            'name' => 'Otupko Estate',
-            'address' => 'Otupko Abuja',
-        ]);
+        if (env('PHILEOTECH_CLIENT') == 'ochacho') {
+            Estate::create([
+                'name' => 'LifeCamp',
+                'address' => 'Abuja',
+            ]);
+    
+            Estate::create([
+                'name' => 'Karimo',
+                'address' => 'Abuja',
+            ]);
+    
+            Estate::create([
+                'name' => 'Apo',
+                'address' => 'Abuja',
+            ]);
+    
+        }
+        
     }
 }

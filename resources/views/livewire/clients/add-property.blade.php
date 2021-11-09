@@ -79,7 +79,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Estate</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id"wire:change="getPropertyTypes($event.target.value)" class="form-select"
+                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id"wire:change="getPropertyTypes($event.target.value, {{$key}})" class="form-select"
                                             required>
                                             <option value="">Please select one</option>
                                             @foreach ($estates as $estate)
@@ -94,8 +94,8 @@
                                         <select wire:model.lazy="clientProperties.{{$key}}.property_type_id"
                                             class="form-select" required>
                                             <option value="">Please select one</option>
-                                            @foreach ($propertyTypes as $propertyType)
-                                            <option value="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
+                                            @foreach ($propertyTypes[$key] as $propertyType)
+                                            <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -17,9 +17,10 @@ class CreateEstatePropertyTypesTable extends Migration
             $table->id();
             $table->foreignId('estate_id')->nullable();
             $table->foreignId('property_type_id')->nullable();
-            // $table->foreign('estate_id')->references('id')->on('estates')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('property_type_id')->references('id')->on('property_types')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('estate_id')->references('id')->on('estates')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('property_type_id')->references('id')->on('property_types')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('price')->nullable();
+            $table->integer('number_of_units')->nullable();
             $table->timestamps();
         });
     }

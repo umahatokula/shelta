@@ -56,10 +56,6 @@ class Show extends Component
 
     public function mount(Client $client) {
         
-        $user = auth()->user();
-        if ($user->hasRole('client')) {
-            redirect()->route('clients.show', $user->client);
-        }
 
         $this->client = $client->load([
             'transactions.property.estatePropertyType.propertyType', 

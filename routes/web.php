@@ -25,6 +25,7 @@ use App\Http\Livewire\Estates\CreateEstate;
 use App\Http\Livewire\PaymentPlans\EditPlan;
 use App\Http\Livewire\Settings\EditSettings;
 use App\Http\Livewire\PaymentPlans\CreatePlan;
+use App\Http\Livewire\EstatePropertType\ShowClients;
 use App\Http\Livewire\PropertyTypes\EditPropertyType;
 use App\Http\Livewire\PropertyTypes\ShowPropertyType;
 use App\Http\Livewire\Transactions\TransactionsIndex;
@@ -70,6 +71,9 @@ Route::group(['middleware' => ['auth', 'role:staff']],  function () {
     Route::get('property-types/create', CreatePropertyType::class)->name('property-types.create');
     Route::get('property-types/{propertytype}/edit', EditPropertyType::class)->name('property-types.edit');
     Route::get('property-types/{propertyType}/show', ShowPropertyType::class)->name('property-types.show');
+
+    // estate property-type
+    Route::get('estate-property-type/{estate}/{propertyType}/clients', ShowClients::class)->name('estate-property-type.clients');
 
     // payment-plans
     Route::get('payment-plans', Plans::class)->name('payment-plans.index');

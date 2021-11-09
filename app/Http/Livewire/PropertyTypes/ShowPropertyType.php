@@ -20,12 +20,16 @@ class ShowPropertyType extends Component
         $this->propertyType = $propertyType;
         $this->estates = $propertyType->estates->each( function($estate) {
 
-            $estate->unit_price = $estate->onePropertyType($this->propertyType->id);
-            $estate->number_of_units = $estate->properties->count();
+            $estate->number_of_units = $estate->onePropertyTypePrice($this->propertyType->id) ? $estate->onePropertyTypePrice($this->propertyType->id)->number_of_units : 0;
+            $estate->unit_price = $estate->onePropertyTypePrice($this->propertyType->id) ? $estate->onePropertyTypePrice($this->propertyType->id)->price : 0;
 
             $estate->properties->each(function($property) use($estate) {
-                $estate->property_transaction_total = ($estate->property_transaction_total + $property->transactionTotal());
-                $this->propertyTypeTotal = $this->propertyTypeTotal + $property->transactionTotal();
+
+                if ($property->estatePropertyType->propertyType->id == $this->propertyType->id) {
+                    $estate->property_transaction_total = ($estate->property_transaction_total + $property->transactionTotal());
+                    $this->propertyTypeTotal = $this->propertyTypeTotal + $property->transactionTotal();
+                }
+                
             });
 
         });
