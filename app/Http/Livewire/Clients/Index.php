@@ -8,16 +8,19 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    
+
     use WithPagination;
+    
+    protected $paginationTheme = 'bootstrap';
+    
 
     protected $listeners = ['affirmationAction' => 'destroy'];
-    
+
     public function destroy($id) {
         Client::findOrFail($id)->delete();
         session()->flash('message', 'Client deleted.');
     }
-    
+
     public function render()
     {
         return view('livewire.clients.index', [

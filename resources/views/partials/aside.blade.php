@@ -11,6 +11,14 @@
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+        
+                                <a class="dropdown-item" href="route('logout')"
+                                onclick="event.preventDefault();  this.closest('form').submit();"><i class="ti-lock text-muted mr-2"></i> {{ __('Log Out') }}</a>
+                            </form>
+                        </li>
                     </li>
 
                     <li class="header">Admin</li>
@@ -89,8 +97,6 @@
                                             class="path1"></span><span class="path2"></span></i>Add Staff</a></li>
                         </ul>
                     </li>
-                    <li><a href="ui_badges.html"><i class="icon-Commit"><span class="path1"></span><span
-                                    class="path2"></span></i>Badges</a></li>
 					
 					<li class="header">Settings</li>
                     <li class="treeview">

@@ -66,7 +66,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Property Type</label>
                                         <select wire:model.lazy="addedProperties.{{$key}}.property_id"
-                                            class="form-select" required>
+                                            class="form-select form-control" required>
                                             <option value="">Please select one</option>
                                             @foreach ($propertyTypes as $propertyType)
                                             <option value="{{ $propertyType->id }}">{{ $propertyType->name }}</option>

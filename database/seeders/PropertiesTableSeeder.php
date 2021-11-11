@@ -14,6 +14,13 @@ class PropertiesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \Schema::disableForeignKeyConstraints();
+
+        \DB::table('properties')->truncate();
+
+        // factory(Property::class, 10)->create();
+        \App\Models\Property::factory(200)->create();
+
+        \Schema::enableForeignKeyConstraints();
     }
 }

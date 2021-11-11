@@ -40,7 +40,7 @@
                             
                             <div class="form-group">
                                 <label class="form-label">Description</label>
-                                <textarea wire:model.lazy="description" class="form-control""></textarea>
+                                <textarea wire:model.lazy="description" class="form-control" rows="8"></textarea>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 

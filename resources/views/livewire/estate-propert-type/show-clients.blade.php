@@ -25,21 +25,75 @@
     <!-- Main content -->
     <section class="content">
 
+        <div>
+            @if (session()->has('message'))
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            @endif
+        </div>
+
         <div class="row">
             
             <div class="col-lg-12">
                 <div class="box p-15">
-                    <h4 class="box-title">
-                        {{ $propertyType->name }} 
-                        
-                        <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
+                    <div x-data="{show: false}" class="row">
+                        <div class="col-md-8 mb-5">
+                            <h4 class="box-title">
+                                {{ $propertyType->name }} 
+                                
+                                <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
+        
+                                <span class="text-warning">{{ $estate->name }}</span>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                            <a @click="show = true" x-show="!show" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right ml-3">Send Emai</a>
+                            
+                            <a @click="show = false" x-show="show" href="#" class="waves-effect waves-light btn btn-danger btn-sm float-right ml-3">Cancel</a>
+                        </div>
+                                    
+                        <div x-show="show" @emailSent.window="show = false" x-transition.duration.500ms class="col-md-12 ma-5">
+                            <div class="box box-outline-primary">
+                                <div class="box-header with-border">
+                                <h4 class="box-title"><strong>Compose Email</strong></h4>
+                                <div class="box-tools pull-right">
+                                    &nbsp
+                                </div>
+                                </div>
+            
+                                <div class="box-body">
+                                    <form wire:submit.prevent="sendMail">
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Subject</label>
+                                            <input wire:model="subject" class="form-control" autofocus>
+                                            @error('subject') <span class="text-danger">{{ $subject }}</span> @enderror
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Mail Content</label>
+                
+                                            <div wire:ignore class="form-group row">
+                                                <div class="col-md-12">
+                                                    <textarea wire:model="message" class="form-control required" name="message" id="message"></textarea>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                
+                                        <button class="btn btn-primary btn-block {{ $clients->isEmpty() ? 'disabled' : '' }}">Send mail</button>
+                
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
-                        <span class="text-warning">{{ $estate->name }}</span>
-                    </h4>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-lg-7">
+            <div class="col-lg-12">
                 <div class="box p-15">
 
                     <h4>Client List</h4>
@@ -77,25 +131,7 @@
 
                     
                 </div>
-            </div>
-            
-            <div class="col-lg-5">
-                <div class="box p-15">
-                    <h4>Compose Mail</h4>
-                    <form wire:submit.prevent="sendMail">
-                        
-                        <div class="form-group">
-                            <textarea wire:model="message" class="form-control" name="wysiwyg-editor" required></textarea>
-                            @error('message') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        <button class="btn btn-primary btn-block {{ $clients->isEmpty() ? 'disabled' : '' }}">Send mail</button>
-
-                    </form>
-                    
-                </div>
-            </div>
-            
+            </div>            
 
         </div>
 
@@ -108,10 +144,13 @@
 <script src="{{ asset('assets/js/pages/data-table.js') }}"></script>
 
 
-<script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.ckeditor').ckeditor();
-    });
+{{-- <script src="{{ asset('ckeditor/ckeditor.js') }}"></script> --}}
+<script src="https://cdn.ckeditor.com/4.16.1/full/ckeditor.js"></script>
+<script>
+    const editor = CKEDITOR.replace('message');
+    editor.on('change', function(event){
+        console.log(event.editor.getData())
+        @this.set('message', event.editor.getData());
+    })
 </script>
 @endpush

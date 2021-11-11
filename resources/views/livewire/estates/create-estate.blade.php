@@ -61,11 +61,11 @@
 
                             @foreach ($properties as $key => $property)
                             <div class="row mb-5">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Property Type</label>
                                         <select wire:model.lazy="addedProperties.{{$key}}.property_id"
-                                            class="form-select" required>
+                                            class="form-select form-control" required>
                                             <option value="">Please select one</option>
                                             @foreach ($propertyTypes as $propertyType)
                                             <option value="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
@@ -73,7 +73,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Price</label>
                                         <input wire:model.lazy="addedProperties.{{$key}}.price" class="form-control"
@@ -81,7 +81,7 @@
                                         @error('price') <span class="error">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Number of Units</label>
                                         <input wire:model.lazy="addedProperties.{{$key}}.number_of_units" class="form-control"

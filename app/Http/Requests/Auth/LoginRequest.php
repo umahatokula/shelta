@@ -53,6 +53,11 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // 2 factor auth
+        auth()->user()->generateCode();
+
+        return redirect()->route('2fa.index');
+
         RateLimiter::clear($this->throttleKey());
     }
 

@@ -25,6 +25,7 @@ class EstatePropertyTypeFactory extends Factory
             'estate_id' => rand(1, 2),
             'property_type_id' => rand(1, 3),
             'price' => 80000000,
+            'number_of_units' => rand(15, 35),
         ];
     }
 }

@@ -11,7 +11,7 @@ class EditPropertyType extends Component
 {
     use WithFileUploads;
  
-    public PropertyType $propertytype;
+    public PropertyType $propertyType;
     public $name;
     public $description;
     public $photos, $currentPhotos, $photosToBeDeleted = [];
@@ -19,15 +19,15 @@ class EditPropertyType extends Component
     /**
      * mount
      *
-     * @param  mixed $propertytype
+     * @param  mixed $propertyType
      * @return void
      */
-    public function mount(PropertyType $propertytype) {
+    public function mount(PropertyType $propertyType) {
 
-        $this->propertytype  = $propertytype;
-        $this->name          = $propertytype->name;
-        $this->description   = $propertytype->description;
-        $this->currentPhotos = $propertytype->getMedia('propertyTypephotos')->map(function($photos) {
+        $this->propertyType  = $propertyType;
+        $this->name          = $propertyType->name;
+        $this->description   = $propertyType->description;
+        $this->currentPhotos = $propertyType->getMedia('propertyTypephotos')->map(function($photos) {
             return $photos;
         });
 
@@ -60,13 +60,13 @@ class EditPropertyType extends Component
             'photos.*' => 'image|max:1024', // 1MB Max
         ]);
 
-        $propertytype = PropertyType::where('id', $this->propertytype->id)->first();
-        $propertytype->name = $this->name;
-        $propertytype->description = $this->description;
-        $propertytype->save();
+        $propertyType = PropertyType::where('id', $this->propertyType->id)->first();
+        $propertyType->name = $this->name;
+        $propertyType->description = $this->description;
+        $propertyType->save();
 
 
-        $this->propertytype->getMedia('propertyTypephotos')->each(function($mediaPhoto) {
+        $this->propertyType->getMedia('propertyTypephotos')->each(function($mediaPhoto) {
             if (in_array($mediaPhoto->id, $this->photosToBeDeleted)) {
                 $mediaPhoto->delete();
             }
@@ -75,7 +75,7 @@ class EditPropertyType extends Component
 
         if($this->photos) {
             foreach($this->photos as $photo) {
-                $propertytype
+                $propertyType
                     ->addMedia($photo->getRealPath())
                     ->usingName($photo->getClientOriginalName())
                     ->toMediaCollection('propertyTypephotos', 'public');

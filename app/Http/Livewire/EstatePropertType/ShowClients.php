@@ -18,8 +18,10 @@ class ShowClients extends Component
     public PropertyType $propertyType;
     public $estatePropertyType;
     public $clients;
+    public $subject;
+    public $content;
     public $message;
-    public $settings;
+    public $company_email;
 
 
     /**
@@ -28,7 +30,8 @@ class ShowClients extends Component
      * @return void
      */
     public function mount(Estate $estate, PropertyType $propertyType) {
-        $this->settings = Setting::first();
+
+        $this->company_email = Setting::first() ? Setting::first()->company_email : env('MAIL_FROM_ADDRESS', 'hello@example.com');
         $this->estate = $estate;
         $this->propertyType = $propertyType;
         $this->estatePropertyType = EstatePropertyType::where([
@@ -77,11 +80,17 @@ class ShowClients extends Component
      */
     public function sendMail() {
     
-        // dd($this->message);
-        Mail::to($this->clients->pluck('email'))
-            ->bcc($this->settings->company_email)
-            ->send(new PropertyTypeClientMail($this->message));
+        // $this->validate();
 
+        Mail::to($this->clients->pluck('email'))
+            ->bcc($this->company_email)
+            ->send(new PropertyTypeClientMail($this->subject, $this->message));
+
+        $this->reset(['subject', 'message']);
+
+        $this->dispatchBrowserEvent('emailSent');
+
+        session()->flash('message', 'Email sent successfully.');
         redirect()->back();
     }
     

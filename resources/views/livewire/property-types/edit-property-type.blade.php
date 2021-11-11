@@ -10,7 +10,7 @@
                             <li class="breadcrumb-item" aria-current="page"><a
                                     href="{{ route('estates.index') }}">Property Types</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Add Property Type
+                                Edit Property Type
                             </li>
                         </ol>
                     </nav>
@@ -40,7 +40,7 @@
                             
                             <div class="form-group">
                                 <label class="form-label">Description</label>
-                                <textarea wire:model.lazy="description" class="form-control""></textarea>
+                                <textarea wire:model.lazy="description" class="form-control" rows="8"></textarea>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
@@ -59,6 +59,7 @@
                                 <label class="form-label">Photos</label>
                                                             
                                 <input type="file" wire:model="photos" multiple>
+                                <div wire:loading wire:target="photo">Uploading...</div>
                             
                                 @error('photo') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>

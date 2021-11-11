@@ -296,7 +296,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Estate</label>
                                         <select wire:model.lazy="clientProperties.{{$key}}.estate_id"
-                                            wire:change="getPropertyTypes($event.target.value, {{$key}})" class="form-select"
+                                            wire:change="getPropertyTypes($event.target.value, {{$key}})" class="form-select form-control"
                                             required>
                                             <option value="">Please select one</option>
                                             @foreach ($estates as $estate)
@@ -309,7 +309,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Property Type</label>
                                         <select wire:model.lazy="clientProperties.{{$key}}.property_type_id"
-                                            class="form-select" required>
+                                            class="form-select form-control" required>
                                             <option value="">Please select one</option>
                                             @foreach ($propertyTypes[$key] as $propertyType)
                                             <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
@@ -321,7 +321,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Payment Plan</label>
                                         <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
-                                            class="form-select" required>
+                                            class="form-select form-control" required>
                                             <option value="">Please select one</option>
                                             @foreach ($paymentPlans as $paymentPlan)
                                             <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>

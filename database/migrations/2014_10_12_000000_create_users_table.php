@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->boolean('use_2fa')->nullable()->default(false);
             $table->foreignId('staff_id')->nullable();
             $table->foreign('staff_id')->references('id')->on('staff')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('client_id')->nullable();

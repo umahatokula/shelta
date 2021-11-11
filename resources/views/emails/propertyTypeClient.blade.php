@@ -1,1 +1,1 @@
-<p>{{ $message }}</p>
+<p>{!! $content !!}</p>

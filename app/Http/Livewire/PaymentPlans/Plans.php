@@ -4,23 +4,30 @@ namespace App\Http\Livewire\PaymentPlans;
 
 use Livewire\Component;
 use App\Models\PaymentPlan;
+use Livewire\WithPagination;
 
 class Plans extends Component
 {
-    public $plans;
-    
+    use WithPagination;
+            
     /**
-     * mount
+     * destroy
      *
+     * @param  mixed $id
      * @return void
      */
-    public function mount() {
-        $this->plans = PaymentPlan::all();
+    public function destroy($id) {
+        
+        PaymentPlan::findOrFail($id)->delete();
+
+        session()->flash('message', 'Client deleted.');
+
     }
 
-    
     public function render()
     {
-        return view('livewire.payment-plans.plans');
+        return view('livewire.payment-plans.plans', [
+            'plans' => PaymentPlan::paginate(10)
+        ]);
     }
 }

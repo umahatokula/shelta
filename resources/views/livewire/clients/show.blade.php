@@ -28,15 +28,13 @@
 
         <div class="row">
 
-            <div>
-                @if (session()->has('message'))
-                <div class="col-lg-12">
-                    <div class="alert alert-success">
-                        {{ session('message') }}
-                    </div>
+            @if (session()->has('message'))
+            <div class="col-lg-12">
+                <div class="alert alert-success">
+                    {{ session('message') }}
                 </div>
-                @endif
             </div>
+            @endif
 
             <div class="col-lg-12">
                 <div class="box p-15">
@@ -94,7 +92,7 @@
 
                         </div>
                         
-                        <div x-show="show" class="ma-5">
+                        <div x-show="show" x-transition.duration.500ms class="col-md-12 ma-5">
                             <div class="box box-outline-primary">
                                 <div class="box-header with-border">
                                 <h4 class="box-title"><strong>Online Payment Details</strong></h4>
@@ -255,7 +253,6 @@
                 </div>
             </div>
 
-            
             <div class="col-lg-12">
                 <div class="box p-15">
 
@@ -384,7 +381,6 @@
                     @endforelse
                 </div>
             </div>    
-            
 
         </div>
 

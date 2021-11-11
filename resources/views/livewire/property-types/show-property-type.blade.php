@@ -53,7 +53,6 @@
                             </div>
 
                             <div class="col-lg-8 col-12">
-                                @if ($estates->isNotEmpty())
                                 <div class="table-responsive">
                                    <table class="table table-hover">
                                         <tbody>
@@ -62,11 +61,11 @@
                                                     <th>Estate</th>
                                                     <th class="text-center">No of Units</th>
                                                     <th class="text-right">Unit Price (&#x20A6;)</th>
-                                                    <th class="text-right">Total til date (&#x20A6;)</th>
+                                                    {{-- <th class="text-right">Total til date (&#x20A6;)</th> --}}
                                                 </tr>
                                             </thead>
 
-                                            @foreach ($estates as $estate)
+                                            @forelse ($estates as $estate)
                                                 <tr>
                                                     <td>
                                                         {{ $estate->name }}
@@ -74,24 +73,24 @@
                                                     </td>
                                                     <td class="text-center">{{ $estate->number_of_units }}</td>
                                                     <td class="text-right">{{ number_format($estate->unit_price) }}</td>
-                                                    <td class="text-right">{{ number_format($estate->property_transaction_total) }}</td>
+                                                    {{-- <td class="text-right">{{ number_format($estate->property_transaction_total) }}</td> --}}
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="3" class="text-center">Property type not assigned to estate</td>
+                                                </tr>
+                                            @endforelse
 
-                                            <tfoot>
+                                            {{-- <tfoot>
                                                 <tr>
                                                     <td><b>Total:</b></td>
                                                     <td colspan="4" class="text-right"><b>&#x20A6; {{ number_format($propertyTypeTotal) }}</b></td>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot> --}}
                                             
                                         </tbody>
                                     </table>  
                                 </div>
-                                   
-                                @else
-                                <p>Property type not assigned to estate</p>
-                                @endif
                                 
                             </div>
 

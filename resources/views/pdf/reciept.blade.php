@@ -3,7 +3,7 @@
 
 <style>
   #invoice {
-    font-size: 0.8rem
+    font-size: 1rem
   }
 </style>
 
@@ -20,7 +20,7 @@
                   </div>
                   <div class="col-md-6 text-right mt-3">
                       {{-- <img src="{{ asset('assets/images/user7-128x128.jpg') }}" alt="" class="img-fluid" width="150px"> --}}
-                      <h5 class="text-danger mb-0">{{ config('app.name', 'Real Estate App') }}</h5><small>www.</small>
+                      <h5 class="text-danger mb-0">{{ config('app.name', 'Real Estate App') }}</h5><small>https://www.ochachorealhomes.com</small>
                   </div>
               </div>
               <div class="mt-3">

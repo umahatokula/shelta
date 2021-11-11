@@ -14,7 +14,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.staff.list-staff');
     }
 
     /**
@@ -24,7 +24,7 @@ class StaffController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.staff.create-staff');
     }
 
     /**
@@ -57,7 +57,8 @@ class StaffController extends Controller
      */
     public function edit(Staff $staff)
     {
-        //
+        $data['staff'] = $staff;
+        return view('admin.staff.edit-staff', $data);
     }
 
     /**

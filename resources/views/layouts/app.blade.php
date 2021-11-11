@@ -8,6 +8,15 @@
 
     <title>{{ config('app.name', 'Real Estate App') }}</title>
 
+    @livewireStyles
+
+    <!-- Scripts -->
+    <script src="{{ mix('js/app.js') }}" defer></script>
+
+    <!-- Scripts -->
+    {{-- <script src="{{ asset('assets/js/alpine.min.js') }}"></script> --}}
+    <script src="//unpkg.com/alpinejs" defer></script>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
 
@@ -15,21 +24,12 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.7.0/css/font-awesome.css') }}">
 
-    @livewireStyles
-
-    <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
-
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{ asset('assets/css/vendors_css.css') }}">
 
     <!-- Style-->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/skin_color.css') }}">
-
-    <!-- Scripts -->
-    <script src="{{ asset('assets/js/alpine.min.js') }}"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
 
 </head>
 
@@ -73,7 +73,11 @@
         <div class="content-wrapper">
             <div class="container-full">
                 <!-- Main content -->
-                {{ $slot }}
+
+                {{-- {{ $slot }} --}}
+                
+                @yield('content')
+
                 <!-- /.content -->
             </div>
         </div>

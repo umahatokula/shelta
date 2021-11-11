@@ -11,16 +11,18 @@ class PropertyTypeClientMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $message;
+    public $subject;
+    public $content;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($subject, $content)
     {
-        $this->message = $message;
+        $this->subject = $subject ?? env('APP_NAME');
+        $this->content = $content;
     }
 
     /**
@@ -30,6 +32,6 @@ class PropertyTypeClientMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.propertyTypeClient');
+        return $this->subject($this->subject)->view('emails.propertyTypeClient');
     }
 }

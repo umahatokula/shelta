@@ -25,6 +25,14 @@
 
         <div class="row">
 
+            @if (session()->has('message'))
+            <div class="col-lg-12">
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            </div>
+            @endif
+
             <div class="col-12">
                 <div class="box">
                     <div class="box-header with-border">
@@ -46,7 +54,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <div class="table-responsive-sm">
                             <table class="table mb-0">
                                 <thead>
@@ -83,12 +91,16 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                    
+
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="row my-5">
+                          <div class="col-12 d-flex justify-content-center">
 
                             {{ $clients->links() }}
-
+                          </div>
                         </div>
                     </div>
                 </div>

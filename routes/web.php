@@ -1,38 +1,19 @@
 <?php
 
-use App\Http\Livewire\Dashboard;
-use App\Http\Livewire\Clients\Edit;
-use App\Http\Livewire\Clients\Show;
-use App\Http\Livewire\Clients\Index;
-use App\Http\Livewire\Clients\Store;
-use App\Http\Livewire\Clients\Create;
-use App\Http\Livewire\Clients\Update;
-use App\Http\Livewire\Users\EditUser;
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\Clients\Destroy;
-use App\Http\Livewire\Staff\EditStaff;
-use App\Http\Livewire\Staff\ListStaff;
-use App\Http\Livewire\Users\ListUsers;
-use App\Http\Livewire\Users\CreateUser;
-use App\Http\Livewire\Settings\Settings;
-use App\Http\Livewire\Staff\CreateStaff;
-use App\Http\Livewire\Estates\EditEstate;
-use App\Http\Livewire\PaymentPlans\Plans;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\SearchController;
 use App\Http\Livewire\Clients\AddProperty;
-use App\Http\Livewire\Estates\ListEstates;
-use App\Http\Livewire\Search\SearchResult;
-use App\Http\Livewire\Estates\CreateEstate;
-use App\Http\Livewire\PaymentPlans\EditPlan;
-use App\Http\Livewire\Settings\EditSettings;
-use App\Http\Livewire\PaymentPlans\CreatePlan;
-use App\Http\Livewire\EstatePropertType\ShowClients;
-use App\Http\Livewire\PropertyTypes\EditPropertyType;
-use App\Http\Livewire\PropertyTypes\ShowPropertyType;
-use App\Http\Livewire\Transactions\TransactionsIndex;
-use App\Http\Livewire\Transactions\TransactionsStore;
-use App\Http\Livewire\PropertyTypes\ListPropertyTypes;
-use App\Http\Livewire\Transactions\TransactionsCreate;
-use App\Http\Livewire\PropertyTypes\CreatePropertyType;
+use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\EstatesController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentPlansController;
+use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\PropertyTypesController;
+use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\EstatePropertyTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,76 +26,68 @@ use App\Http\Livewire\PropertyTypes\CreatePropertyType;
 |
 */
 
+Route::get('clients/login', [ClientsController::class, 'login'])->name('clients.login');
+Auth::routes();
+
+Route::get('two-factor-auth', [TwoFactorAuthController::class, 'index'])->name('2fa.index');
+Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name('2fa.store');
+Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend');
+
 Route::get('/', function () {
-    return redirect('dashboard');
+    return redirect()->route('dashboard');
+    
 })->name('home');
 
-Route::group(['middleware' => ['auth']],  function () {
-    Route::get('dashboard', Dashboard::class)->name('dashboard');
-});
+Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
-
-Route::group(['middleware' => ['auth', 'role:staff']],  function () {
-
-    // payments
-    Route::get('transactions', TransactionsIndex::class)->name('transactions.index');
-    Route::get('transactions/create/{client}', TransactionsCreate::class)->name('transactions.create');
-    Route::post('transactions', TransactionsStore::class)->name('transactions.store');
-
-    // estates
-    Route::get('estates', ListEstates::class)->name('estates.index');
-    Route::get('estates/create', CreateEstate::class)->name('estates.create');
-    Route::get('estates/{estate}/edit', EditEstate::class)->name('estates.edit');
-
-    // property-types
-    Route::get('property-types', ListPropertyTypes::class)->name('property-types.index');
-    Route::get('property-types/create', CreatePropertyType::class)->name('property-types.create');
-    Route::get('property-types/{propertytype}/edit', EditPropertyType::class)->name('property-types.edit');
-    Route::get('property-types/{propertyType}/show', ShowPropertyType::class)->name('property-types.show');
-
-    // estate property-type
-    Route::get('estate-property-type/{estate}/{propertyType}/clients', ShowClients::class)->name('estate-property-type.clients');
-
-    // payment-plans
-    Route::get('payment-plans', Plans::class)->name('payment-plans.index');
-    Route::get('payment-plans/create', CreatePlan::class)->name('payment-plans.create');
-    Route::get('payment-plans/{paymentPlan}/edit', EditPlan::class)->name('payment-plans.edit');
-
-    // settings
-    Route::get('settings', Settings::class)->name('settings.index');
-    Route::get('settings/edit', EditSettings::class)->name('settings.edit');
-
-    // staff
-    Route::get('staff', ListStaff::class)->name('staff.index');
-    Route::get('staff/create', CreateStaff::class)->name('staff.create');
-    Route::get('staff/{staff}/edit', EditStaff::class)->name('staff.edit');
-
-    // users
-    Route::get('users', ListUsers::class)->name('users.index');
-    Route::get('users/create', CreateUser::class)->name('users.create');
-    Route::get('users/{staff}/edit', EditUser::class)->name('users.edit');
-
-    // search
-    Route::get('search/result/{query}', SearchResult::class)->name('search.result');
-
-});
-
-
-
-Route::group(['middleware' => ['auth', 'role:staff|client']],  function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // clients
-    Route::get('clients', Index::class)->name('clients.index');
-    Route::get('clients/create', Create::class)->name('clients.create');
-    Route::post('clients', Store::class)->name('clients.store');
-    Route::get('clients/{client}/show', Show::class)->name('clients.show');
-    Route::get('clients/{client}/edit', Edit::class)->name('clients.edit');
-    Route::put('clients', Update::class)->name('clients.update');
-    Route::delete('clients', Destroy::class)->name('clients.destroy');
-    Route::get('clients/{client}/add-property', AddProperty::class)->name('clients.add-property');
+    Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
+    Route::resource('clients', ClientsController::class);
 
+    // payments
+    Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+    Route::get('transactions/create/{client}', [TransactionsController::class, 'create'])->name('transactions.create');
+    Route::post('transactions', [TransactionsController::class, 'index'])->name('transactions.store');
+
+    // estates
+    Route::resource('estates', EstatesController::class);
+
+    // property-types
+    Route::resource('property-types', PropertyTypesController::class);
+
+    // estate property-type
+    Route::get('estate-property-type/{estate}/{propertyType}/clients', [EstatePropertyTypeController::class, 'showClients'])->name('estate-property-type.clients');
+
+    // payment-plans
+    Route::resource('payment-plans', PaymentPlansController::class);
+
+    // settings
+    Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
+
+    // staff
+    Route::resource('staff', StaffController::class);
+
+    // users
+    Route::resource('users', UsersController::class);
+
+    // search
+    Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
 });
 
-//routes
-require __DIR__.'/auth.php';
+Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
 
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // clients
+    Route::get('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile');
+    Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
+    Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
+
+    // users
+    Route::get('users/{user}/profile', [UsersController::class, 'profile'])->name('users.profile');
+    Route::post('users/{user}/profile', [UsersController::class, 'storeProfile'])->name('users.profile.store');
+
+});

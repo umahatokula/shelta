@@ -22,7 +22,7 @@
 
 </head>
 	
-<body class="hold-transition theme-primary bg-img" style="background-image: url({{ asset('assets/images/auth-bg/bg-hall7.jpg') }})">
+<body class="hold-transition theme-primary bg-img" style="background-image: url({{ asset('assets/images/auth-bg/bg-ochacho.jpg') }})">
 	
 	<div class="container h-p100">
 		<div class="row align-items-center justify-content-md-center h-p100">	
@@ -32,7 +32,7 @@
 					<div class="col-lg-5 col-md-5 col-12">
 						<div class="bg-white rounded30 shadow-lg">
 							<div class="content-top-agile p-20 pb-0">
-								<img src="{{ asset('assets/images/hall7_logo.png') }}" alt="" class="img-fluid" style="max-width: 100px;">						
+								<img src="{{ asset('assets/images/logo-light.png') }}" alt="" class="img-fluid" style="max-width: 200px;">						
 							</div>
 							<div class="p-40">
 
