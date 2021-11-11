@@ -34,9 +34,23 @@ Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name(
 Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend');
 
 Route::get('/', function () {
+    return redirect()->route('dashboard');    
+});
+
+
+
+Route::get('/home', function () {
+
+    $user = auth()->user();
+    if ($user->hasRole('client')) {
+        return view('frontend.dashboard');
+    }
+
     return redirect()->route('dashboard');
     
-})->name('home');
+})->name('home')->middleware('auth');
+
+
 
 Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
@@ -83,6 +97,8 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
 
     // clients
     Route::get('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile');
+    Route::get('clients/{client}/payments', [ClientsController::class, 'payments'])->name('clients.payments');
+    Route::get('clients/{client}/properties', [ClientsController::class, 'properties'])->name('clients.properties');
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
     Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
 

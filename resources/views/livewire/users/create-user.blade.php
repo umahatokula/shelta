@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <label class="form-label" id="staff_id">Staff</label>
                                 <select wire:model.lazy="staff_id"
-                                    class="form-select">
+                                    class="form-select form-control">
                                     <option value="">Please select one</option>
                                     @foreach ($staffs as $staff)
                                     <option value="{{ $staff->id }}">{{ $staff->name }}</option>
@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <label class="form-label" id="client_id">Client</label>
                                 <select wire:model.lazy="client_id"
-                                    class="form-select select2">
+                                    class="form-select select2  form-control">
                                     <option value="">Please select one</option>
                                     @foreach ($clients as $client)
                                     <option value="{{ $client->id }}">{{ $client->onames }} {{ $client->sname }}</option>

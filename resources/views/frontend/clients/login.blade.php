@@ -1,23 +1,6 @@
-
-
-
-<!--
-=========================================================
-* Soft UI Dashboard - v1.0.3
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 
 <head>
     <meta charset="utf-8">
@@ -29,106 +12,96 @@
 
     <title>{{ config('app.name', 'Real Estate App') }} - Login</title>
 
-    <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <!-- Nucleo Icons -->
-    <link href="{{ asset('frontend/assets/css/nucleo-icons.css') }}" rel="stylesheet" />
-    <link href="{{ asset('frontend/assets/css/nucleo-svg.css') }}" rel="stylesheet" />
-    <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <link href="{{ asset('frontend/assets/css/nucleo-svg.css') }}" rel="stylesheet" />
-    <!-- CSS Files -->
-    <link id="pagestyle" href="{{ asset('frontend/assets/css/soft-ui-dashboard.css?v=1.0.3') }}" rel="stylesheet" />
+    <!-- Bootstrap Css -->
+    <link href="{{ asset('frontend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('frontend/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('frontend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
 </head>
 
-<body class="">
-    
-    <main class="main-content  mt-0">
-        <section>
-            <div class="page-header min-vh-75">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
-                            <div class="card card-plain mt-8">
-                                <div class="card-header pb-0 text-left bg-transparent">
-                                    <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
-                                </div>
-                                <div class="card-body">
-
-                                <form action="{{ route('login') }}" method="post">
-                                    @csrf
-
-                                        <label>Email</label>
-                                        <div class="mb-3">
-                                            <input name="email" type="email" value="{{ old('email') }}"
-                                                class="form-control pl-15 {{ $errors->has('email') ? ' is-invalid' : '' }}"
-												placeholder="Email" aria-label="Email" aria-describedby="email-addon">
-                                            <x-jet-input-error for="email"></x-jet-input-error>
-                                        </div>
-
-                                        <label>Password</label>
-                                        <div class="mb-3">
-											<input name="password" type="password"
-												class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-												placeholder="Password" aria-label="Password" aria-describedby="password-addon">
-											<x-jet-input-error for="password"></x-jet-input-error>
-                                        </div>
-
-                                        <div class="form-check form-switch">
-                                            <input name="remember" class="form-check-input" type="checkbox" id="remember_me" checked="">
-                                            <label class="form-check-label" for="remember_me">Remember me</label>
-                                        </div>
-										
-                                        <div class="text-center">
-                                            <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign
-                                                in</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                                    <p class="mb-4 text-sm mx-auto">
-
-                                        Don't have an account?
-										@if (Route::has('password.request'))
-                                        <a href="{{ route('password.request') }}" class="text-info text-gradient font-weight-bold">{{ __('Forgot your password?') }}</a>
-										@endif
-										
-                                    </p>
-                                </div>
+<body>
+    <div class="home-btn d-none d-sm-block">
+        <a href="index.html" class="text-dark"><i class="fas fa-home h2"></i></a>
+    </div>
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card overflow-hidden">
+                        <div class="bg-login text-center">
+                            <div class="bg-login-overlay"></div>
+                            <div class="position-relative">
+                                <h5 class="text-white font-size-20">Welcome Back !</h5>
+                                <p class="text-white-50 mb-0">Sign in to continue to Qovex.</p>
+                                <a href="index.html" class="logo logo-admin mt-4">
+                                    <img src="assets/images/logo-sm-dark.png" alt="" height="30">
+                                </a>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
-                                    style="background-image:url({{ asset('frontend/assets/img/curved-images/curved6.jpg') }})"></div>
+                        <div class="card-body pt-5">
+                            <div class="p-2">
+
+                                <form action="{{ route('login') }}" class="form-horizontal" method="post">
+                                        @csrf
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input name="email" type="email" value="{{ old('email') }}"
+                                            class="form-control pl-15 {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                            placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                                        <x-jet-input-error for="email"></x-jet-input-error>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="userpassword">Password</label>
+                                        <input name="password" type="password"
+                                            class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                            placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                                        <x-jet-input-error for="password"></x-jet-input-error>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input name="remember" type="checkbox" class="form-check-input" id="customControlInline">
+                                        <label class="form-check-label" for="customControlInline">Remember
+                                            me</label>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log
+                                            In</button>
+                                    </div>
+
+                                    <div class="mt-4 text-center">
+                                                
+										@if (Route::has('password.request'))
+                                        <a href="{{ route('password.request') }}" class="text-muted"><i
+                                            class="mdi mdi-lock me-1"></i>{{ __('Forgot your password?') }}</a>
+										@endif
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
-        </section>
-    </main>
-    
-    <!--   Core JS Files   -->
-    <script src="{{ asset('frontend/assets/js/core/popper.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/js/core/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-    <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-            var options = {
-                damping: '0.5'
-            }
-            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-        }
+        </div>
+    </div>
 
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('frontend/assets/js/soft-ui-dashboard.min.js?v=1.0.3') }}"></script>
+    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT -->
+    <script src="{{ asset('frontend/assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/libs/metismenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/libs/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
+
+    <script src="{{ asset('frontend/assets/js/app.js') }}"></script>
+
 </body>
 
 </html>

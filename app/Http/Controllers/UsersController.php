@@ -91,6 +91,7 @@ class UsersController extends Controller
      * @return void
      */
     public function profile(User $user) {
+        dd($user);
 
         $data['user'] = $user->load('client');
 

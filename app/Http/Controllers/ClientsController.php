@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Client;
 use Illuminate\Http\Request;
 
@@ -60,6 +61,8 @@ class ClientsController extends Controller
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);
+
+        $data['propertybalance'] = 0;
 
         if (auth()->user()->hasRole('client')) {
     
@@ -123,5 +126,83 @@ class ClientsController extends Controller
      */
     public function login() {
         return view('frontend.clients.login');
+    }
+    
+    /**
+     * display profile page
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function profile(User $user) {
+
+        $data['user'] = $user->load('client');
+
+        return view('frontend.users.profile', $data);
+    }
+    
+    /**
+     * store client Profile
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeProfile(Request $request) {
+
+        $data['user'] = $user->load('client');
+
+        return redirect()->route('frontend.users.profile');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function payments(Client $client)
+    {
+        
+        $data['client'] = $client->load([
+            'transactions.property.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.estate', 
+            'properties.estatePropertyType.propertyType', 
+            'properties.estatePropertyType.estate'
+        ]);
+        
+        $data['propertybalance'] = 0;
+
+        if (auth()->user()->hasRole('client')) {
+    
+            return view('frontend.clients.payments', $data);
+        }
+
+        return view('admin.clients.show', $data);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function properties(Client $client)
+    {
+        
+        $data['client'] = $client->load([
+            'transactions.property.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.estate', 
+            'properties.estatePropertyType.propertyType', 
+            'properties.estatePropertyType.estate'
+        ]);
+        
+        $data['propertybalance'] = 0;
+
+        if (auth()->user()->hasRole('client')) {
+    
+            return view('frontend.clients.properties', $data);
+        }
+
+        return view('admin.clients.show', $data);
     }
 }

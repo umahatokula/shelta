@@ -2,47 +2,40 @@
 
 @section('content')
 <div>
-
-    <div class="content-header">
-        <div class="d-flex align-items-center">
-            <div class="me-auto">
-                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
-                <div class="d-inline-block align-items-center">
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('home') }}">
-                                    <i class="mdi mdi-home-outline"></i>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item" aria-current="page"><a
-                                    href="{{ route('clients.index') }}">Clients</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ $client->sname }}</li>
-                        </ol>
-                    </nav>
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="page-title mb-0 font-size-18">Payments</h4>
+    
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item "><a href="javascript: void(0);">Payments</a></li>
+                    </ol>
                 </div>
+    
             </div>
-
         </div>
     </div>
+    <!-- end page title -->
 
     <!-- Main content -->
-    <section class="content">
 
-        <div class="row">
+    <div class="row">
 
-            <div>
-                @if (session()->has('message'))
-                <div class="col-lg-12">
-                    <div class="alert alert-success">
-                        {{ session('message') }}
-                    </div>
-                </div>
-                @endif
-            </div>
-
+        <div>
+            @if (session()->has('message'))
             <div class="col-lg-12">
-                <div class="box p-15">
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            </div>
+            @endif
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card p-15">
+                <div class="card-body">
                     <div class="row">
 
                         @can('manage clients')
@@ -65,9 +58,11 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-12">
-                <div class="box p-15">
+        <div class="col-lg-12">
+            <div class="card p-15">
+                <div class="card-body">
 
                     <div x-data="{show: false}" class="row mb-4">
                         <div class="col-md-6">
@@ -175,9 +170,9 @@
 
                     @if ($client->transactions->isNotEmpty())
                         
-					<div class="table-responsive">
+                    <div class="table-responsive">
                     <table id="payments" class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
-                          <thead>
+                        <thead>
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th class="text-left">Property</th>
@@ -186,8 +181,8 @@
                                     <th class="text-center">Date</th>
                                     <th class="text-center">Action(s)</th>
                                 </tr>
-                          </thead>
-                          <tbody>
+                        </thead>
+                        <tbody>
                             @foreach ($client->transactions as $transaction)
                             <tr>
                                 <th scope="row" class="text-center">{{ $loop->iteration }}</th>
@@ -235,8 +230,8 @@
                                 </td>
                             </tr>
                             @endforeach
-                          </tbody>				  
-                          <tfoot>
+                        </tbody>				  
+                        <tfoot>
                             <tr>
                                 <th class="text-center">#</th>
                                 <th class="text-left">Property</th>
@@ -245,9 +240,9 @@
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Action(s)</th>
                             </tr>
-                          </tfoot>
-                      </table>
-                      </div>
+                        </tfoot>
+                    </table>
+                    </div>
                     @else
                     <p>
                         No payments yet
@@ -257,9 +252,11 @@
                     
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-12">
-                <div class="box p-15">
+        <div class="col-lg-12">
+            <div class="card p-15">
+                <div class="card-body">
 
                     <div class="row">
                         <div class="col-md-6 float-right">
@@ -303,7 +300,7 @@
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <div class="flexslider2">
-                                                        <ul class="slides">
+                                                        <ul class="slides" style="list-style: none">
 
                                                             @if ($property->estatePropertyType)
                                                                 @if ($property->estatePropertyType->propertyType)
@@ -312,7 +309,7 @@
                                                                         <li
                                                                             data-thumb="{{ $photo->getUrl('thumb') }}">
                                                                             <img src="{{ $photo->getUrl() }}"
-                                                                                alt="slide" />
+                                                                                alt="slide" width="300px" />
                                                                         </li>
                                                                     @endforeach
                                                                     
@@ -385,12 +382,12 @@
 
                     @endforelse
                 </div>
-            </div>    
-            
+            </div>
+        </div>    
+        
 
-        </div>
+    </div>
 
-    </section>
 </div>
 
 @push('scripts')
