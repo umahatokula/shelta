@@ -26,8 +26,7 @@
 
             @forelse ($propertyTypes as $propertyType)            
             <div class="col-xl-3 col-md-6 col-12">
-                <div class="box bg-secondary-light pull-up"
-                    style="background-image: url({{ $propertyType->getFirstMedia('propertyTypephotos') ? $propertyType->getFirstMedia('propertyTypephotos')->getUrl('thumb') : null }}); background-position: right bottom; background-repeat: no-repeat;">
+                <div class="box bg-secondary-light pull-up">
                     <div class="box-body">
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-center pr-2 justify-content-between">

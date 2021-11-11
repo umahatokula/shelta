@@ -11,14 +11,6 @@
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-        
-                                <a class="dropdown-item" href="route('logout')"
-                                onclick="event.preventDefault();  this.closest('form').submit();"><i class="ti-lock text-muted mr-2"></i> {{ __('Log Out') }}</a>
-                            </form>
-                        </li>
                     </li>
 
                     <li class="header">Admin</li>
@@ -113,6 +105,14 @@
 							<li><a href="{{ route('settings.index') }}"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Company Profile</a></li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Logout</span>
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> {{ csrf_field() }}</form>
                     </li>
                 </ul>
             </div>

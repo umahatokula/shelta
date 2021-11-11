@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-md-6 mb-4 d-flex justify-content-end">
 
-                            @can('online payment')
+                            @can('record payment')
                             <a @click="show = true" x-show="!show" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right ml-3">Online
                                 Payment</a>
                             
@@ -101,22 +101,22 @@
                                     <form id="onlinePaymentForm">
 
                                         <div class="box-body">
-                                            
-                                            <div class="form-group row">
+
+                                            <div class="mb-3 row">
                                                 <label class="col-form-label col-md-2">Name</label>
                                                 <div class="col-md-10">
                                                     <input value="{{ $client->sname.' '.$client->onames }}" class="form-control" type="text" id="payingName" readonly>
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group row">
+                                            <div class="mb-3 row">
                                                 <label class="col-form-label col-md-2">Email</label>
                                                 <div class="col-md-10">
                                                     <input value="{{ $client->email }}" class="form-control" type="text" id="payingEmail" readonly>
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group row">
+                                            <div class="mb-3 row">
                                                 <label class="col-form-label col-md-2">Property</label>
                                                 <div class="col-md-10">
                                                     
@@ -139,7 +139,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group row">
+                                            <div class="mb-3 row">
                                                 <label class="col-form-label col-md-2">Amount</label>
                                                 <div class="col-md-10">
                                                     <input class="form-control" type="number" max="{{ $propertybalance }}" id="payingAmount">
@@ -219,7 +219,7 @@
                                     
                                     <a  href="{{ route('frontend.clients.mailReciept', [$client->id, $transaction->id]) }}" href="#" class="text-success p-0"
                                         data-original-title="" title="Email Reciept">
-                                        Email
+                                        <i class="fa fa-envelope font-medium-3 mr-2"></i>
                                     </a>
                                 </td>
                             </tr>

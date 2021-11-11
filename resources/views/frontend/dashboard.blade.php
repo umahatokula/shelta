@@ -24,8 +24,8 @@
                         <div class="row">
                             <div class="col-8">
                                 <div>
-                                    <p class="text-muted fw-medium mt-1 mb-2">Orders</p>
-                                    <h4>1,368</h4>
+                                    <p class="text-muted fw-medium mt-1 mb-2">Payment Total</p>
+                                    <h4>&#x20A6; 1,368, 000</h4>
                                 </div>
                             </div>
 
@@ -47,8 +47,8 @@
                         <div class="row">
                             <div class="col-8">
                                 <div>
-                                    <p class="text-muted fw-medium mt-1 mb-2">Revenue</p>
-                                    <h4>$ 32,695</h4>
+                                    <p class="text-muted fw-medium mt-1 mb-2">Last Payment</p>
+                                    <h4>&#x20A6; 32,695</h4>
                                 </div>
                             </div>
 
@@ -67,12 +67,12 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-4">Sales Report</h4>
+                <h4 class="card-title mb-4">Properties</h4>
                 <div class="row">
                     <div class="col-sm-7">
                         <div>
                             <p class="mb-2">01 Jan - 31 Jan, 2020</p>
-                            <h4>$ 27, 253</h4>
+                            <h4>3</h4>
 
                             <p class="mt-4 mb-0"><span class="badge badge-soft-success me-2"> 0.6%
                                     <i class="mdi mdi-arrow-up"></i> </span> From previous period
@@ -104,7 +104,7 @@
                         </li>
                     </ul>
                 </div>
-                <h4 class="card-title mb-4">Email Sent</h4>
+                <h4 class="card-title mb-4">Payment</h4>
 
                 <div id="mixed-chart" class="apex-charts"></div>
             </div>
