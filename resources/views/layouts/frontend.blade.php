@@ -17,7 +17,7 @@
     <link href="{{ asset('frontend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
     <!-- Scripts -->
-    {{-- <script src="{{ asset('assets/js/alpine.min.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/alpine.min.js') }}"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 
 </head>

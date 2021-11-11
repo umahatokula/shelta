@@ -96,6 +96,8 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // clients
+    Route::get('clients/{client}/{transactionId}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
+    Route::get('clients/{client}/{transactionId}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
     Route::get('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile');
     Route::get('clients/{client}/payments', [ClientsController::class, 'payments'])->name('clients.payments');
     Route::get('clients/{client}/properties', [ClientsController::class, 'properties'])->name('clients.properties');

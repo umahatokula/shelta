@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Client;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use PDF;
+use Mail;
 
 class ClientsController extends Controller
 {
@@ -134,11 +137,16 @@ class ClientsController extends Controller
      * @param  mixed $user
      * @return void
      */
-    public function profile(User $user) {
+    public function profile(Client $client) {
 
-        $data['user'] = $user->load('client');
+        $data['client'] = $client->load([
+            'transactions.property.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.estate', 
+            'properties.estatePropertyType.propertyType', 
+            'properties.estatePropertyType.estate'
+        ]);
 
-        return view('frontend.users.profile', $data);
+        return view('frontend.clients.profile', $data);
     }
     
     /**
@@ -204,5 +212,47 @@ class ClientsController extends Controller
         }
 
         return view('admin.clients.show', $data);
+    }
+    
+    /**
+     * downloadReciept
+     *
+     * @param  mixed $clientId
+     * @param  mixed $transactionId
+     * @return void
+     */
+    public function downloadReciept($clientId, $transactionId) {
+
+        $data['client'] = Client::where('id', $clientId)->first();
+        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+
+        $pdfContent = PDF::loadView('pdf.reciept', $data)->setPaper('a4', 'landscape');
+        return $pdfContent->download('reciept.pdf');
+
+    }
+    
+    /**
+     * mailReciept
+     *
+     * @param  mixed $clientId
+     * @param  mixed $transactionId
+     * @return void
+     */
+    public function mailReciept($clientId, $transactionId) {
+
+        $data['client'] = Client::where('id', $clientId)->first();
+        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+
+        $pdfContent = PDF::loadView('pdf.reciept', $data);
+
+        Mail::send('emails.recieptEmail', $data, function($message)use($data, $pdfContent) {
+            $message->to($data['client']->email)
+                    ->subject('Payment Reciept ['.$data['client']->sname.' '.$data['client']->onames.']')
+                    ->attachData($pdfContent->output(), "reciept.pdf");
+        });
+
+        session()->flash('message', 'Email sent successfully.');
+
+        return redirect()->route('frontend.clients.payments', $data['client']->slug);
     }
 }

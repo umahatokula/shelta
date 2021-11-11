@@ -8,12 +8,6 @@
             <div class="page-title-box d-flex align-items-center justify-content-between">
                 <h4 class="page-title mb-0 font-size-18">Payments</h4>
     
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item "><a href="{{ route('frontend.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Payments</li>
-                    </ol>
-                </div>
     
             </div>
         </div>
@@ -69,7 +63,7 @@
                         <div class="col-md-6">
                             <h3 class="box-title">Payments</h3>
                         </div>
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-4 d-flex justify-content-end">
 
                             @can('online payment')
                             <a @click="show = true" x-show="!show" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right ml-3">Online
@@ -148,7 +142,7 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-md-2">Amount</label>
                                                 <div class="col-md-10">
-                                                    <input class="form-control" type="number" max="{{ $propertybalance }}" {{ $propertybalance == 0 ? 'disabled' : '' }} id="payingAmount">
+                                                    <input class="form-control" type="number" max="{{ $propertybalance }}" id="payingAmount">
                                                     <small>Max: {{ $propertybalance }}</small>
                                                 </div>
                                             </div>
@@ -212,8 +206,7 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                        href="#" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
+                                    <a href="{{ route('frontend.clients.downloadReciept', [$client->id, $transaction->id]) }}" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
                                         <i class="fa fa-download font-medium-3 mr-2"></i>
                                     </a>
 
@@ -224,9 +217,9 @@
                                     </a>    
                                     @endif
                                     
-                                    <a wire:click.prevent="mailReciept({{$client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
+                                    <a  href="{{ route('frontend.clients.mailReciept', [$client->id, $transaction->id]) }}" href="#" class="text-success p-0"
                                         data-original-title="" title="Email Reciept">
-                                        <i class="fa fa-envelope-open-o font-medium-3 mr-2"></i>
+                                        Email
                                     </a>
                                 </td>
                             </tr>

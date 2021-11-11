@@ -16,8 +16,8 @@
                         id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         <img class="rounded-circle header-profile-user"
-                            src="assets/images/users/avatar-2.jpg" alt="Header Avatar">
-                        <span class="d-none d-xl-inline-block ms-1">Patrick</span>
+                            src="{{ asset('frontend/assets/images/users/avatar-2.jpg') }}" alt="Header Avatar">
+                        <span class="d-none d-xl-inline-block ms-1">{{ auth()->user()->name }}</span>
                         <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
@@ -46,21 +46,21 @@
             <div>
                 <!-- LOGO -->
                 <div class="navbar-brand-box">
-                    <a href="index.html" class="logo logo-dark">
+                    <a href="{{ route('frontend.dashboard') }}" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="{{ asset('frontend/assets/images/logo-light.png') }}" alt="" height="120">
+                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="120">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="80">
+                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="55">
                         </span>
                     </a>
 
-                    <a href="index.html" class="logo logo-light">
+                    <a href="{{ route('frontend.dashboard') }}" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{{ asset('frontend/assets/images/logo-light.png') }}" alt="" height="120">
+                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="120">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('frontend/assets/images/logo-light.png') }}" alt="" height="80">
+                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="55">
                         </span>
                     </a>
                 </div>
