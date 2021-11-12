@@ -34,16 +34,15 @@ Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name(
 Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend');
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');    
+    return redirect()->route('home');    
 });
 
 
 
 Route::get('/home', function () {
 
-    $user = auth()->user();
-    if ($user->hasRole('client')) {
-        return view('frontend.dashboard');
+    if (auth()->user()->hasRole('client')) {
+        return redirect()->route('frontend.dashboard');
     }
 
     return redirect()->route('dashboard');
@@ -57,6 +56,8 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // clients
+    Route::get('clients/{client}/sendMail', [ClientsController::class, 'sendMail'])->name('clients.sendMail');
+    Route::post('clients/sendMail/post', [ClientsController::class, 'sendMailPost'])->name('clients.sendMail.post');
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
     Route::resource('clients', ClientsController::class);
 
@@ -91,21 +92,22 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
 });
 
-Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
+Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // clients
     Route::get('clients/{client}/{transactionId}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
     Route::get('clients/{client}/{transactionId}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
-    Route::get('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile');
-    Route::get('clients/{client}/payments', [ClientsController::class, 'payments'])->name('clients.payments');
-    Route::get('clients/{client}/properties', [ClientsController::class, 'properties'])->name('clients.properties');
+
+    Route::get('clients/profile', [ClientsController::class, 'profile'])->name('clients.profile');
+    Route::put('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile.updateClientProfileRequest');
+    Route::post('clients/profile/toggle2FA', [ClientsController::class, 'toggle2FA'])->name('clients.profile.toggle2FA');
+
+    Route::get('clients/payments', [ClientsController::class, 'payments'])->name('clients.payments');
+    Route::get('clients/properties', [ClientsController::class, 'properties'])->name('clients.properties');
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
     Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
 
-    // users
-    Route::get('users/{user}/profile', [UsersController::class, 'profile'])->name('users.profile');
-    Route::post('users/{user}/profile', [UsersController::class, 'storeProfile'])->name('users.profile.store');
 
 });

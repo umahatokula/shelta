@@ -19,8 +19,10 @@ class CreateTransactionsTable extends Migration
             $table->foreignId('property_id')->nullable();
             $table->foreign('property_id')->references('id')->on('properties')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('amount')->nullable();
+            $table->string('transaction_number')->unique()->nullable();
             $table->string('type')->nullable();
-            $table->string('transaction_number')->nullable();
+            $table->foreignId('by')->nullable()->comment('User who made or recorded this transaction');
+            $table->string('proof_reference_number')->unique()->nullable();
             $table->date('date')->nullable();
             $table->timestamps();
         });

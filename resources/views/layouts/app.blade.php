@@ -14,8 +14,8 @@
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     <!-- Scripts -->
-    {{-- <script src="{{ asset('assets/js/alpine.min.js') }}"></script> --}}
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="{{ asset('assets/js/alpine.min.js') }}"></script>
+    {{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
@@ -107,6 +107,24 @@
 	<script src="{{ asset('assets/js/pages/advanced-form-element.js') }}"></script>
 	<script src="{{ asset('assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
 
+    <script>
+        $(document).ready(function () {
+
+            $('body').on('click', '[data-toggle="modal"]', function () {
+                url = $(this).data("remote")
+                console.log(url)
+                $($(this).data("target") + ' .modal-body').load(url);
+            });
+
+            $('#confirmationModal').on('show.bs.modal', function (e) {
+                $(this).find('.confirm').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+        });
+
+
+    </script>
+
     @livewire('modal')
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
@@ -117,3 +135,24 @@
 </body>
 
 </html>
+
+
+
+
+  <!-- Modal -->
+  <div class="modal center-modal fade" id="modal-center" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">&nbsp</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Your content comes here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- /.modal -->

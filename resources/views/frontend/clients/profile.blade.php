@@ -49,13 +49,61 @@
                                 <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                                     aria-labelledby="v-pills-home-tab">
                                     <p>
-                                        <livewire:clients.profile :client="$client" />
+                                            {!! Form::model($client, ['route' => ['frontend.clients.profile.updateClientProfileRequest', $client->id], 'method' => 'PUT']) !!}
+                                            
+                                            <div class="mb-3 row">
+                                                <label for="example-text-input" class="col-md-2 col-form-label">Surname Name</label>
+                                                <div class="col-md-10">
+                                                    {!! Form::text('sname', null, ['class' => 'form-control']) !!}
+                                                    @error('sname') <span class="text-danger">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="example-text-input" class="col-md-2 col-form-label">Other Names</label>
+                                                <div class="col-md-10">
+                                                    {!! Form::text('onames', null, ['class' => 'form-control']) !!}
+                                                    @error('onames') <span class="text-danger">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="example-text-input" class="col-md-2 col-form-label">Phone Number</label>
+                                                <div class="col-md-10">
+                                                    {!! Form::number('phone', null, ['class' => 'form-control']) !!}
+                                                    @error('phone') <span class="text-danger">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="example-text-input" class="col-md-2 col-form-label">Email</label>
+                                                <div class="col-md-10">
+                                                    {!! Form::email('email', null, ['class' => 'form-control']) !!}
+                                                    @error('email') <span class="text-danger">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit">Update profile</button>
+                                        </form>
                                     </p>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
                                     aria-labelledby="v-pills-profile-tab">
                                     <p>
-                                        <livewire:clients.two-factor-auth :client="$client" />
+                                        <form action="{{ route('frontend.clients.profile.toggle2FA') }}" method="post">
+                                            @csrf
+
+                                            <div class="mb-3 row my-5">
+                                                <label for="example-text-input" class="col-md-7 col-form-label">Do you want to enable or disable Two Factor Authentication? 
+
+                                                <br> 
+
+                                                (Currently <span class="text-{{ auth()->user()->use_2fa ? 'success' : 'danger' }}">{{ auth()->user()->use_2fa ? 'Enabled' : 'Disabled' }}</span>)</label>
+
+                                                <div class="col-md-5">
+
+                                                    <button class="btn btn-{{ auth()->user()->use_2fa ? 'danger' : 'success' }}" >{{ auth()->user()->use_2fa ? 'Disable Two Factor Authentication' : 'Enable Two Factor Authentication' }}</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
                                     </p>
                                 </div>
                             </div>

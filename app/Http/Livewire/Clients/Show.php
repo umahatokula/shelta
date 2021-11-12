@@ -33,9 +33,10 @@ class Show extends Component
                 'client_id'          => $data['client_id'],
                 'property_id'        => $data['property_id'],
                 'amount'             => $data['amount'],
-                'type'               => 'cr',
+                'type'               => 'online',
                 'transaction_number' => $data['reference'],
                 'date'               => Carbon::now(),
+                'by'                 => auth()->id(),
             ]);
         }
 
@@ -47,6 +48,13 @@ class Show extends Component
             'status'         => $data['status'],
             'amount'         => $data['amount'],
         ]);
+
+        // log this transaction
+        activity()
+            ->by(auth()->user())
+            ->on($transaction)
+            ->withProperties(['is_staff' => false])
+            ->log('online payment');
 
         session()->flash('message', 'Payment successful.');
 
@@ -60,6 +68,7 @@ class Show extends Component
         $this->client = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
             'transactions.property.estatePropertyType.estate', 
+            'transactions.performed_by', 
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);

@@ -19,6 +19,7 @@
         "livewire/livewire": "^2.5",
         "pragmarx/countries": "^0.7.2",
         "protonemedia/laravel-cross-eloquent-search": "^2.4",
+        "spatie/laravel-activitylog": "^3.17",
         "spatie/laravel-medialibrary": "^9.0.0",
         "spatie/laravel-permission": "^5.1",
         "spatie/laravel-sluggable": "^2.6",

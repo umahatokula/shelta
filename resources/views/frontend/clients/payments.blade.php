@@ -195,9 +195,9 @@
                                 <td class="text-center">
                                     
                                     @if ($transaction->onlinePayment)
-                                    <span class="badge badge-primary">online</span>
+                                    <span class="badge bg-primary">online</span>
                                     @else
-                                    <span class="badge badge-danger">recorded</span>
+                                    <span class="badge bg-danger">recorded</span>
                                     @endif
                                 </td>
 
@@ -213,7 +213,7 @@
                                     @if (!$transaction->onlinePayment)
                                     <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
                                         data-original-title="" title="Proof of Payment" target="_blank">
-                                        <i class="fa fa-file-pdf-o font-medium-3 mr-2"></i>
+                                        <i class="fa fa-file-pdf font-medium-3 mr-2"></i>
                                     </a>    
                                     @endif
                                     

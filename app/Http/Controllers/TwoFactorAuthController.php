@@ -34,9 +34,10 @@ class TwoFactorAuthController extends Controller
                 ->exists();
 
         if ($exists) {
-            \Session::put('tfa', auth()->user()->id);
+            \Session::put('user_2fa', auth()->user()->id);
 
-            return redirect()->route('home');
+            // return redirect()->route('home');
+            return redirect()->intended('home');
         }
 
         return redirect()

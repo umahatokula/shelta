@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use Mail;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use PDF;
-use Mail;
+use App\Http\Requests\UpdateClientProfileRequest;
 
 class ClientsController extends Controller
 {
@@ -121,6 +122,26 @@ class ClientsController extends Controller
         $data['client'] = $client;
         return view('admin.clients.add-property', $data);
     }
+
+    public function sendMail(Client $client) {
+        $data['client'] = $client;
+        
+        return view('admin.clients.send-mail', $data);
+    }
+
+    public function sendMailPost(Request $request) {
+        dd($request->all());
+    }
+
+
+
+
+
+
+
+
+
+    //=======================CLIENTS FUNCTIONS=========================
     
     /**
      * login
@@ -137,16 +158,49 @@ class ClientsController extends Controller
      * @param  mixed $user
      * @return void
      */
-    public function profile(Client $client) {
+    public function profile() {
 
-        $data['client'] = $client->load([
-            'transactions.property.estatePropertyType.propertyType', 
-            'transactions.property.estatePropertyType.estate', 
-            'properties.estatePropertyType.propertyType', 
-            'properties.estatePropertyType.estate'
-        ]);
+        $user = auth()->user();
+
+        if ($user->hasRole('staff')) {
+
+            $data['enable'] = $user->staff->use_2fa;
+
+        } else {
+
+            $data['enable'] = $user->client->use_2fa;
+
+            $data['client'] = $user->client->load([
+                'transactions.property.estatePropertyType.propertyType', 
+                'transactions.property.estatePropertyType.estate', 
+                'properties.estatePropertyType.propertyType', 
+                'properties.estatePropertyType.estate'
+            ]);
+        }
+        
 
         return view('frontend.clients.profile', $data);
+    }
+
+    public function updateClientProfileRequest(UpdateClientProfileRequest $request, $id) {
+        dd($request->all());
+
+        $validated = $request->validated();
+    }
+
+    public function toggle2FA() {
+
+        $user = User::findOrFail(auth()->id());
+
+        if ($user) {
+            $user->use_2fa = !$user->use_2fa;
+            $user->save();
+        }
+
+        $status = $user->use_2fa ? 'enabled' : 'disabled';
+
+        session()->flash('message', 'Two factor authentication '. $status);
+        return redirect()->back();
     }
     
     /**
@@ -163,13 +217,14 @@ class ClientsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display payment history of client
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function payments(Client $client)
-    {
+    public function payments() {
+        
+        $client = auth()->user()->client;
         
         $data['client'] = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
@@ -189,13 +244,14 @@ class ClientsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display client properties.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function properties(Client $client)
-    {
+    public function properties() {
+        
+        $client = auth()->user()->client;
         
         $data['client'] = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
@@ -215,7 +271,7 @@ class ClientsController extends Controller
     }
     
     /**
-     * downloadReciept
+     * Download client payment reciept for specifc transaction
      *
      * @param  mixed $clientId
      * @param  mixed $transactionId
@@ -232,7 +288,7 @@ class ClientsController extends Controller
     }
     
     /**
-     * mailReciept
+     * Mail client payment reciept for specifc transaction
      *
      * @param  mixed $clientId
      * @param  mixed $transactionId

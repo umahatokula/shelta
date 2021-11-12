@@ -49,8 +49,6 @@ class AddProperty extends Component
         $this->client = $client;
         $this->paymentPlans = PaymentPlan::all();
         $this->estates = Estate::all();
-        $this->propertyTypes[] = PropertyType::all()->toArray();
-        // dd($this->propertyTypes);
 
         $this->clientProperties = $this->properties = $client->properties->map(function($property) {
 
@@ -65,6 +63,9 @@ class AddProperty extends Component
                 $estate_id = $property->estatePropertyType->estate ? $property->estatePropertyType->estate->id : null;
             }
 
+            // this ensures the property types array matches the number of properties
+            $this->propertyTypes[] = PropertyType::all()->toArray();
+
             return [
                 'property_type_id' => $property_type_id,
                 'estate_id' => $estate_id,
@@ -72,6 +73,8 @@ class AddProperty extends Component
                 'payment_plan_id' => $property->payment_plan_id,
             ];
         })->toArray();
+
+        // dd($this->propertyTypes);
     }
     
     /**

@@ -82,16 +82,24 @@
                                 <label class="col-form-label col-md-2" id="amount">Amount <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
                                     <input wire:model="amount" class="form-control" type="number" max="{{ $propertybalance }}" {{ $propertybalance == 0 ? 'disabled' : '' }}>
-                                    <small>Max: {{ $propertybalance }}</small>
+                                    <span class="d-block"><small>Max: {{ $propertybalance }}</small></span>
                                     @error('amount') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2" id="amount">Date</label>
+                                <label class="col-form-label col-md-2" id="amount">Date <span class="text-danger">*</span></label>
                                 <div class="col-md-10">
                                     <input wire:model="date" class="form-control" type="date">
                                     @error('date') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2" id="proof_reference_number">Proof of payment Ref.<span class="text-danger">*</span></label>
+                                <div class="col-md-10">
+                                    <input wire:model="proof_reference_number" class="form-control" type="text">
+                                    @error('proof_reference_number') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             

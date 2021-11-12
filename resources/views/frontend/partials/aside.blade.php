@@ -29,14 +29,14 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('frontend.clients.payments', auth()->user()->client) }}" class="waves-effect">
+                    <a href="{{ route('frontend.clients.payments') }}" class="waves-effect">
                         <i class="mdi mdi-airplay"></i>
                         <span>Payments</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ route('frontend.clients.properties', auth()->user()->client) }}" class="waves-effect">
+                    <a href="{{ route('frontend.clients.properties') }}" class="waves-effect">
                         <i class="mdi mdi-airplay"></i>
                         <span>My Property</span>
                     </a>
@@ -49,7 +49,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
                         <li>
-                            <a href="{{ route('frontend.clients.profile', auth()->user()->client) }}" class="waves-effect">Profile</a>
+                            <a href="{{ route('frontend.clients.profile') }}" class="waves-effect">Profile</a>
                         </li>
                     </ul>
 

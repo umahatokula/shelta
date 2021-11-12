@@ -33,11 +33,11 @@
                         <div class="bg-login text-center">
                             <div class="bg-login-overlay"></div>
                             <div class="position-relative">
-                                <h5 class="text-white font-size-20">Welcome Back !</h5>
-                                <p class="text-white-50 mb-0">Sign in to continue to Qovex.</p>
-                                <a href="index.html" class="logo logo-admin mt-4">
-                                    <img src="assets/images/logo-sm-dark.png" alt="" height="30">
-                                </a>
+                                <p class="text-white-50 mb-0">
+                                    <a href="{{ url('/') }}" class="">
+                                        <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="80">
+                                    </a>
+                                </p>
                             </div>
                         </div>
                         <div class="card-body pt-5">
@@ -49,16 +49,14 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="email">Email</label>
                                         <input name="email" type="email" value="{{ old('email') }}"
-                                            class="form-control pl-15 {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                            placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                                            class="form-control pl-15 {{ $errors->has('email') ? ' is-invalid' : '' }}" aria-label="Email" aria-describedby="email-addon">
                                         <x-jet-input-error for="email"></x-jet-input-error>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" for="userpassword">Password</label>
                                         <input name="password" type="password"
-                                            class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                            placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                                            class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" aria-label="Password" aria-describedby="password-addon">
                                         <x-jet-input-error for="password"></x-jet-input-error>
                                     </div>
 

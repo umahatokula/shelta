@@ -113,6 +113,9 @@ class Edit extends Component
                 $estate = $property->estatePropertyType->estate;
             }
 
+            // this ensures the property types array matches the number of properties
+            $this->propertyTypes[] = PropertyType::all()->toArray();
+
             return [
                 'property_type_id' => $propertyType ? $propertyType->id : null,
                 'estate_id' => $estate ? $estate->id : null,
@@ -127,7 +130,6 @@ class Edit extends Component
         $this->genders = Gender::all();
         $this->states = State::all();
         $this->estates = Estate::all();
-        $this->propertyTypes[] = PropertyType::all()->toArray();
         $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();      
 
     }
