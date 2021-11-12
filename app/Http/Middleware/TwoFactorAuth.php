@@ -17,7 +17,7 @@ class TwoFactorAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Session::has('user_2fa')) {
+        if (!Session::has('user_2fa') && auth()->user()->use_2fa) {
             return redirect()->route('2fa.index');
         }
 
