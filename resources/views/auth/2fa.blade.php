@@ -44,7 +44,7 @@
                                 <form method="POST" action="{{ route('2fa.store') }}">
                                     @csrf
 
-                                    <p class="text-center">We sent code to your phone : {{ substr(auth()->user()->email, 0, 5) . '******' . substr(auth()->user()->phone,  -2) }}</p>
+                                    <p class="text-center">We sent an OTP to your email : {{ substr(auth()->user()->email, 0, 5) . '******' . substr(auth()->user()->phone,  -2) }}</p>
   
                                     <div>
                                         @if ($message = Session::get('success'))
@@ -75,7 +75,7 @@
                                     <div class="row">
 
                                         <div class="mb-3">
-                                            <label class="form-label" for="email">Code</label>
+                                            <label class="form-label" for="email">OTP</label>
                                             <input id="code" type="number" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required autocomplete="code" autofocus aria-label="Email" aria-describedby="email-addon">
                                             <x-jet-input-error for="email"></x-jet-input-error>
                                         </div>
