@@ -37,7 +37,7 @@
                         @can('manage clients')
                             <div class="col-12 float-right">
                                 <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
-                                 <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right mx-3">Send email</a>
+                                 <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="waves-effect waves-light btn btn-warning btn-sm float-right mx-3">Send email</a>
                             </div>  
                         @endcan
                         
