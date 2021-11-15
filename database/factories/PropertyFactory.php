@@ -22,10 +22,10 @@ class PropertyFactory extends Factory
     public function definition()
     {
         return [
-            'estate_property_type_id' => rand(1, 100),
-            'client_id' => rand(1, 100),
+            'estate_property_type_id' => rand(1, 6),
+            // 'client_id' => rand(1, 100),
             'unique_number' => rand(1000, 9999),
-            'payment_plan_id' => rand(1, 4),
+            // 'payment_plan_id' => rand(1, 4),
         ];
     }
 }

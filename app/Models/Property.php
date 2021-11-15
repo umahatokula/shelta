@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Client;
+use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use App\Models\EstatePropertyType;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,16 @@ class Property extends Model
      * @return void
      */
     public function estatePropertyType() {
-        return $this->belongsTo(EstatePropertyType::class);
+        return $this->belongsTo(EstatePropertyType::class)->withDefault();
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function scopeUnallocated($query) {
+        return $query->where('client_id', null);
     }
     
     /**
@@ -29,7 +39,17 @@ class Property extends Model
      * @return void
      */
     public function client() {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class)->withDefault();
+    }
+    
+    /**
+     * paymentPlan
+     *
+     * @return void
+     */
+    public function paymentPlan() {
+
+        return $this->belongsTo(PaymentPlan::class)->withDefault();
     }
     
     /**

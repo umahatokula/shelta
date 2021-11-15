@@ -19,7 +19,7 @@ class PropertiesTableSeeder extends Seeder
         \DB::table('properties')->truncate();
 
         // factory(Property::class, 10)->create();
-        \App\Models\Property::factory(200)->create();
+        \App\Models\Property::factory(10)->create();
 
         \Schema::enableForeignKeyConstraints();
     }

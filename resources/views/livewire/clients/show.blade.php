@@ -118,7 +118,7 @@
             @if ($client->transactions->isNotEmpty())
                 
             <div class="table-responsive">
-            <table id="payments" class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
+                <table id="payments" class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
@@ -138,7 +138,7 @@
                         <td>
                             @if ($transaction->property)
                                 @if ($transaction->property->estatePropertyType)
-                                    <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
+                                    <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }} [{{ $transaction->property->unique_number }}]
                                 @endif
                             @endif
                         </td>
@@ -193,7 +193,7 @@
                     </tr>
                     </tfoot>
                 </table>
-                </div>
+            </div>
             @else
             <p>
                 No payments yet

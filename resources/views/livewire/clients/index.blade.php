@@ -47,14 +47,6 @@
                     <!-- /.box-header -->
                     <div class="box-body">
 
-                        <div>
-                            @if (session()->has('message'))
-                                <div class="alert alert-success">
-                                    {{ session('message') }}
-                                </div>
-                            @endif
-                        </div>
-
                         <div class="table-responsive-sm">
                             <table class="table mb-0">
                                 <thead>

@@ -20,15 +20,15 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         \App\Models\Client::factory(100)->create();
-        // \App\Models\Property::factory(10000)->create();
-        // \App\Models\EstatePropertyType::factory(20000)->create();
+        // \App\Models\Property::factory(20)->create();
+        // \App\Models\EstatePropertyType::factory(6)->create();
         \App\Models\Staff::factory(10)->create();
 
         $this->call([
             EstatesTableSeeder::class,
             PropertyTypesTableSeeder::class,
-            // EstatePropertyTypeTableSeeder::class,
-            // PropertiesTableSeeder::class,
+            EstatePropertyTypeTableSeeder::class,
+            PropertiesTableSeeder::class,
             RolesTableSeeder::class,
             StatesTableSeeder::class,
             LGAsTableSeeder::class,

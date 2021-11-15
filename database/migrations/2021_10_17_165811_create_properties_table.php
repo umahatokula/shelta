@@ -18,7 +18,7 @@ class CreatePropertiesTable extends Migration
             $table->foreignId('estate_property_type_id')->nullable();
             $table->foreign('estate_property_type_id')->references('id')->on('estate_property_type')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('client_id')->nullable();
-            $table->string('unique_number')->nullable();
+            $table->string('unique_number')->unique()->nullable();
             $table->foreignId('payment_plan_id')->nullable();
             $table->timestamps();
         });

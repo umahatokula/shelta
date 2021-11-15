@@ -22,7 +22,7 @@ class EstatePropertyTypeFactory extends Factory
     public function definition()
     {
         return [
-            'estate_id' => rand(1, 2),
+            'estate_id' => rand(1, 3),
             'property_type_id' => rand(1, 3),
             'price' => 80000000,
             'number_of_units' => rand(15, 35),

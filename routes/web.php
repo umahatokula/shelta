@@ -9,6 +9,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PaymentPlansController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\PropertyTypesController;
@@ -29,15 +30,13 @@ use App\Http\Controllers\EstatePropertyTypeController;
 Route::get('clients/login', [ClientsController::class, 'login'])->name('clients.login');
 Auth::routes();
 
-Route::get('two-factor-auth', [TwoFactorAuthController::class, 'index'])->name('2fa.index');
-Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name('2fa.store');
-Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend');
+Route::get('two-factor-auth', [TwoFactorAuthController::class, 'index'])->name('2fa.index')->middleware(['auth']);
+Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name('2fa.store')->middleware(['auth']);
+Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend')->middleware(['auth']);
 
 Route::get('/', function () {
     return redirect()->route('home');    
 });
-
-
 
 Route::get('/home', function () {
 
@@ -48,7 +47,6 @@ Route::get('/home', function () {
     return redirect()->route('dashboard');
     
 })->name('home')->middleware('auth');
-
 
 
 Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
@@ -65,6 +63,9 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
     Route::get('transactions/create/{client}', [TransactionsController::class, 'create'])->name('transactions.create');
     Route::post('transactions', [TransactionsController::class, 'index'])->name('transactions.store');
+
+    // properties
+    Route::resource('properties', PropertiesController::class);
 
     // estates
     Route::resource('estates', EstatesController::class);
@@ -83,6 +84,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
 
     // staff
+    Route::get('staff/profile', [StaffController::class, 'profile'])->name('staff.profile');
     Route::resource('staff', StaffController::class);
 
     // users

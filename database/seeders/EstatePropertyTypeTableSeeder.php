@@ -19,7 +19,7 @@ class EstatePropertyTypeTableSeeder extends Seeder
         \DB::table('estate_property_type')->truncate();
 
         // factory(EstatePropertyType::class, 10)->create();
-        \App\Models\EstatePropertyType::factory(100)->create();
+        \App\Models\EstatePropertyType::factory(6)->create();
 
         \Schema::enableForeignKeyConstraints();
     }

@@ -73,13 +73,13 @@
                             </div>
                             <hr class="my-15">
 
-                            @foreach ($properties as $key => $property)
+                            @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
 
-                            <div class="row mb-5">
+                            <div class="row" style="margin-bottom: 25px">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Estate</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id"wire:change="getPropertyTypes($event.target.value, {{$key}})" class="form-select form-control"
+                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id" wire:change="onSelectEstate($event.target.value, {{$key}})" class="form-select form-control"
                                             required>
                                             <option value="">Please select one</option>
                                             @foreach ($estates as $estate)
@@ -91,13 +91,29 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Property Type</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.property_type_id"
+                                        <select wire:model.lazy="clientProperties.{{$key}}.property_type_id" wire:change="onSelectPropertyType($event.target.value, {{$key}})"
                                             class="form-select form-control" required>
                                             <option value="">Please select one</option>
                                             @foreach ($propertyTypes[$key] as $propertyType)
                                             <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Property</label>
+                                        <select wire:model.lazy="clientProperties.{{$key}}.property_id"
+                                            class="form-select form-control" required>
+                                            <option value="">Please select one</option>
+                                            @isset($properties[$key])
+                                                @foreach ($properties[$key] as $property)
+                                                <option value="{{ $property['id'] }}">{{ $property['unique_number'] }}</option>
+                                                @endforeach
+                                            @endisset
+                                            
+                                        </select>
+                                        @error('price') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -110,14 +126,6 @@
                                             <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="form-label">Property Number</label>
-                                        <input wire:model.lazy="clientProperties.{{$key}}.unique_number"
-                                            class="form-control" type="text" required>
-                                        @error('price') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-1 pt-4 d-flex justify-content-end align-items-center">

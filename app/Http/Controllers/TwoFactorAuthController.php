@@ -14,7 +14,7 @@ class TwoFactorAuthController extends Controller
      */
     public function index()
     {
-        return view('auth.2fa');
+        return auth()->user()->hasRole('staff') ? view('auth.2fa_staff') : view('auth.2fa_client');
     }
 
     /**

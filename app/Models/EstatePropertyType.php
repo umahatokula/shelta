@@ -22,7 +22,7 @@ class EstatePropertyType extends Model
      * @return void
      */
     public function propertyType() {
-        return $this->belongsTo(PropertyType::class);
+        return $this->belongsTo(PropertyType::class)->withDefault();
     }
     
     /**
@@ -31,7 +31,7 @@ class EstatePropertyType extends Model
      * @return void
      */
     public function estate() {
-        return $this->belongsTo(Estate::class);
+        return $this->belongsTo(Estate::class)->withDefault();
     }
     
     /**

@@ -45,15 +45,22 @@ class Create extends Component
     public $genders;
     public $staffs;
     public $paymentPlans;
-    public $estates;
-    public $states;
     public $propertyTypes;
+    public $propertyType_id;
+    public $estates;
+    public $estate_id;
+    public $properties;
+    public $estatePropertyType;
+
+    public $allPropertyTypes;
+    public $allProperties;    
+
     public $clientProperties = [];
-    public $properties = [
+    public $clientSubscribedProperties = [ // properties already subscribed to by client
         [
             'estate_id' => null,
             'property_type_id' => null,
-            'unique_number' => null,
+            'property_id' => null,
         ]
     ];
 
@@ -62,6 +69,11 @@ class Create extends Component
         'onames' => 'required|string|min:6',
         'phone' => 'required|string|max:500',
         'email' => 'email',
+        'clientProperties' => 'array',
+        'clientProperties.*.estate_id' => 'required',
+        'clientProperties.*.property_type_id' => 'required',
+        'clientProperties.*.property_id' => 'required',
+        'clientProperties.*.payment_plan_id' => 'required',
     ];
 
     protected $messages = [
@@ -82,9 +94,11 @@ class Create extends Component
         $this->states = State::all();
         $this->estates = Estate::all();
         $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
-        // dd($this->countries);
+        $this->allPropertyTypes = PropertyType::all()->toArray();  // get all property types once on mount of component to reduce DB calls
+        $this->allProperties    = Property::all();                 // get all properties once on mount of component to reduce DB calls
         
-        $this->propertyTypes[] = PropertyType::all()->toArray();
+        $this->propertyTypes[] = [];
+        $this->properties[] = [];
     }
     
     /**
@@ -93,13 +107,16 @@ class Create extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypes($estateId, $key) {
+    public function onSelectEstate($estateId, $key) {
 
-        $estate = Estate::findOrFail($estateId);
+        if (empty($estateId)) {
+            return $this->propertyTypes = [];
+        }
 
         // add property types to array
-        $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray(); 
+        $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
 
+        $this->estate_id = $estateId;
     }
     
     /**
@@ -108,24 +125,24 @@ class Create extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypesPrice($propertyId) {
+    public function onSelectPropertyType($propertyTypeId, $key) {
 
-        dd($this->clientProperties);
-        $estate = Estate::findOrFail($propertyId);
-        $this->propertyTypes = $estate->propertyTypes;  
-
+        $this->propertyType_id = $propertyTypeId;
+        
+        $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
     }
 
 
     public function addProperty() {
-        $this->properties[] = [
+        $this->clientSubscribedProperties[] = [
             'estate_id' => null,
             'property_type_id' => null,
-            'unique_number' => null,
+            'property_id' => null,
+            'payment_plan_id' => null,
         ];
         
-        // add property types to array
-        $this->propertyTypes[] = PropertyType::all()->toArray();
+        // add property types & properties to array
+        $this->propertyTypes[] = [];
     }
     
     /**
@@ -135,11 +152,31 @@ class Create extends Component
      * @return void
      */
     public function removeProperty($key) {
-        array_splice($this->properties, $key, 1);
+        // dd($this->propertyTypes, $this->properties, $key);
+        
+        array_splice($this->clientSubscribedProperties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
         
         // remove property types from array
         array_splice($this->propertyTypes, $key, 1);
+        array_splice($this->properties, $key, 1);
+    }
+    
+    /**
+     * Merge properties not allocaated to anyone and properties allocated to client.
+     *
+     * @param  mixed $estate_id
+     * @param  mixed $property_type_id
+     * @return void
+     */
+    public function getUnallocatedAndClientAllocatedProperties($estate_id, $property_type_id) {
+
+        // merge properties not allocaated to anyone and properties allocated to client. This helps in the case where properties are to be removed from a client. We thereofre have ot  make avvailble those properties already allocaated to him/her
+
+        $this->estatePropertyType = EstatePropertyType::where(['estate_id' => $estate_id, 'property_type_id' => $property_type_id])->first();
+
+        return $this->allProperties->where('client_id', null)->where('estate_property_type_id', $this->estatePropertyType->id)->toArray(); // get unallocated properties
+
     }
     
     /**
@@ -176,20 +213,15 @@ class Create extends Component
         $client->agent_id              = $this->agent_id;
         $client->save();
 
-        // dd($this->clientProperties);
+        Property::where('client_id', $client->id)->update(['client_id' => null]); // update clients existing properties
+
         foreach ($this->clientProperties as $key => $clientProperty) {
 
-            $estatePropertyType = EstatePropertyType::where([
-                'estate_id' => $clientProperty['estate_id'],
-                'property_type_id' => $clientProperty['property_type_id'],
-            ])->first();
-
-            Property::create([
-                'estate_property_type_id' => $estatePropertyType->id,
-                'unique_number'           => $clientProperty['unique_number'],
+            $updated = Property::where('id', $clientProperty['property_id'])->update([
                 'client_id'               => $client->id,
                 'payment_plan_id'         => $clientProperty['payment_plan_id'],
             ]);
+
         }
 
         $user = User::create([

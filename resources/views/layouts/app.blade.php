@@ -140,7 +140,7 @@
 
 
   <!-- Modal -->
-  <div class="modal center-modal fade" id="modal-center" tabindex="-1">
+  <div id="modal-center" class="modal center-modal fade" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -150,9 +150,30 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Your content comes here</p>
+          <p>loading...</p>
         </div>
       </div>
     </div>
   </div>
+<!-- /.modal -->
+
+
+<div id="modal-large" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">&nbsp</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>loading...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <!-- /.modal -->

@@ -16,7 +16,9 @@ use PragmaRX\Countries\Package\Countries;
 
 class Edit extends Component
 {
-    public  $sname,
+    public Client $client;
+
+    public $sname,
             $onames,
             $phone,
             $email,
@@ -42,29 +44,37 @@ class Edit extends Component
 
     public $genders;
     public $staffs;
-    public $paymentPlans;
-    public $estates;
     public $states;
+
+    public $paymentPlans;
     public $propertyTypes;
+    public $propertyType_id;
+    public $estates;
+    public $estate_id;
+    public $properties;
+    public $estatePropertyType;
+    
+    public $allPropertyTypes;
+    public $allProperties;  
+
     public $clientProperties = [];
-    public $properties = [
+    public $clientSubscribedProperties = [ // properties already subscribed to by client
         [
             'estate_id' => null,
             'property_type_id' => null,
-            'unique_number' => null,
+            'property_id' => null,
         ]
-    ];
-    public Client $client;
+    ]; 
 
     protected $rules = [
-        'sname' => 'required|string|min:6',
-        'onames' => 'required|string|min:6',
+        'sname' => 'required|string|min:2',
+        'onames' => 'required|string|min:2',
         'phone' => 'required|string|max:500',
         'email' => 'email',
         'clientProperties' => 'array',
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
-        'clientProperties.*.unique_number' => 'required',
+        'clientProperties.*.property_id' => 'required',
         'clientProperties.*.payment_plan_id' => 'required',
     ];
 
@@ -104,26 +114,33 @@ class Edit extends Component
         $this->employer_phone        = $client->employer_phone;
         $this->payment_plan_id       = $client->payment_plan_id;
         $this->agent_id              = $client->agent_id;
-        
-        
-        $this->clientProperties = $this->properties = $client->properties->map(function($property) {
 
-            if ($property->estatePropertyType) {
-                $propertyType = $property->estatePropertyType->propertyType;
-                $estate = $property->estatePropertyType->estate;
+        $this->allPropertyTypes = PropertyType::all()->toArray();  // get all property types once on mount of component to reduce DB calls
+        $this->allProperties    = Property::all();                 // get all properties once on mount of component to reduce DB calls
+
+        $this->clientProperties = $this->clientSubscribedProperties = $client->properties->map(function($property) {
+
+            $property_type_id = null;
+            $estate_id = null;
+            
+            if($property->estatePropertyType) {
+                $property_type_id = $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->id : null;
+                $estate_id = $property->estatePropertyType->estate ? $property->estatePropertyType->estate->id : null;
             }
 
             // this ensures the property types array matches the number of properties
-            $this->propertyTypes[] = PropertyType::all()->toArray();
+            $this->propertyTypes[] = $this->allPropertyTypes;
+
+            $this->properties[] = $this->getUnallocatedAndClientAllocatedProperties($estate_id, $property_type_id);
 
             return [
-                'property_type_id' => $propertyType ? $propertyType->id : null,
-                'estate_id' => $estate ? $estate->id : null,
-                'unique_number' => $property->unique_number,
+                'property_type_id' => $property_type_id,
+                'estate_id' => $estate_id,
+                'property_id' => $property->id,
                 'payment_plan_id' => $property->payment_plan_id,
             ];
+
         })->toArray();
-        // dd($this->clientProperties);
 
         $this->paymentPlans = PaymentPlan::all();
         $this->staffs = Staff::all();
@@ -140,7 +157,7 @@ class Edit extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypes($estateId, $key) {
+    public function onSelectEstate($estateId, $key) {
 
         if (empty($estateId)) {
             return $this->propertyTypes = [];
@@ -149,6 +166,7 @@ class Edit extends Component
         // add property types to array
         $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
 
+        $this->estate_id = $estateId;
     }
     
     /**
@@ -157,26 +175,28 @@ class Edit extends Component
      * @param  mixed $estateId
      * @return void
      */
-    public function getPropertyTypesPrice($propertyId) {
+    public function onSelectPropertyType($propertyTypeId, $key) {
 
-        dd($this->clientProperties);
-        $estate = Estate::findOrFail($propertyId);
-        $this->propertyTypes = $estate->propertyTypes;  
-
+        $this->propertyType_id = $propertyTypeId;
+        
+        $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
     }
-
-
+    
+    /**
+     * addProperty
+     *
+     * @return void
+     */
     public function addProperty() {
-        // dd($this->properties);
-        $this->properties[] = [
+        $this->clientSubscribedProperties[] = [
             'estate_id' => null,
             'property_type_id' => null,
-            'unique_number' => null,
+            'property_id' => null,
             'payment_plan_id' => null,
         ];
         
-        // add property types to array
-        $this->propertyTypes[] = PropertyType::all()->toArray();
+        // add empty property types array
+        $this->propertyTypes[] = [];
     }
     
     /**
@@ -186,11 +206,31 @@ class Edit extends Component
      * @return void
      */
     public function removeProperty($key) {
-        array_splice($this->properties, $key, 1);
+        array_splice($this->clientSubscribedProperties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
         
         // remove property types from array
         array_splice($this->propertyTypes, $key, 1);
+        array_splice($this->properties, $key, 1);
+    }
+    
+    /**
+     * Merge properties not allocaated to anyone and properties allocated to client.
+     *
+     * @param  mixed $estate_id
+     * @param  mixed $property_type_id
+     * @return void
+     */
+    public function getUnallocatedAndClientAllocatedProperties($estate_id, $property_type_id) {
+
+        // merge properties not allocaated to anyone and properties allocated to client. This helps in the case where properties are to be removed from a client. We thereofre have ot  make avvailble those properties already allocaated to him/her
+
+        $this->estatePropertyType = EstatePropertyType::where(['estate_id' => $estate_id, 'property_type_id' => $property_type_id])->first();
+
+        $unallocated = $this->allProperties->where('client_id', null); // get unallocated properties
+        $allocatedToClient = $this->allProperties->where('client_id', $this->client->id); // get properties allocated to client
+
+        return $unallocated->merge($allocatedToClient)->where('estate_property_type_id', $this->estatePropertyType->id)->toArray();
     }
  
     public function save()
@@ -222,21 +262,15 @@ class Edit extends Component
         $client->agent_id              = $this->agent_id;
         $client->save();
 
-        Property::where('client_id', $client->id)->delete(); // delete clients existing properties
+        Property::where('client_id', $this->client->id)->update(['client_id' => null]); // update clients existing properties
 
         foreach ($this->clientProperties as $key => $clientProperty) {
 
-            $estatePropertyType = EstatePropertyType::where([
-                'estate_id'        => $clientProperty['estate_id'],
-                'property_type_id' => $clientProperty['property_type_id'],
-            ])->first();
-
-            Property::create([
-                'estate_property_type_id' => $estatePropertyType->id,
-                'unique_number'           => $clientProperty['unique_number'],
-                'client_id'               => $client->id,
+            $updated = Property::where('id', $clientProperty['property_id'])->update([
+                'client_id'               => $this->client->id,
                 'payment_plan_id'         => $clientProperty['payment_plan_id'],
             ]);
+
         }
 
         session()->flash('message', 'Client successfully added.');

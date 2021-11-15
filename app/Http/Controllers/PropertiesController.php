@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Staff;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
-class StaffController extends Controller
+class PropertiesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        return view('admin.staff.list-staff');
+        return view('admin.properties.index');
     }
 
     /**
@@ -24,7 +24,7 @@ class StaffController extends Controller
      */
     public function create()
     {
-        return view('admin.staff.create-staff');
+        return view('admin.properties.create');
     }
 
     /**
@@ -41,10 +41,10 @@ class StaffController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Staff  $staff
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Staff $staff)
+    public function show($id)
     {
         //
     }
@@ -52,23 +52,23 @@ class StaffController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Staff  $staff
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Staff $staff)
+    public function edit(Property $property)
     {
-        $data['staff'] = $staff;
-        return view('admin.staff.edit-staff', $data);
+        $data['property'] = $property;
+        return view('admin.properties.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Staff  $staff
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Staff $staff)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,18 +76,11 @@ class StaffController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Staff  $staff
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Staff $staff)
+    public function destroy($id)
     {
         //
-    }
-
-    public function profile() {
-
-        $data['staff'] = auth()->user()->staff;
-
-        return view('admin.staff.profile', $data);
     }
 }

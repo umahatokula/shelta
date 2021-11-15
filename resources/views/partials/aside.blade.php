@@ -30,6 +30,20 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
+                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Properties
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('properties.index') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>All Properties</a></li>
+                            <li><a href="{{ route('properties.create') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Add Property</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
                             <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Estates
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
@@ -100,6 +114,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+							<li><a href="{{ route('staff.profile') }}"><i class="icon-Commit"><span class="path1"></span><span
+											class="path2"></span></i>My Profile</a></li>
 							<li><a href="{{ route('users.index') }}"><i class="icon-Commit"><span class="path1"></span><span
 											class="path2"></span></i>Users</a></li>
 							<li><a href="{{ route('settings.index') }}"><i class="icon-Commit"><span class="path1"></span><span
