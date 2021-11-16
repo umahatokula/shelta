@@ -92,15 +92,25 @@ class EditEstate extends Component
             return $property['property_id'];
         });
 
-        $estate->propertyTypes()->sync($updatedProperties); // detach existing properties
-
         // attach new properties
+        $attachedPropertyTypes = [];
         foreach($this->addedProperties as $property) {
-            EstatePropertyType::where(['estate_id' => $estate->id, 'property_type_id' => $property['property_id']])->update([
-                'price' => $property['price'], 
-                'number_of_units' => $property['number_of_units']
-            ]);
+            EstatePropertyType::updateOrCreate(
+                [
+                    'estate_id' => $estate->id, 
+                    'property_type_id' => $property['property_id'],
+                ],
+                [
+                    'price' => $property['price'], 
+                    'number_of_units' => $property['number_of_units']
+                ]
+            );
+
+            $attachedPropertyTypes[] = $property['property_id'];
         }
+
+        $detachedPropertyTypes = EstatePropertyType::whereNotIn('property_type_id', $attachedPropertyTypes)->where('estate_id', $estate->id)->pluck('property_type_id');
+        $estate->propertyTypes()->detach($detachedPropertyTypes); // detach existing properties
 
         session()->flash('message', 'Estate successfully added.');
 

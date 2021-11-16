@@ -1,4 +1,4 @@
-<div>
+<div class="row">
 
     @if (session()->has('message'))
     <div class="col-lg-12">

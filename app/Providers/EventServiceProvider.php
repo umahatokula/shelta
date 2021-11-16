@@ -23,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         OPTGenerated::class => [
             SendOTPNotification::class
         ],
+        'App\Events\PaymentMade' => [
+            'App\Listeners\SendReceiptNotification'
+        ],
     ];
 
     /**

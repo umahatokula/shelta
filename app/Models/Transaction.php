@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Client;
 use App\Models\Property;
 use App\Models\OnlinePayment;
 use Spatie\MediaLibrary\HasMedia;
@@ -18,9 +19,23 @@ class Transaction extends Model implements HasMedia
     protected $fillable = ['client_id', 'property_id', 'amount', 'type', 'date', 'transaction_number', 'proof_reference_number', 'by'];
 
     protected $dates = ['date'];
-
+    
+    /**
+     * property
+     *
+     * @return void
+     */
     public function property() {
         return $this->belongsTo(Property::class);
+    }
+    
+    /**
+     * client
+     *
+     * @return void
+     */
+    public function client() {
+        return $this->belongsTo(Client::class);
     }
         
     /**
@@ -31,7 +46,12 @@ class Transaction extends Model implements HasMedia
     public function onlinePayment() {
         return $this->hasOne(OnlinePayment::class);
     }
-
+    
+    /**
+     * performed_by
+     *
+     * @return void
+     */
     public function performed_by() {
         return $this->belongsTo(User::class, 'by', 'id')->withDefault();
     }

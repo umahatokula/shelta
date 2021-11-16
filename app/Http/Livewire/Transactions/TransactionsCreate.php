@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Transactions;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Property;
+use App\Events\PaymentMade;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
 use Livewire\WithFileUploads;
@@ -75,6 +76,7 @@ class TransactionsCreate extends Modal
      * @return void
      */
     public function save() {
+        
         $this->validate();
  
         $transaction = Transaction::create([
@@ -100,7 +102,11 @@ class TransactionsCreate extends Modal
                 ->withProperties(['is_staff' => true])
                 ->log('payment recorded');
 
-        session()->flash('message', 'Payment successful.');
+        // dispatch event
+        PaymentMade::dispatch($transaction);
+
+        // session()->flash('message', 'Payment successful.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
 
         redirect()->route('clients.show', $this->client->slug);
     }

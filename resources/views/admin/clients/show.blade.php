@@ -56,12 +56,9 @@
                 </div>
             </div>
 
-            <div class="col-12">
-
-                <livewire:clients.show :client="$client" />
-
-            </div>
-
         </div>
+
+        <livewire:clients.show :client="$client" />
+        
     </section>
 @endsection

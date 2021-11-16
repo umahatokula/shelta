@@ -82,7 +82,8 @@ class CreateProperty extends Component
             'estate_property_type_id' => $this->estatePropertyType->id,
         ]);
 
-        session()->flash('message', 'Property added successfully');
+        // session()->flash('message', 'Property added successfully');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Property added successfully']);
 
         redirect()->route('properties.index');
     }

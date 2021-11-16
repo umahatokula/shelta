@@ -2,14 +2,16 @@
 
 namespace App\Http\Livewire\Clients;
 
+use PDF;
 use Mail;
 use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Property;
-use PDF;
+use App\Events\PaymentMade;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
+use App\Mail\PaymentMadeMailable;
 
 class Show extends Component
 {
@@ -56,7 +58,11 @@ class Show extends Component
             ->withProperties(['is_staff' => false])
             ->log('online payment');
 
-        session()->flash('message', 'Payment successful.');
+        // dispatch event
+        PaymentMade::dispatch($transaction);
+
+        // session()->flash('message', 'Payment successful.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
 
         redirect()->route('clients.show', $this->client->slug);
         
@@ -105,20 +111,17 @@ class Show extends Component
      */
     public function mailReciept($clientId, $transactionId) {
 
-        $data['client'] = Client::where('id', $clientId)->first();
-        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
 
-        $pdfContent = PDF::loadView('pdf.reciept', $data);
+        // session()->flash('message', 'Email sent successfully.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
 
-        Mail::send('emails.recieptEmail', $data, function($message)use($data, $pdfContent) {
-            $message->to($data['client']->email)
-                    ->subject('Payment Reciept ['.$data['client']->sname.' '.$data['client']->onames.']')
-                    ->attachData($pdfContent->output(), "reciept.pdf");
-        });
+        // redirect()->route('clients.show', $this->client->slug);
+    }
 
-        session()->flash('message', 'Email sent successfully.');
-
-        redirect()->route('clients.show', $this->client->slug);
+    public function showToastr() {
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'It works']);
     }
 
     public function render()
