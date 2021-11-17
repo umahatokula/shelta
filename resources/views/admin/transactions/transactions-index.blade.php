@@ -1,3 +1,5 @@
-<div>
-    {{-- Because she competes with no one, no one can compete with her. --}}
-</div>
+@extends('layouts.app')
+
+@section('content')
+    <livewire:transactions.list-transactions />
+@endsection

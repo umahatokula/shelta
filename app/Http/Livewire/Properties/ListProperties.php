@@ -26,7 +26,7 @@ class ListProperties extends Component
     public function render()
     {
         return view('livewire.properties.list-properties', [
-            'properties' => Property::where('unique_number', 'LIKE', '%'.$this->search.'%')->paginate(10),
+            'properties' => Property::where('unique_number', 'LIKE', '%'.$this->search.'%')->paginate(20),
         ]);
     }
 }

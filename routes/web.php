@@ -92,6 +92,9 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
     // search
     Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
+
+    // transactions
+    Route::resource('transactions', TransactionsController::class);
 });
 
 Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {

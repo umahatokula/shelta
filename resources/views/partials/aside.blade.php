@@ -103,6 +103,12 @@
                                             class="path1"></span><span class="path2"></span></i>Add Staff</a></li>
                         </ul>
                     </li>
+                    <li class="">
+                        <a href="{{ route('transactions.index') }}">
+                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
 					
 					<li class="header">Settings</li>
                     <li class="treeview">
