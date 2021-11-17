@@ -31,6 +31,6 @@ class SendReceiptNotification
      */
     public function handle(PaymentMade $event)
     {
-        Mail::to($event->transaction->client)->queue(new PaymentMadeMailable($event->transaction));
+        Notification::send($event->transaction->client, new PaymentMadeNotification($event->transaction));
     }
 }

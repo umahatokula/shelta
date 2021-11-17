@@ -113,3 +113,10 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(func
 
 
 });
+
+
+Route::get('/mailable', function () {
+    $transaction = App\Models\Transaction::find(1);
+
+    return new App\Mail\PaymentMadeMailable($transaction);
+});

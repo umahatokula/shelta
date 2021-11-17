@@ -85,7 +85,7 @@
         line-height: inherit;
       }
       .btn-primary table td:hover {
-        background-color: #34495e !important;
+        background-color: #f2f5f8 !important;
       }
       .btn-primary a:hover {
         background-color: #34495e !important;
@@ -111,8 +111,8 @@
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hi there,</p>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Sometimes you just want to send a simple HTML email with a simple design and clear call to action. This is it.</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hi {{ $transaction->client->onames }},</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Your transaction details are as follows:</p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                           <tbody>
                             <tr>
@@ -120,7 +120,52 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
                                   <tbody>
                                     <tr>
-                                      <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #3498db; border-radius: 5px; text-align: center;"> <a href="http://htmlemail.io" target="_blank" style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #3498db;">Call To Action</a> </td>
+                                      <td style="padding: 5px 15px"> 
+                                        <strong>Transaction number:</strong>
+                                      </td>
+                                      <td style="padding: 5px 15px"> 
+                                        {{ $transaction->transaction_number  }}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding: 5px 15px"> 
+                                        <strong>Estate:</strong>
+                                      </td>
+                                      <td style="padding: 5px 15px"> 
+                                        {{ $transaction->property->estatePropertyType->estate->name  }}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding: 5px 15px"> 
+                                        <strong>Property:</strong>
+                                      </td>
+                                      <td style="padding: 5px 15px"> 
+                                        {{ $transaction->property->estatePropertyType->propertyType->name  }}
+                                      </td>
+                                      <tr>
+                                        <td style="padding: 5px 15px"> 
+                                          <strong>Property number:</strong>
+                                        </td>
+                                        <td style="padding: 5px 15px"> 
+                                          {{ $transaction->property->unique_number  }}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td style="padding: 5px 15px"> 
+                                          <strong>Amount:</strong>
+                                        </td>
+                                        <td style="padding: 5px 15px"> 
+                                          &#x20A6; {{ number_format($transaction->amount, 2)  }}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td style="padding: 5px 15px"> 
+                                          <strong>Date:</strong>
+                                        </td>
+                                        <td style="padding: 5px 15px"> 
+                                          {{ $transaction->created_at->toFormattedDateString()  }}
+                                        </td>
+                                      </tr>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -128,8 +173,7 @@
                             </tr>
                           </tbody>
                         </table>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.</p>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Good luck! Hope it works.</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">A copy of your transaction receipt is also attached to this email</p>
                       </td>
                     </tr>
                   </table>
@@ -144,13 +188,7 @@
               <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                 <tr>
                   <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
-                    <br> Don't like these emails? <a href="http://i.imgur.com/CScmqnj.gif" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">Unsubscribe</a>.
-                  </td>
-                </tr>
-                <tr>
-                  <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    Powered by <a href="http://htmlemail.io" style="color: #999999; font-size: 12px; text-align: center; text-decoration: none;">HTMLemail</a>.
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">{{ env('APP_NAME'). ' ' . date('Y') }}</span>
                   </td>
                 </tr>
               </table>

@@ -12,6 +12,8 @@ use App\Events\PaymentMade;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 use App\Mail\PaymentMadeMailable;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PaymentMadeNotification;
 
 class Show extends Component
 {
@@ -113,7 +115,7 @@ class Show extends Component
 
         $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
         Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
-
+        
         // session()->flash('message', 'Email sent successfully.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
 

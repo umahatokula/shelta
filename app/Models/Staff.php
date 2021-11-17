@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Staff extends Model
 {
-    use HasFactory;
-    use HasSlug;
+    use HasFactory, HasSlug, Notifiable;
 
     protected $fillable = ['name', 'phone', 'email', 'dob', 'gender_id'];
 
