@@ -99,8 +99,8 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(func
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // clients
-    Route::get('clients/{client}/{transactionId}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
-    Route::get('clients/{client}/{transactionId}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
+    Route::get('clients/{transaction_number}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
+    Route::get('clients/{transaction_number}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
 
     Route::get('clients/profile', [ClientsController::class, 'profile'])->name('clients.profile');
     Route::put('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile.updateClientProfileRequest');

@@ -206,7 +206,7 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a href="{{ route('frontend.clients.downloadReciept', [$client->id, $transaction->id]) }}" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
+                                    <a href="{{ route('frontend.clients.downloadReciept', [$transaction->transaction_number]) }}" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
                                         <i class="fa fa-download font-medium-3 mr-2"></i>
                                     </a>
 
@@ -217,7 +217,7 @@
                                     </a>    
                                     @endif
                                     
-                                    <a  href="{{ route('frontend.clients.mailReciept', [$client->id, $transaction->id]) }}" href="#" class="text-success p-0"
+                                    <a  href="{{ route('frontend.clients.mailReciept', [$transaction->transaction_number]) }}" href="#" class="text-success p-0"
                                         data-original-title="" title="Email Reciept">
                                         <i class="fa fa-envelope font-medium-3 mr-2"></i>
                                     </a>

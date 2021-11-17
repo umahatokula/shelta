@@ -182,7 +182,8 @@ class AddProperty extends Component
 
         }
 
-        session()->flash('message', 'Client successfully added.');
+        // session()->flash('message', 'Client successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
 
         redirect()->route('clients.show', $this->client);
     }

@@ -2,15 +2,15 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="me-auto">
-                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
+                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Property</h4>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a></li>
                             <li class="breadcrumb-item" aria-current="page"><a
-                                    href="{{ route('clients.index') }}">Clients</a></li>
+                                    href="{{ route('clients.index') }}">property</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Add Clients
+                                Add property
                             </li>
                         </ol>
                     </nav>
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-form-label col-md-3">Property</label>
+                                <label class="col-form-label col-md-3">Property Type</label>
                                 <div class="col-md-9">
                                     <select wire:model.lazy="property_type_id"
                                         wire:change="getEstatePropertyTypeBinding($event.target.value)"

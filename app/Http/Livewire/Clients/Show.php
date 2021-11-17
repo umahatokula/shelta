@@ -95,7 +95,6 @@ class Show extends Component
         $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data)->output();
-        // dd($data['transaction'], $transactionId);
         
         return response()->streamDownload(
             fn () => print($pdfContent),
@@ -105,7 +104,7 @@ class Show extends Component
     }
     
     /**
-     * mailReciept
+     * Send transsaction receipt
      *
      * @param  mixed $clientId
      * @param  mixed $transactionId
@@ -118,8 +117,6 @@ class Show extends Component
         
         // session()->flash('message', 'Email sent successfully.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
-
-        // redirect()->route('clients.show', $this->client->slug);
     }
 
     public function showToastr() {

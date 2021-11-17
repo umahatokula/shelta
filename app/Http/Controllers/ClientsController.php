@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Client;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Mail\PaymentMadeMailable;
 use App\Http\Requests\UpdateClientProfileRequest;
 
 class ClientsController extends Controller
@@ -277,10 +278,11 @@ class ClientsController extends Controller
      * @param  mixed $transactionId
      * @return void
      */
-    public function downloadReciept($clientId, $transactionId) {
+    public function downloadReciept($transaction_number) {
 
-        $data['client'] = Client::where('id', $clientId)->first();
-        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        $data['client'] = auth()->user()->client;
+
+        $data['transaction'] = Transaction::where('transaction_number', $transaction_number)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data)->setPaper('a4', 'landscape');
         return $pdfContent->download('reciept.pdf');
@@ -294,21 +296,15 @@ class ClientsController extends Controller
      * @param  mixed $transactionId
      * @return void
      */
-    public function mailReciept($clientId, $transactionId) {
+    public function mailReciept($transaction_number) {
 
-        $data['client'] = Client::where('id', $clientId)->first();
-        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        $client = auth()->user()->client;
 
-        $pdfContent = PDF::loadView('pdf.reciept', $data);
-
-        Mail::send('emails.recieptEmail', $data, function($message)use($data, $pdfContent) {
-            $message->to($data['client']->email)
-                    ->subject('Payment Reciept ['.$data['client']->sname.' '.$data['client']->onames.']')
-                    ->attachData($pdfContent->output(), "reciept.pdf");
-        });
+        $transaction = Transaction::where('transaction_number', $transaction_number)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
 
         session()->flash('message', 'Email sent successfully.');
 
-        return redirect()->route('frontend.clients.payments', $data['client']->slug);
+        return redirect()->route('frontend.clients.payments', $client->slug);
     }
 }
