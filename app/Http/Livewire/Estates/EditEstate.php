@@ -19,6 +19,7 @@ class EditEstate extends Component
         'name' => 'required|string|min:6',
         'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
         'addedProperties.*.number_of_units' => 'numeric',
+        'addedProperties.*.property_id' => 'distinct',
     ];
     
     /**
@@ -87,10 +88,16 @@ class EditEstate extends Component
         $estate->name    = $this->name;
         $estate->address = $this->address;
         $estate->save();
-
-        $updatedProperties = collect($this->addedProperties)->map(function($property) {
-            return $property['property_id'];
-        });
+        
+        // get existing property types attached to this estate
+        // $addedPropertyTypesInArrayFormat = collect($this->addedProperties)->map(function($p) {
+        //     return $p['property_id'];
+        // })->toArray();
+        // $existingEstatePropertypes = EstatePropertyType::where('estate_id', $this->estate->id)->get();
+        // $toBeRemoved = $existingEstatePropertypes->filter(function($value, $key) use($addedPropertyTypesInArrayFormat) {
+        //     return in_array($value->property_type_id, $addedPropertyTypesInArrayFormat);
+        // });
+        // dd($toBeRemoved, $addedPropertyTypesInArrayFormat);
 
         // attach new properties
         $attachedPropertyTypes = [];
@@ -112,7 +119,8 @@ class EditEstate extends Component
         $detachedPropertyTypes = EstatePropertyType::whereNotIn('property_type_id', $attachedPropertyTypes)->where('estate_id', $estate->id)->pluck('property_type_id');
         $estate->propertyTypes()->detach($detachedPropertyTypes); // detach existing properties
 
-        session()->flash('message', 'Estate successfully added.');
+        // session()->flash('message', 'Estate successfully edited.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Estate successfully edited.']);
 
         redirect()->route('estates.index');
 

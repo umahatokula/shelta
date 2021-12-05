@@ -7,6 +7,7 @@ use Mail;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Transaction;
+use App\Mail\CustomMailable;
 use Illuminate\Http\Request;
 use App\Mail\PaymentMadeMailable;
 use App\Http\Requests\UpdateClientProfileRequest;
@@ -131,7 +132,18 @@ class ClientsController extends Controller
     }
 
     public function sendMailPost(Request $request) {
-        dd($request->all());
+        // dd($request->all());
+
+        $client = Client::findOrFail($request->client_id);
+
+        if ($client ->email) {
+            Mail::to($client->email)
+            ->send(new CustomMailable($request->subject, $request->message));
+        }
+
+        session()->flash('message', 'Message sent to client');
+        return redirect()->back();
+        
     }
 
 

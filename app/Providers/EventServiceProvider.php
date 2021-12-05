@@ -26,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\PaymentMade' => [
             'App\Listeners\SendReceiptNotification'
         ],
+        'App\Events\ClientPropertiesUpdated' => [
+            'App\Listeners\SendPropertyAssignedNotification'
+        ],
     ];
 
     /**

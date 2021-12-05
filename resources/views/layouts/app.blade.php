@@ -191,14 +191,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">&nbsp</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title">&nbsp</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <p>loading...</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
             </div>
         </div>
         <!-- /.modal-content -->

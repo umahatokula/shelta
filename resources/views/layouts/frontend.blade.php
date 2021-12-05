@@ -73,7 +73,43 @@
     <script src="{{ asset('frontend/assets/js/pages/dashboard-2.init.js') }}"></script>
 
     <script src="{{ asset('frontend/assets/js/app.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('body').on('click', '[data-toggle="modal"]', function () {
+                url = $(this).data("remote")
+                console.log(url)
+                $($(this).data("target") + ' .modal-body').load(url);
+            });
+
+            $('#confirmationModal').on('show.bs.modal', function (e) {
+                $(this).find('.confirm').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+        });
+
+    </script>
 
 </body>
 
 </html>
+
+<!-- sample modal content -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">               
+                <p>
+                    loading...
+                </p>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use PDF;
 
-class PaymentMadeMailable extends Mailable
+class PaymentMadeMailable extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -37,7 +37,7 @@ class PaymentMadeMailable extends Mailable
         $pdfContent = PDF::loadView('pdf.reciept', $data);
 
         return $this->view('emails.payment_receipt')
-                    ->subject('Payment Reciept ['.$data['client']->sname.' '.$data['client']->onames.']')
+                    ->subject('Payment Reciept')
                     ->attachData($pdfContent->output(), "reciept.pdf");
     }
 }

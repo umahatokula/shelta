@@ -59,6 +59,12 @@
                             </div>
                             <hr class="my-15">
 
+                            @if ($errors->any())
+                                <div class="alert alert-danger" role="alert">
+                                    Ensure there are no duplicate selections for Property Type
+                                </div>
+                            @endif 
+
                             @foreach ($properties as $key => $property)
                             <div class="row mb-5">
                                 <div class="col-md-3">

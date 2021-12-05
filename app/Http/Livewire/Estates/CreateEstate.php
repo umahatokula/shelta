@@ -17,6 +17,7 @@ class CreateEstate extends Component
         'name' => 'required|string|min:2',
         'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
         'addedProperties.*.number_of_units' => 'numeric',
+        'addedProperties.*.property_id' => 'distinct',
     ];
     
     /**
@@ -84,7 +85,8 @@ class CreateEstate extends Component
             ]);
         }
 
-        session()->flash('message', 'Estate successfully added.');
+        // session()->flash('message', 'Estate successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Estate successfully added.']);
 
         redirect()->route('estates.index');
 

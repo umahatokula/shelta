@@ -40,8 +40,16 @@ class Show extends Component
                 'type'               => 'online',
                 'transaction_number' => $data['reference'],
                 'date'               => Carbon::now(),
-                'by'                 => auth()->id(),
+                'recorded_by'        => auth()->id(),
+                'status'             => 1,
+                'is_approved'        => 1,
             ]);
+
+            if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
+                Property::where('id', $transaction->property_id)->update([
+                    'date_of_first_payment' => Carbon::now(),
+               ]);
+            }
         }
 
         OnlinePayment::create([
@@ -76,7 +84,7 @@ class Show extends Component
         $this->client = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
             'transactions.property.estatePropertyType.estate', 
-            'transactions.performed_by', 
+            'transactions.recordedBy', 
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);

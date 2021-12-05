@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end  d-flex align-items-center">
                                     <a wire:click.prevent="addProperty" href="#" class="mt-4"> <span
-                                            class="badge badge-success">Add Property Type</span> </a>
+                                            class="badge badge-success">Add Property</span> </a>
                                 </div>
                             </div>
                             <hr class="my-15">

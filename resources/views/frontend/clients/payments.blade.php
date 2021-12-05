@@ -65,25 +65,11 @@
                         </div>
                         <div class="col-md-6 mb-4 d-flex justify-content-end">
 
-                            @can('record payment')
-                            <a @click="show = true" x-show="!show" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right ml-3">Online
-                                Payment</a>
-                            
-                            <a @click="show = false" x-show="show" href="#" class="waves-effect waves-light btn btn-danger btn-sm float-right ml-3">Cancel Online
-                                Payment</a>
-                            @endcan
+                            <a  data-toggle="modal" data-keyboard="false" data-target="#myModal" data-remote="{{ route('frontend.transactions.online', $client) }}" href="#" class="waves-effect waves-light btn btn-success btn-sm float-right ml-3">Online Payment</a>
 
                             &nbsp
 
-                            @can('record payment')
-                            <a href="{{ route('transactions.create', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right">Record
-                                Payment</a>    
-                            @endcan
-                            
-
-                            <!-- Taking namespace into account for component Admin/Actions/EditUser -->
-                            {{-- <button x-data="{}" x-on:click="$wire.emitTo('transactions.transactions-create', 'openModal')">Make Payment</button> --}}
-                            {{-- <button wire:click="$emit('openModal', 'transactions.transactions-create')" class="waves-effect waves-light btn btn-primary btn-sm float-right">Open Modal</button> --}}
+                            <a  data-toggle="modal" data-keyboard="false" data-target="#myModal" data-remote="{{ route('frontend.transactions.record', $client) }}" href="#"  class="waves-effect waves-light btn btn-primary btn-sm float-right">Record Payment</a>
 
                         </div>
                         

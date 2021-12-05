@@ -9,6 +9,7 @@ use App\Models\Property;
 use App\Models\PaymentPlan;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
+use App\Events\ClientPropertiesUpdated;
 
 class AddProperty extends Component
 {
@@ -184,6 +185,8 @@ class AddProperty extends Component
 
         // session()->flash('message', 'Client successfully added.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
+
+        ClientPropertiesUpdated::dispatch($this->client, $this->clientProperties);
 
         redirect()->route('clients.show', $this->client);
     }

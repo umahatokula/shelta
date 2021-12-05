@@ -7,9 +7,9 @@ use App\Models\Estate;
 use App\Models\Setting;
 use Livewire\Component;
 use App\Models\Property;
+use App\Mail\CustomMailable;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
-use App\Mail\PropertyTypeClientMail;
 use Illuminate\Support\Facades\Mail;
 
 class ShowClients extends Component
@@ -84,7 +84,7 @@ class ShowClients extends Component
 
         Mail::to($this->clients->pluck('email'))
             ->bcc($this->company_email)
-            ->send(new PropertyTypeClientMail($this->subject, $this->message));
+            ->send(new CustomMailable($this->subject, $this->message));
 
         $this->reset(['subject', 'message']);
 

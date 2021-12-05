@@ -125,7 +125,7 @@
                             <th class="text-left">Property</th>
                             <th class="text-right">Amount</th>
                             <th class="text-center">Type</th>
-                            <th class="text-center">Performed By</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Date</th>
                             <th class="text-center">Action(s)</th>
                         </tr>
@@ -148,21 +148,37 @@
                         <td class="text-center">
                             
                             @if ($transaction->onlinePayment)
-                            <span class="badge badge-primary">online</span>
+                                <span class="badge badge-primary">online</span>
                             @else
-                            <span class="badge badge-danger">recorded</span>
+                                <span class="badge badge-danger">recorded</span>
                             @endif
                         </td>
 
-                        <td class="text-center">{{ $transaction->performed_by->name }}</td>
+                        <td class="text-center">
+                            @if ($transaction->status == 1)
+                                <span class="badge badge-success">approved</span>
+                            @elseif ($transaction->status == 2)
+                                <span class="badge badge-danger">unapproved</span>
+                            @else
+                                <span class="badge badge-default">unprocessed</span>
+                            @endif
+                        </td>
 
                         <td class="text-center">
                             {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
                         </td>
 
                         <td class="text-center">
+                            <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.show', $transaction) }}" href="#" class="text-primary p-0" data-original-title="" title="View Details">
+                                <i class="fa fa-eye font-medium-3 mr-2"></i>
+                            </a>
+                            
+                            <a  data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.process', $transaction) }}" href="#" class="text-secondary p-0" data-original-title="" title="Process Transaction">
+                                <i class="fa fa-toggle-off font-medium-3 mr-2"></i>
+                            </a>
+
                             <a wire:click.prevent="downloadReciept({{$client->id}}, {{$transaction->id}})"
-                                href="#" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
+                                href="#" class="text-success p-0" data-original-title="" title="Download Reciept" download>
                                 <i class="fa fa-download font-medium-3 mr-2"></i>
                             </a>
 
@@ -173,7 +189,7 @@
                             </a>    
                             @endif
                             
-                            <a wire:click.prevent="mailReciept({{$client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
+                            <a wire:click.prevent="mailReciept({{$client->id}}, {{$transaction->id}})" href="#" class="text-warning p-0"
                                 data-original-title="" title="Email Reciept">
                                 <i class="fa fa-envelope-open-o font-medium-3 mr-2"></i>
                             </a>
@@ -187,7 +203,7 @@
                         <th class="text-left">Property</th>
                         <th class="text-right">Amount</th>
                         <th class="text-center">Type</th>
-                        <th class="text-center">Performed By</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center">Date</th>
                         <th class="text-center">Action(s)</th>
                     </tr>
@@ -303,6 +319,14 @@
                                                         <td>&#x20A6; {{ number_format($property->totalPaid(), 2) }}</td>
                                                     </tr>
                                                     <tr>
+                                                        <td>Monthly Payment Date:</td>
+                                                        <td>
+                                                            @if ($property->lastPayment())
+                                                            <strong>{{ $property->date_of_first_payment ? $property->date_of_first_payment->format('d') : null }}</strong> monthly
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>Last Payment:</td>
                                                         <td>
                                                             @if ($property->lastPayment())
@@ -337,54 +361,58 @@
 
 @push('scripts')
 
-<script src="{{ asset('assets/vendor_components/datatable/datatables.min.js') }}"></script>
-<script src="{{ asset('assets/js/pages/data-table.js') }}"></script>
-<script src="//unpkg.com/alpinejs" defer></script>
+    <script src="{{ asset('assets/vendor_components/datatable/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/data-table.js') }}"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 
-{{-- Paystack --}}
-<script src="https://js.paystack.co/v1/inline.js"></script>
+    {{-- Paystack --}}
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
-<script>
+    <script>
 
-    const onlinePaymentBtn = document.getElementById('onlinePaymentBtn');
+        const onlinePaymentBtn = document.getElementById('onlinePaymentBtn');
 
-    onlinePaymentBtn.addEventListener("click", payWithPaystack, false);
+        onlinePaymentBtn.addEventListener("click", payWithPaystack, false);
 
-    function payWithPaystack(e) {
+        function payWithPaystack(e) {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        var clientId = @json($client->id);
-        var email = document.getElementById('payingEmail').value;
-        var amount = document.getElementById('payingAmount').value;
-        var property_id = document.getElementById('payingPropertyId').value;
+            var clientId = @json($client->id);
+            var email = document.getElementById('payingEmail').value;
+            var amount = document.getElementById('payingAmount').value;
+            var property_id = document.getElementById('payingPropertyId').value;
 
-        let handler = PaystackPop.setup({
-                key: 'pk_test_1868497b412662f1ab265218caffa56830eb32be', // Replace with your public key
-                email: email,
-                amount: amount * 100,
-            onClose: function(){
-                // alert('Window closed.');
-            },
-            callback: function(response){
-                // let message = 'Payment complete! Reference: ' + response.reference;
+            let handler = PaystackPop.setup({
+                    key: 'pk_test_1868497b412662f1ab265218caffa56830eb32be', // Replace with your public key
+                    email: email,
+                    amount: amount * 100,
+                onClose: function(){
+                    // alert('Window closed.');
+                },
+                callback: function(response){
+                    // let message = 'Payment complete! Reference: ' + response.reference;
 
-                const data = {
-                    client_id: @json($client->id),
-                    property_id,
-                    reference: response.reference,
-                    amount,
-                    message: response.message,
-                    reference: response.reference,
-                    status: response.status,
+                    const data = {
+                        client_id: @json($client->id),
+                        property_id,
+                        reference: response.reference,
+                        amount,
+                        message: response.message,
+                        reference: response.reference,
+                        status: response.status,
+                    }
+
+                    Livewire.emit('onlinePaymentSuccessful', data)
                 }
+            });
 
-                Livewire.emit('onlinePaymentSuccessful', data)
-            }
-        });
+            handler.openIframe();
+        }
 
-        handler.openIframe();
-    }
-
-</script> 
+    </script> 
+    
+	<script src="js/pages/advanced-form-element.js"></script>
+    
 @endpush
+

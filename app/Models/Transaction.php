@@ -16,7 +16,20 @@ class Transaction extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['client_id', 'property_id', 'amount', 'type', 'date', 'transaction_number', 'proof_reference_number', 'by'];
+    protected $fillable = ['client_id',
+                            'property_id',
+                            'property_id',
+                            'amount',
+                            'transaction_number',
+                            'type',
+                            'recorded_by',
+                            'recorded_by_staff',
+                            'proof_reference_number',
+                            'date',
+                            'status',
+                            'is_approved',
+                            'processed_by',
+                        ];
 
     protected $dates = ['date'];
     
@@ -52,7 +65,16 @@ class Transaction extends Model implements HasMedia
      *
      * @return void
      */
-    public function performed_by() {
-        return $this->belongsTo(User::class, 'by', 'id')->withDefault();
+    public function recordedBy() {
+        return $this->belongsTo(User::class, 'recorded_by', 'id')->withDefault();
+    }
+    
+    /**
+     * performed_by
+     *
+     * @return void
+     */
+    public function processedBy() {
+        return $this->belongsTo(User::class, 'processed_by', 'id')->withDefault();
     }
 }

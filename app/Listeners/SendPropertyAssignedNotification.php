@@ -2,14 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
-use App\Mail\SendOPT;
-use App\Events\OPTGenerated;
+use Log;
+use App\Mail\PropertyAddedMailable;
 use Illuminate\Support\Facades\Mail;
+use App\Events\ClientPropertiesUpdated;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendOTPNotification
+class SendPropertyAssignedNotification
 {
     /**
      * Create the event listener.
@@ -24,13 +24,12 @@ class SendOTPNotification
     /**
      * Handle the event.
      *
-     * @param  SendOPT  $event
+     * @param  ClientPropertiesUpdated  $event
      * @return void
      */
-    public function handle(OPTGenerated $OPTGenerated)
+    public function handle(ClientPropertiesUpdated $event)
     {
-        Mail::to($OPTGenerated->recipients->email)
-            ->send(new SendOPT($OPTGenerated->content));
-
+        Mail::to($event->client->email)
+            ->send(new PropertyAddedMailable($event->client, $event->properties));
     }
 }

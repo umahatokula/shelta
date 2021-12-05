@@ -273,7 +273,8 @@ class Edit extends Component
 
         }
 
-        session()->flash('message', 'Client successfully added.');
+        // session()->flash('message', 'Client successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully edited.']);
 
         redirect()->route('clients.show', $client);
     }

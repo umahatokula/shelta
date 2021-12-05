@@ -21,9 +21,13 @@ class CreateTransactionsTable extends Migration
             $table->integer('amount')->nullable();
             $table->string('transaction_number')->unique()->nullable();
             $table->string('type')->nullable();
-            $table->foreignId('by')->nullable()->comment('User who made or recorded this transaction');
+            $table->foreignId('recorded_by')->nullable()->comment('User who made or recorded this transaction');
+            $table->boolean('recorded_by_staff')->nullable()->default(1);
             $table->string('proof_reference_number')->unique()->nullable();
             $table->date('date')->nullable();
+            $table->integer('status')->nullable()->default(3)->comment('1=Approved / 2=Unapproved / 3=Unprocessed');
+            $table->boolean('is_approved')->nullable()->default(0);
+            $table->foreignId('processed_by')->nullable()->comment('User who made or processedrecorded_ this transaction');
             $table->timestamps();
         });
     }

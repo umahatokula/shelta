@@ -65,4 +65,8 @@ class PropertyType extends Model implements HasMedia
     {
         return $this->belongsToMany(Estate::class, 'estate_property_type', 'property_type_id', 'estate_id')->withTimestamps()->withPivot(['price', 'number_of_units']);
     }
+
+    public function scopeWithWhereHas($query, $relationship, $constraint) {
+        return $query->with([$relationship => $constraint]);
+    }
 }

@@ -2,27 +2,26 @@
 
 namespace App\Mail;
 
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PropertyTypeClientMail extends Mailable
+class SendMonthlyPaymentRemindersMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject;
-    public $content;
+    public $client;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject, $content)
+    public function __construct(Client $client)
     {
-        $this->subject = $subject ?? env('APP_NAME');
-        $this->content = $content;
+        $this->client = $client;
     }
 
     /**
@@ -32,6 +31,6 @@ class PropertyTypeClientMail extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->subject)->view('emails.propertyTypeClient');
+        return $this->subject('Monthly Subscription Reminder')->view('emails.monthlyPaymentReminders');
     }
 }

@@ -59,10 +59,13 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
     Route::resource('clients', ClientsController::class);
 
-    // payments
+    // transactions
+    Route::get('transactions/{transaction}/process', [TransactionsController::class, 'process'])->name('transactions.process');
+    Route::post('transactions/processStore', [TransactionsController::class, 'processStore'])->name('transactions.processStore');
     Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
     Route::get('transactions/create/{client}', [TransactionsController::class, 'create'])->name('transactions.create');
     Route::post('transactions', [TransactionsController::class, 'index'])->name('transactions.store');
+    Route::get('transactions/{transaction}', [TransactionsController::class, 'show'])->name('transactions.show');
 
     // properties
     Route::resource('properties', PropertiesController::class);
@@ -94,7 +97,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
 
     // transactions
-    Route::resource('transactions', TransactionsController::class);
+    // Route::resource('transactions', TransactionsController::class);
 });
 
 Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {
@@ -114,12 +117,22 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(func
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
     Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
 
+    // transactions
+    Route::get('transactions/create/{client}/record', [TransactionsController::class, 'frontendRecordTransaction'])->name('transactions.record');
+    Route::get('transactions/create/{client}/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
+    Route::get('transactions/create/{client}/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
+    Route::get('transactions/create/{client}/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
+
 
 });
 
 
 Route::get('/mailable', function () {
-    $transaction = App\Models\Transaction::find(1);
+    $clients = App\Models\Client::find(1);
+    $properties = [];
 
-    return new App\Mail\PaymentMadeMailable($transaction);
+    return new App\Mail\PropertyAddedMailable($clients, $properties);
 });
+
+
+Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

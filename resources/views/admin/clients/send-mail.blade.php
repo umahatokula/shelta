@@ -17,7 +17,7 @@
                     
                     <div class="form-group">
                         <label class="form-label">Subject</label>
-                        <input wire:model="subject" class="form-control" autofocus>
+                        <input wire:model="subject" class="form-control" name="subject" autofocus>
                         @error('subject') <span class="text-danger">{{ $subject }}</span> @enderror
                     </div>
                     

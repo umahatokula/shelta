@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\State;
+use App\Models\Client;
 use App\Models\Property;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
@@ -21,6 +22,13 @@ class Client extends Model
     use HasFactory, HasSlug, Notifiable;
 
     protected $fillable = ['name', 'phone', 'email', 'address'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['name'];
 
     /**
      * Get the options for generating the slug.
@@ -40,6 +48,16 @@ class Client extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /**
+     * Determine if the user is an administrator.
+     *
+     * @return bool
+     */
+    public function getNameAttribute()
+    {
+        return $this->attributes['sname'].' '.$this->attributes['onames'];
     }
     
     /**

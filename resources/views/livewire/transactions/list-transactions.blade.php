@@ -37,7 +37,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input wire:model="search" type="search" class="form-control" placeholder="Filter transactions...">
                             </div>
                             <div class="col-md-6 d-flex justify-content-end float-right">
@@ -55,6 +55,7 @@
                                         <th>#</th>
                                         <th class="text-left">transaction Number</th>
                                         <th class="text-left">Client</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-left">Date</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -67,9 +68,20 @@
                                         <td class="text-left">
                                             {{ $transaction->client->sname.' '.$transaction->client->onames }}
                                         </td>
+
+                                        <td class="text-center">
+                                            @if ($transaction->status == 1)
+                                                <span class="badge badge-success">approved</span>
+                                            @elseif ($transaction->status == 2)
+                                                <span class="badge badge-danger">unapproved</span>
+                                            @else
+                                                <span class="badge badge-default">unprocessed</span>
+                                            @endif
+                                        </td>
                                         <td class="text-left">
                                             {{ $transaction->created_at->toFormattedDateString() }}
                                         </td>
+
                                         <td class="text-center">
 
                                             <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.show', $transaction) }}" href="#" class="text-warning p-0" data-original-title="" title="View Details" >

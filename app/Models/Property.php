@@ -13,7 +13,9 @@ class Property extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id'];
+    protected $dates = ['date_of_first_payment'];
+
+    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id', 'date_of_first_payment'];
     
     /**
      * properties

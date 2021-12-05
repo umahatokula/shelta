@@ -234,7 +234,8 @@ class Create extends Component
         // assign role
         $user->assignRole('client');
 
-        session()->flash('message', 'Client successfully added.');
+        // session()->flash('message', 'Client successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
 
         redirect()->route('clients.index');
     }

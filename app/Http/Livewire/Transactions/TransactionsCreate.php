@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Transactions;
 
+use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Property;
@@ -87,7 +88,9 @@ class TransactionsCreate extends Modal
             'proof_reference_number' => $this->proof_reference_number,
             'transaction_number'     => substr(hash('sha256', mt_rand() . microtime()), 0, 20),
             'date'                   => $this->date,
-            'by'                     => auth()->id(),
+            'recorded_by'            => auth()->id(),
+            'status'                 => 3,
+            'is_approved'            => 0,
         ]);
 
         $transaction
@@ -95,12 +98,18 @@ class TransactionsCreate extends Modal
             ->usingName($this->proof->getClientOriginalName())
             ->toMediaCollection('proofOfPayment', 'public');
 
-            // log this transaction
-            activity()
-                ->by(auth()->user())
-                ->on($transaction)
-                ->withProperties(['is_staff' => true])
-                ->log('payment recorded');
+        if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
+            Property::where('id', $transaction->property_id)->update([
+                'date_of_first_payment' => Carbon::now(),
+           ]);
+        }
+
+        // log this transaction
+        activity()
+            ->by(auth()->user())
+            ->on($transaction)
+            ->withProperties(['is_staff' => true])
+            ->log('payment recorded');
 
         // dispatch event
         PaymentMade::dispatch($transaction);

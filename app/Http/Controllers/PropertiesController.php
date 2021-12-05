@@ -46,7 +46,8 @@ class PropertiesController extends Controller
      */
     public function show($id)
     {
-        //
+        $data['property'] = Property::findOrfail($id);
+        return view('admin.properties.show', $data);
     }
 
     /**
