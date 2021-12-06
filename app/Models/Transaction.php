@@ -32,6 +32,26 @@ class Transaction extends Model implements HasMedia
                         ];
 
     protected $dates = ['date'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_approved' => 'boolean',
+    ];
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeIsApproved($query)
+    {
+        $query->where('status', 1);
+    }
     
     /**
      * property

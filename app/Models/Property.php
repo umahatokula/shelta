@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
@@ -60,7 +61,7 @@ class Property extends Model
      * @return void
      */
     public function totalPaid() {
-        return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->sum('amount');
+        return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->sum('amount');
     }
     
     /**
@@ -87,6 +88,18 @@ class Property extends Model
      * @return void
      */
     public function transactionTotal() {
-        return $this->hasMany(Transaction::class)->sum('amount');
+        return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
+    }
+
+    public function nextPaymentDueDate() {
+
+        $nextDueDate = Carbon::today()->addDays(7);
+        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
+        
+        $day = $nextDueDate->day;
+        $month = $nextDueDate->month;
+        $year = $nextDueDate->year;
+
+        return Carbon::parse($month.'/'.$day.'/'.$year);
     }
 }

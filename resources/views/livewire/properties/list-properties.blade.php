@@ -94,11 +94,11 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('properties.show', $property->unique_number) }}" class="text-primary p-0" data-original-title="View"
+                                            <a href="{{ route('properties.show', $property) }}" class="text-primary p-0" data-original-title="View"
                                                 title="View">
                                             <i class="fa fa-eye font-medium-3 mr-2"></i>
                                             </a>
-                                            <a href="{{ route('properties.edit', $property->unique_number) }}" class="text-warning p-0" data-original-title=""
+                                            <a href="{{ route('properties.edit', $property) }}" class="text-warning p-0" data-original-title=""
                                                 title="Edit">
                                             <i class="fa fa-pencil font-medium-3 mr-2"></i>
                                             </a>

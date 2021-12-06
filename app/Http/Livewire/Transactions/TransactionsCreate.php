@@ -111,11 +111,8 @@ class TransactionsCreate extends Modal
             ->withProperties(['is_staff' => true])
             ->log('payment recorded');
 
-        // dispatch event
-        PaymentMade::dispatch($transaction);
-
         // session()->flash('message', 'Payment successful.');
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment recorded.']);
 
         redirect()->route('clients.show', $this->client->slug);
     }

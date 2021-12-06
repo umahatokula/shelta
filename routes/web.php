@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
@@ -128,10 +129,42 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(func
 
 
 Route::get('/mailable', function () {
-    $clients = App\Models\Client::find(1);
-    $properties = [];
 
-    return new App\Mail\PropertyAddedMailable($clients, $properties);
+    $nextDueDate = Carbon::today()->addDays(0);
+    // dd($nextDueDate);
+    // $nextDueDate = Carbon::parse('12/24/2021')->addDays(7);
+
+    $properties = App\Models\Property::with('client')
+        ->whereNotNull('client_id')
+        ->whereNotNull('date_of_first_payment')
+        ->get()
+        ->filter(function ($property, $key) use($nextDueDate) {
+            
+            $day = 28;
+            if ($property->date_of_first_payment->day < 28) {
+                $day = $property->date_of_first_payment->day;
+            }
+
+            $dueDate = 28;
+            if ($nextDueDate->day < 28) {
+                $dueDate = $nextDueDate->day;
+            }
+
+            return $day == $dueDate;
+        })
+        ->filter(function ($property, $key) {
+            dd($property->transactionTotal());
+            return $property->transactionTotal() < $property->estatePropertyType->price;
+        });
+
+        dd($properties);
+
+    foreach ($properties as $property) {
+        if ($property) {
+            return new App\Mail\SendMonthlyPaymentRemindersMailable($property);
+        }
+    }
+    
 });
 
 

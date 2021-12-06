@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Events\PaymentMade;
 
 class TransactionsController extends Controller
 {    
@@ -59,6 +60,9 @@ class TransactionsController extends Controller
         $transaction->is_approved = $request->status == 1 ? 1 : 0;
         $transaction->processed_by = auth()->id();
         $transaction->save();
+
+        // dispatch event
+        PaymentMade::dispatch($transaction);
 
         return redirect()->back();
     }
