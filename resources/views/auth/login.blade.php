@@ -32,7 +32,7 @@
 					<div class="col-lg-5 col-md-5 col-12">
 						<div class="bg-white rounded30 shadow-lg">
 							<div class="content-top-agile p-20 pb-0">
-								<img src="{{ asset('assets/images/logo-light.png') }}" alt="" class="img-fluid" style="max-width: 200px;">						
+								<img src="{{ asset('assets/images/logo_richboss.png') }}" alt="" class="img-fluid" style="max-width: 200px;">						
 							</div>
 							<div class="p-40">
 

@@ -334,6 +334,14 @@
                                                             @endif
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>Next Payment:</td>
+                                                        <td>
+                                                            @if ($property->lastPayment())
+                                                            {{ $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->toFormattedDateString() : null }}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>

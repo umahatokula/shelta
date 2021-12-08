@@ -24,7 +24,7 @@ class SendMonthlyPaymentRemindersMailable extends Mailable
     public function __construct($property)
     {
         $this->property = $property;
-        $this->nextDueDate = $property->nextPaymentDueDate();
+        $this->nextDueDate = $property->getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue();
     }
 
     /**

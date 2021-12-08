@@ -90,8 +90,30 @@ class Property extends Model
     public function transactionTotal() {
         return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
     }
-
+    
+    /**
+     * nextPaymentDueDate
+     *
+     * @return void
+     */
     public function nextPaymentDueDate() {
+
+        $nextDueDate = Carbon::today()->addMonth()->addDays(7);
+        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
+        
+        $day = $this->date_of_first_payment->day;
+        $month = $nextDueDate->month;
+        $year = $nextDueDate->year;
+
+        return Carbon::parse($month.'/'.$day.'/'.$year);
+    }
+    
+    /**
+     * getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue
+     *
+     * @return void
+     */
+    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue() {
 
         $nextDueDate = Carbon::today()->addDays(7);
         // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);

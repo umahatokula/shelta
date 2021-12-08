@@ -101,7 +101,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     // Route::resource('transactions', TransactionsController::class);
 });
 
-Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {
+Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -130,9 +130,7 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(func
 
 Route::get('/mailable', function () {
 
-    $nextDueDate = Carbon::today()->addDays(0);
-    // dd($nextDueDate);
-    // $nextDueDate = Carbon::parse('12/24/2021')->addDays(7);
+    $nextDueDate = Carbon::today()->addDays(config('payments.payment_reminder_days'));
 
     $properties = App\Models\Property::with('client')
         ->whereNotNull('client_id')
@@ -153,7 +151,6 @@ Route::get('/mailable', function () {
             return $day == $dueDate;
         })
         ->filter(function ($property, $key) {
-            dd($property->transactionTotal());
             return $property->transactionTotal() < $property->estatePropertyType->price;
         });
 
