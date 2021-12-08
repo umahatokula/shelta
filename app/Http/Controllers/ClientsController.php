@@ -212,6 +212,13 @@ class ClientsController extends Controller
 
         $status = $user->use_2fa ? 'enabled' : 'disabled';
 
+        if ($user->use_2fa) {
+            \Session::put('user_2fa', auth()->user()->id);
+        } else {
+            \Session::forget('user_2fa');
+        }
+        
+
         session()->flash('message', 'Two factor authentication '. $status);
         return redirect()->back();
     }

@@ -50,7 +50,7 @@ Route::get('/home', function () {
 })->name('home')->middleware('auth');
 
 
-Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -101,7 +101,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     // Route::resource('transactions', TransactionsController::class);
 });
 
-Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
+Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
