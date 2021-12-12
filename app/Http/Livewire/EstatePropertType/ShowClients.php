@@ -48,7 +48,9 @@ class ShowClients extends Component
                 ->where('estate_property_type.property_type_id', '=', $propertyType->id)
                 ->get()
                 ->toArray();
-        })->get();
+        })
+        ->whereNotNull('client_id')
+        ->get();
 
 
         // get the amuont paid and unpaid for this property type in this estate for evrey client that owns this proprety type in the estate

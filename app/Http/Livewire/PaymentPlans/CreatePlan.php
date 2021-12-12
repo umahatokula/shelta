@@ -13,7 +13,7 @@ class CreatePlan extends Component
 
     public $rules = [
         'name' => 'required', 
-        'number_of_months' => 'required',
+        // 'number_of_months' => 'required',
     ];
 
     public $messages = [
@@ -30,7 +30,8 @@ class CreatePlan extends Component
             'number_of_months' => $this->number_of_months,
         ]);
         
-        session()->flash('message', 'Payment Plan successfully added.');
+        // session()->flash('message', 'Payment Plan successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment Plan successfully added.']);
 
         redirect()->route('payment-plans.index');
  

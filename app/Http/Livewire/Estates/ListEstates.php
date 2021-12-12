@@ -14,7 +14,7 @@ class ListEstates extends Component
     public function render()
     {
         return view('livewire.estates.list-estates', [
-            'estates' => Estate::paginate(10)
+            'estates' => Estate::with('estatePropertyType')->paginate(10)
         ]);
     }
 

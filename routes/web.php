@@ -49,10 +49,12 @@ Route::get('/home', function () {
     
 })->name('home')->middleware('auth');
 
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
 
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
+
+    Route::get('dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
     // clients
     Route::get('clients/{client}/sendMail', [ClientsController::class, 'sendMail'])->name('clients.sendMail');
@@ -86,6 +88,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     // settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::get('settings/payment-reminders', [SettingsController::class, 'paymentReminders'])->name('settings.payment-reminders');
 
     // staff
     Route::get('staff/profile', [StaffController::class, 'profile'])->name('staff.profile');
@@ -101,9 +104,16 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     // Route::resource('transactions', TransactionsController::class);
 });
 
-Route::name('frontend.')->middleware(['auth', 'role:client', '2fa'])->group(function () {
 
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+// ======================================================================
+//
+//                          FRONTEND
+//
+// ======================================================================
+
+Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
 
     // clients
     Route::get('clients/{transaction_number}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');

@@ -57,7 +57,10 @@ class Client extends Model
      */
     public function getNameAttribute()
     {
-        return $this->attributes['sname'].' '.$this->attributes['onames'];
+        $sname = isset($this->attributes['sname']) ? $this->attributes['sname'] : '';
+        $onames = isset($this->attributes['onames']) ? $this->attributes['onames'] : '';
+        
+        return $sname .' '.$onames;
     }
     
     /**

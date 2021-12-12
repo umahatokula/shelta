@@ -212,13 +212,6 @@ class ClientsController extends Controller
 
         $status = $user->use_2fa ? 'enabled' : 'disabled';
 
-        if ($user->use_2fa) {
-            \Session::put('user_2fa', auth()->user()->id);
-        } else {
-            \Session::forget('user_2fa');
-        }
-        
-
         session()->flash('message', 'Two factor authentication '. $status);
         return redirect()->back();
     }
@@ -325,5 +318,13 @@ class ClientsController extends Controller
         session()->flash('message', 'Email sent successfully.');
 
         return redirect()->route('frontend.clients.payments', $client->slug);
+
+        
+
+        $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
+        
+        // session()->flash('message', 'Email sent successfully.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
     }
 }

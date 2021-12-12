@@ -14,6 +14,7 @@ class SendMonthlyPaymentRemindersMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $property;
+    public $notification_message;
     public $nextDueDate;
 
     /**
@@ -21,9 +22,10 @@ class SendMonthlyPaymentRemindersMailable extends Mailable
      *
      * @return void
      */
-    public function __construct($property)
+    public function __construct($property, $notification_message)
     {
         $this->property = $property;
+        $this->notification_message = $notification_message;
         $this->nextDueDate = $property->getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue();
     }
 
@@ -34,6 +36,7 @@ class SendMonthlyPaymentRemindersMailable extends Mailable
      */
     public function build()
     {
+        // dd($this->message);
         return $this->subject('Monthly Subscription Reminder')->view('emails.monthlyPaymentReminders');
     }
 }

@@ -33,18 +33,13 @@ class Profile extends Component
             $user->use_2fa = !$this->user_2fa;
             $user->save();
         }
-
-        if ($user->use_2fa) {
-            \Session::put('user_2fa', auth()->user()->id);
-        } else {
-            \Session::forget('user_2fa');
-        }
         
         $this->user_2fa = $user->use_2fa;
 
         $status = $user->use_2fa ? 'enabled' : 'disabled';
 
-        session()->flash('message', 'Two factor authentication '. $status);
+        // session()->flash('message', 'Two factor authentication '. $status);
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Two factor authentication '. $status]);
         
     }
     

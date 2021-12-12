@@ -14,7 +14,7 @@ class EditPlan extends Component
 
     public $rules = [
         'name' => 'required', 
-        'number_of_months' => 'required',
+        // 'number_of_months' => 'required',
     ];
 
     public $messages = [
@@ -41,10 +41,11 @@ class EditPlan extends Component
                 'number_of_months' => $this->number_of_months,
             ]
         );
-        
-        session()->flash('message', 'Payment Plan successfully updated.');
 
         redirect()->route('payment-plans.index');
+        
+        // session()->flash('message', 'Payment Plan successfully updated.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment Plan successfully edited.']);
  
     }
 

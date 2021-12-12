@@ -65,8 +65,8 @@ class Create extends Component
     ];
 
     protected $rules = [
-        'sname' => 'required|string|min:6',
-        'onames' => 'required|string|min:6',
+        'sname' => 'required|string|min:2',
+        'onames' => 'required|string|min:2',
         'phone' => 'required|string|max:500',
         'email' => 'email',
         'clientProperties' => 'array',

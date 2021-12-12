@@ -19,6 +19,7 @@
         "laravelcollective/html": "^6.2",
         "livewire-ui/modal": "^1.0",
         "livewire/livewire": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "pragmarx/countries": "^0.7.2",
         "protonemedia/laravel-cross-eloquent-search": "^2.4",
         "spatie/laravel-activitylog": "^3.17",

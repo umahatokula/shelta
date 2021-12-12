@@ -34,6 +34,15 @@ class Estate extends Model
     {
         return 'slug';
     }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function estatePropertyType() {
+        return $this->belongsTo(EstatePropertyType::class)->withDefault();
+    }
 
     /**
      * The propertyTypes that belong to the estate.
