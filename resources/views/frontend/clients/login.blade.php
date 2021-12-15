@@ -35,7 +35,7 @@
                             <div class="position-relative">
                                 <p class="text-white-50 mb-0">
                                     <a href="{{ url('/') }}" class="">
-                                        <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="80">
+                                        <img src="{{ asset('frontend/assets/images/logo_richboss.png') }}" alt="" height="80">
                                     </a>
                                 </p>
                             </div>

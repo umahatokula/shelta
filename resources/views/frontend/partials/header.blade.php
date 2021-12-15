@@ -48,19 +48,19 @@
                 <div class="navbar-brand-box">
                     <a href="{{ route('frontend.dashboard') }}" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="120">
+                            <img src="{{ asset('frontend/assets/images/logo_richboss.png') }}" alt="" height="120">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="55">
+                            <img src="{{ asset('frontend/assets/images/logo_richboss.png') }}" alt="" height="55">
                         </span>
                     </a>
 
                     <a href="{{ route('frontend.dashboard') }}" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="120">
+                            <img src="{{ asset('frontend/assets/images/logo_richboss.png') }}" alt="" height="120">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('frontend/assets/images/logo-dark.png') }}" alt="" height="55">
+                            <img src="{{ asset('frontend/assets/images/logo_richboss.png') }}" alt="" width="180">
                         </span>
                     </a>
                 </div>

@@ -5,12 +5,14 @@ namespace App\Http\Livewire;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Transaction;
+use App\Models\Property;
 use App\Models\PropertyType;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Component
 {
     public $propertyTypes;
+    public $properties;
 
     public function mount() {
 
@@ -40,8 +42,8 @@ class Dashboard extends Component
         // })
         // ->get();
 
-
-        // dd($this->propertyTypes);
+        $this->properties = (new Property())->getPropertiesDueForReminder(1);
+        // dd($this->properties);
     }
 
 

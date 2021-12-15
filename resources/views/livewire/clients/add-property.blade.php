@@ -1,48 +1,26 @@
 <div>
-    <div class="content-header">
-        <div class="d-flex align-items-center">
-            <div class="me-auto">
-                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
-                <div class="d-inline-block align-items-center">
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a></li>
-                            <li class="breadcrumb-item" aria-current="page"><a
-                                    href="{{ route('clients.index') }}">Clients</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                Add Clients
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
+        
+    <div class="row">
+        <div class="col">
+            <div class="page-description">
+                <h1>{{ config('app.name', 'Real Estate App') }} - Add Property</h1>
             </div>
-
         </div>
     </div>
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-
-                <div>
-                    @if (session()->has('message'))
-                    <div class="alert alert-danger tada ">
-                        {{ session('message') }}
-                    </div>
-                    @endif
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">&nbsp</h5>
                 </div>
-
-                <div class="box">
-                    <form wire:submit.prevent="save">
-
-                        <div class="box-body">
-                            <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Client's Details</h4>
-                            <hr class="my-15">
-
+                <div class="card-body">
+                    <div class="example-container">
+                        <div class="example-content">
+                            
                             <div class="row">
-                                <div class="col-12 float-right">
-                                    <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary btn-lg" >Edit Profile</a>
                                 </div>
                                 <div class="col-12">
                                     <div>
@@ -56,10 +34,21 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
                             {{-- CLIENTS PROPERTIES  --}}
 
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">&nbsp</h5>
+                </div>
+                <div class="card-body">
+                    <div class="example-container">
+                        <div class="example-content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="box-title text-info mb-0 mt-20"><i class="ti-home me-15"></i> Client's
@@ -74,7 +63,6 @@
                             <hr class="my-15">
 
                             @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
-
                             <div class="row" style="margin-bottom: 25px">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -137,17 +125,16 @@
                             </div>
                             @endforeach
 
+                            <div class="box-footer">
+                                <a class="btn btn-warning me-1 btn-lg" href="{{ url()->previous() }}">Cancel</a>
+                                <input type="submit" class="btn btn-primary btn-lg" value="Save">
+                            </div>
+
                         </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer">
-                            <input type="submit" class="btn btn-warning me-1" value="Cancel">
-                            <input type="submit" class="btn btn-primary" value="Save">
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- /.content -->
+    </div>
 
 </div>

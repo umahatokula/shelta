@@ -62,6 +62,28 @@ class Client extends Model
         
         return $sname .' '.$onames;
     }
+
+    public function routeNotificationForWhatsApp() {
+        return $this->phone;
+    }
+
+    /**
+     * Ensure phone number has country code.
+     *
+     * @return bool
+     */
+    public function getPhoneAttribute($value)
+    {
+        if (strlen($value) == 11) {
+           $phone = '+234'.substr($value, 1);
+        }
+
+        if (strlen($value) == 10) {
+           $phone = '+234'.$value;
+        }
+
+        return $phone;
+    }
     
     /**
      * transactions

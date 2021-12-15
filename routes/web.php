@@ -8,6 +8,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Livewire\Clients\AddProperty;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
+use App\Http\Controllers\ImportsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PropertiesController;
@@ -80,6 +81,8 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::resource('property-types', PropertyTypesController::class);
 
     // estate property-type
+    Route::get('estate-property-type/{estate}/{propertyType}/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotification'])->name('estate-property-type.clients.send-notification');
+    Route::post('estate-property-type/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotificationStore'])->name('estate-property-type.clients.send-notification.store');
     Route::get('estate-property-type/{estate}/{propertyType}/clients', [EstatePropertyTypeController::class, 'showClients'])->name('estate-property-type.clients');
 
     // payment-plans
@@ -99,6 +102,12 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
     // search
     Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
+
+    // imports
+    Route::get('imports/clients', [ImportsController::class, 'importClients'])->name('imports.clients');
+    Route::post('imports/clients', [ImportsController::class, 'importClientsStore'])->name('imports.clients.store');
+    Route::get('imports/property', [ImportsController::class, 'importProperty'])->name('imports.property');
+    Route::post('imports/property', [ImportsController::class, 'importPropertyStore'])->name('imports.property.store');
 
     // transactions
     // Route::resource('transactions', TransactionsController::class);

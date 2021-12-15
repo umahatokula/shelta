@@ -6,10 +6,12 @@ use PDF;
 use Mail;
 use App\Models\User;
 use App\Models\Client;
+use App\Helpers\Helpers;
 use App\Models\Transaction;
 use App\Mail\CustomMailable;
 use Illuminate\Http\Request;
 use App\Mail\PaymentMadeMailable;
+use Twilio\Rest\Client as TwilioClient;
 use App\Http\Requests\UpdateClientProfileRequest;
 
 class ClientsController extends Controller
@@ -128,7 +130,7 @@ class ClientsController extends Controller
     public function sendMail(Client $client) {
         $data['client'] = $client;
         
-        return view('admin.clients.send-mail', $data);
+        return view('admin.clients.send-notification', $data);
     }
 
     public function sendMailPost(Request $request) {
@@ -136,12 +138,35 @@ class ClientsController extends Controller
 
         $client = Client::findOrFail($request->client_id);
 
-        if ($client ->email) {
-            Mail::to($client->email)
-            ->send(new CustomMailable($request->subject, $request->message));
+        // send SMS
+        if ($request->has('sms')) {        
+            if ($client->phone) {
+
+                Helpers::sendSMSMessage($client->phone, $request->message);
+
+            }
+        }
+        
+
+        // send whatsapp
+        if ($request->has('whatsapp')) {        
+            if ($client->phone) {
+
+                Helpers::sendWhatsAppMessage($client->phone, $request->message);
+
+            }
+        }
+        
+
+        // send email
+        if ($request->has('email')) {
+            if ($client->email) {
+                Mail::to($client->email)
+                ->send(new CustomMailable($request->subject, $request->message));
+            }
         }
 
-        session()->flash('message', 'Message sent to client');
+        session()->flash('message', 'Notification sent to client');
         return redirect()->back();
         
     }

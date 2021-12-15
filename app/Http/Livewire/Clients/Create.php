@@ -53,7 +53,7 @@ class Create extends Component
     public $estatePropertyType;
 
     public $allPropertyTypes;
-    public $allProperties;    
+    public $allProperties;
 
     public $clientProperties = [];
     public $clientSubscribedProperties = [ // properties already subscribed to by client
@@ -81,7 +81,7 @@ class Create extends Component
         'onames.required' => 'This field is required',
         'phone.required' => 'This field is required',
     ];
-     
+
     /**
      * mount
      *
@@ -96,11 +96,11 @@ class Create extends Component
         $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
         $this->allPropertyTypes = PropertyType::all()->toArray();  // get all property types once on mount of component to reduce DB calls
         $this->allProperties    = Property::all();                 // get all properties once on mount of component to reduce DB calls
-        
+
         $this->propertyTypes[] = [];
         $this->properties[] = [];
     }
-    
+
     /**
      * getPropertyTypes
      *
@@ -118,7 +118,7 @@ class Create extends Component
 
         $this->estate_id = $estateId;
     }
-    
+
     /**
      * getPropertyTypes
      *
@@ -128,7 +128,7 @@ class Create extends Component
     public function onSelectPropertyType($propertyTypeId, $key) {
 
         $this->propertyType_id = $propertyTypeId;
-        
+
         $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
     }
 
@@ -140,11 +140,11 @@ class Create extends Component
             'property_id' => null,
             'payment_plan_id' => null,
         ];
-        
+
         // add property types & properties to array
         $this->propertyTypes[] = [];
     }
-    
+
     /**
      * removeProperty
      *
@@ -153,15 +153,15 @@ class Create extends Component
      */
     public function removeProperty($key) {
         // dd($this->propertyTypes, $this->properties, $key);
-        
+
         array_splice($this->clientSubscribedProperties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
-        
+
         // remove property types from array
         array_splice($this->propertyTypes, $key, 1);
         array_splice($this->properties, $key, 1);
     }
-    
+
     /**
      * Merge properties not allocaated to anyone and properties allocated to client.
      *
@@ -178,7 +178,7 @@ class Create extends Component
         return $this->allProperties->where('client_id', null)->where('estate_property_type_id', $this->estatePropertyType->id)->toArray(); // get unallocated properties
 
     }
-    
+
     /**
      * save
      *
@@ -187,7 +187,7 @@ class Create extends Component
     public function save() {
 
         $this->validate();
- 
+
         $client = new Client;
         $client->sname                 = $this->sname;
         $client->onames                = $this->onames;
@@ -224,12 +224,14 @@ class Create extends Component
 
         }
 
-        $user = User::create([
-            'name'      => $client->sname.' '.$client->onames,
-            'email'     => $client->email,
-            'client_id' => $client->id,
-            'password'  => Hash::make('12345678'),
-        ]);
+        $user = User::updateOrCreate(
+            ['email' =>  $this->email],
+            [
+                'name'      => $client->sname.' '.$client->onames,
+                'client_id' => $client->id,
+                'password'  => Hash::make('12345678'),
+            ]
+        );
 
         // assign role
         $user->assignRole('client');
@@ -239,7 +241,7 @@ class Create extends Component
 
         redirect()->route('clients.index');
     }
-    
+
     public function render()
     {
         return view('livewire.clients.create');

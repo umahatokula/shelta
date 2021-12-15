@@ -1,5 +1,5 @@
 
-<link href="{{ public_path('assets/vendor_components/bootstrap/dist/css/bootstrap.css') }}" rel="stylesheet">
+<link href="{{ public_path('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
 
 <style>
   #invoice {
@@ -20,7 +20,7 @@
                   </div>
                   <div class="col-md-6 text-right mt-3">
                       {{-- <img src="{{ asset('assets/images/user7-128x128.jpg') }}" alt="" class="img-fluid" width="150px"> --}}
-                      <h5 class="text-danger mb-0">{{ config('app.name', 'Real Estate App') }}</h5><small>https://www.ochachorealhomes.com</small>
+                      <h5 class="text-danger mb-0">{{ config('app.name', 'Real Estate App') }}</h5>
                   </div>
               </div>
               <div class="mt-3">

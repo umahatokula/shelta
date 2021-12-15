@@ -128,6 +128,14 @@
                                                                 <td>&#x20A6; {{ number_format($property->totalPaid(), 2) }}</td>
                                                             </tr>
                                                             <tr>
+                                                                <td>Next Payment Date:</td>
+                                                                <td>
+                                                                    @if ($property->nextPaymentDueDate())
+                                                                    {{ $property->nextPaymentDueDate()->toFormattedDateString() }}
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td>Last Payment:</td>
                                                                 <td>
                                                                     @if ($property->lastPayment())
