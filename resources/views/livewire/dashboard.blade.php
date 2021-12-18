@@ -12,11 +12,22 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                          <div class="row">
-                            <div class="col">
-                              Due in <input type="text" class="form-control" placeholder="3" aria-label="Due in"> days
-                            </div>
-                          </div>
+                          <form wire:submit="fetchDuePayments">
+                            <div class="row">
+                                <div class="col-3 col-md-1 mt-3">
+                                    Due in 
+                                </div>
+                                <div class="col-3 col-md-1">
+                                  <input wire:model.defer="dueIn" type="number" class="form-control" placeholder="3" aria-label="Due in">
+                                </div>
+                                <div class="col-3 col-md-1 mt-3"> 
+                                    days
+                                </div>
+                                <div class="col-md-3 mt-3 mt-md-0">
+                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                                </div>
+                              </div>
+                          </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">

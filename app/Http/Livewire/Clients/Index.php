@@ -10,15 +10,17 @@ class Index extends Component
 {
 
     use WithPagination;
-    
+
     protected $paginationTheme = 'bootstrap';
-    
+
 
     protected $listeners = ['affirmationAction' => 'destroy'];
 
     public function destroy($id) {
         Client::findOrFail($id)->delete();
-        session()->flash('message', 'Client deleted.');
+        // session()->flash('message', 'Client deleted.');
+
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client deleted.']);
     }
 
     public function render()

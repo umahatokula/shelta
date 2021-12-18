@@ -7,7 +7,7 @@
             <li class="sidebar-title">
                 Dashboard
             </li>
-            
+
             <li class="{{ url()->current() == route('dashboard') ? 'active-page' : '' }}">
                 <a href="{{route('dashboard')}}" class="active"><i class="material-icons-two-tone">dashboard</i>Dashboard</a>
             </li>
@@ -71,6 +71,18 @@
                     </li>
                     <li class="{{ url()->current() == route('payment-plans.create') ? 'active' : '' }}">
                         <a href="{{ route('payment-plans.create') }}" class="item">Add Payment Plans</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="{{ url()->current() == route('property-prices.index') ? 'active-page' : '' || url()->current() == route('property-prices.create') ? 'active-page' : '' }}">
+                <a href=""><i class="material-icons-two-tone">paid</i>Property Prices<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
+                <ul class="sub-menu">
+                    <li class="{{ url()->current() == route('payment-plans.index') ? 'active' : '' }}">
+                        <a href="{{ route('property-prices.index') }}" class="item">All Property Prices</a>
+                    </li>
+                    <li class="{{ url()->current() == route('payment-plans.create') ? 'active' : '' }}">
+                        <a href="{{ route('property-prices.create') }}" class="item">Add Property Price</a>
                     </li>
                 </ul>
             </li>

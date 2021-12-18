@@ -40,7 +40,7 @@ class SendMonthlyPaymentReminders {
                 }
 
                 // ================SEND NOTIFICATION (Email & WhatsApp)===================
-                Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message));
+                Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
             }
         }
 

@@ -98,8 +98,7 @@ class Property extends Model
      */
     public function nextPaymentDueDate() {
 
-        $nextDueDate = Carbon::today()->addMonth()->addDays(7);
-        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
+        $nextDueDate = Carbon::today()->addMonth();
 
         $day = $this->date_of_first_payment->day;
         $month = $nextDueDate->month;
@@ -113,10 +112,9 @@ class Property extends Model
      *
      * @return void
      */
-    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue() {
+    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_before_due_date) {
 
-        $nextDueDate = Carbon::today()->addDays(7);
-        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
+        $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
 
         $day = $nextDueDate->day;
         $month = $nextDueDate->month;

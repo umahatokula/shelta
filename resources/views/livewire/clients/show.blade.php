@@ -100,7 +100,9 @@
                                                 <!-- /.box-body -->
                                                 @if ($client->id)
                                                 <div class="box-footer">
-                                                    <a href="#" class="btn btn-primary btn-block" id="onlinePaymentBtn">Pay Now</a>
+                                                    <div class="d-grid grid-2">
+                                                        <a href="#" class="btn btn-primary btn-lg" id="onlinePaymentBtn">Pay Now</a>
+                                                    </div>
                                                 </div>
                                                 @endif
 
@@ -157,7 +159,7 @@
                                             @elseif ($transaction->status == 2)
                                                 <span class="badge badge-danger">unapproved</span>
                                             @else
-                                                <span class="badge badge-default">unprocessed</span>
+                                                <span class="badge badge-secondary">unprocessed</span>
                                             @endif
                                         </td>
 
@@ -282,7 +284,7 @@
                                                 <div class="box-body">
                                                     <!-- Place somewhere in the <body> of your page -->
                                                     <div class="row">
-                                                        <div class="col-lg-4">
+                                                        {{-- <div class="col-lg-4">
                                                             <div class="flexslider2">
                                                                 <ul class="slides">
 
@@ -302,9 +304,9 @@
 
                                                                 </ul>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
 
-                                                        <div class="col-lg-8 col-12">
+                                                        <div class="col-lg-6 col-12">
                                                             <table class="table table-hover">
                                                                 <tbody>
                                                                     <tr>
@@ -319,10 +321,16 @@
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
+                                                                        <td>Payment Plan:</td>
+                                                                        <td>
+                                                                            {{ $property->paymentPlan->name }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td>Price:</td>
                                                                         <td>
                                                                             @if ($property->estatePropertyType)
-                                                                            &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }}
+                                                                            &#x20A6; {{ number_format($property->estatePropertyType->priceOfPaymentPlan($property->payment_plan_id), 2) }}
                                                                             @endif
                                                                         </td>
                                                                     </tr>
@@ -330,6 +338,13 @@
                                                                         <td>House number:</td>
                                                                         <td>{{ $property->unique_number }}</td>
                                                                     </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                          <div class="col-lg-6 col-12">
+                                                              <table class="table table-hover">
+                                                                  <tbody>
                                                                     <tr>
                                                                         <td colspan="2"><b>Payment Info:</b></td>
                                                                     </tr>
@@ -415,7 +430,7 @@
             var property_id = document.getElementById('payingPropertyId').value;
 
             let handler = PaystackPop.setup({
-                    key: 'pk_test_d074441bc47f3e809844c28048c7115754ae648f', // Replace with your public key
+                    key: '{{env("PAYSTACK_PK")}}', // Replace with your public key
                     email: email,
                     amount: amount * 100,
                 onClose: function(){

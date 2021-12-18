@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Clients;
 
 use PDF;
+use DB;
 use Mail;
 use Carbon\Carbon;
 use App\Models\Client;
@@ -32,34 +33,37 @@ class Show extends Component
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
  
-        if ($data['status'] === 'success') {
-            $transaction = Transaction::create([
-                'client_id'          => $data['client_id'],
-                'property_id'        => $data['property_id'],
-                'amount'             => $data['amount'],
-                'type'               => 'online',
-                'transaction_number' => $data['reference'],
-                'date'               => Carbon::now(),
-                'recorded_by'        => auth()->id(),
-                'status'             => 1,
-                'is_approved'        => 1,
-            ]);
-
-            if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
-                Property::where('id', $transaction->property_id)->update([
-                    'date_of_first_payment' => Carbon::now(),
-               ]);
+        $transaction = null;
+        DB::transaction(function () use($data, &$transaction) {
+            if ($data['status'] === 'success') {
+                $transaction = Transaction::create([
+                    'client_id'          => $data['client_id'],
+                    'property_id'        => $data['property_id'],
+                    'amount'             => $data['amount'],
+                    'type'               => 'online',
+                    'transaction_number' => $data['reference'],
+                    'date'               => Carbon::now(),
+                    'recorded_by'        => auth()->id(),
+                    'status'             => 1,
+                    'is_approved'        => 1,
+                ]);
+    
+                if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
+                    Property::where('id', $transaction->property_id)->update([
+                        'date_of_first_payment' => Carbon::now(),
+                   ]);
+                }
             }
-        }
-
-        OnlinePayment::create([
-            'client_id'      => $data['client_id'],
-            'transaction_id' => $transaction ? $transaction->id : null,
-            'message'        => $data['message'],
-            'reference'      => $data['reference'],
-            'status'         => $data['status'],
-            'amount'         => $data['amount'],
-        ]);
+    
+            OnlinePayment::create([
+                'client_id'      => $data['client_id'],
+                'transaction_id' => $transaction ? $transaction->id : null,
+                'message'        => $data['message'],
+                'reference'      => $data['reference'],
+                'status'         => $data['status'],
+                'amount'         => $data['amount'],
+            ]);
+        });
 
         // log this transaction
         activity()

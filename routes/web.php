@@ -17,6 +17,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\PropertyTypesController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\EstatePropertyTypeController;
+use App\Http\Controllers\PropertyPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name(
 Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend')->middleware(['auth']);
 
 Route::get('/', function () {
-    return redirect()->route('home');    
+    return redirect()->route('home');
 });
 
 Route::get('/home', function () {
@@ -47,11 +48,10 @@ Route::get('/home', function () {
     }
 
     return redirect()->route('dashboard');
-    
+
 })->name('home')->middleware('auth');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
 
 Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
@@ -75,6 +75,8 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::resource('properties', PropertiesController::class);
 
     // estates
+    // Route::get('estates/add-property-price', [EstatesController::class, 'addPropertyPrice'])->name('estates.add-property-price');
+    // Route::post('estates/add-property-price', [EstatesController::class, 'addPropertyPriceStore'])->name('estates.add-property-price.store');
     Route::resource('estates', EstatesController::class);
 
     // property-types
@@ -87,6 +89,9 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
     // payment-plans
     Route::resource('payment-plans', PaymentPlansController::class);
+
+    // property prices
+    Route::resource('property-prices', PropertyPriceController::class);
 
     // settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -112,9 +117,6 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     // transactions
     // Route::resource('transactions', TransactionsController::class);
 });
-
-
-
 
 // ======================================================================
 //
@@ -146,7 +148,6 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
 
 });
 
-
 Route::get('/mailable', function () {
 
     $nextDueDate = Carbon::today()->addDays(config('payments.payment_reminder_days'));
@@ -156,7 +157,7 @@ Route::get('/mailable', function () {
         ->whereNotNull('date_of_first_payment')
         ->get()
         ->filter(function ($property, $key) use($nextDueDate) {
-            
+
             $day = 28;
             if ($property->date_of_first_payment->day < 28) {
                 $day = $property->date_of_first_payment->day;
@@ -180,8 +181,7 @@ Route::get('/mailable', function () {
             return new App\Mail\SendMonthlyPaymentRemindersMailable($property);
         }
     }
-    
-});
 
+});
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

@@ -66,6 +66,16 @@ class Client extends Model
     public function routeNotificationForWhatsApp() {
         return $this->phone;
     }
+    /**
+     * Set the user's first name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = trim(str_replace(' ', '', $value));
+    }
 
     /**
      * Ensure phone number has country code.
@@ -74,6 +84,8 @@ class Client extends Model
      */
     public function getPhoneAttribute($value)
     {
+        $phone = $value;
+
         if (strlen($value) == 11) {
            $phone = '+234'.substr($value, 1);
         }

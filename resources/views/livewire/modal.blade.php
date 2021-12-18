@@ -4,7 +4,7 @@
         @if ($show)
 
             {{-- <livewire:transactions.transactions-create /> --}}
-            <livewire:dynamic-component component="{{$comp}}" />
+            <livewire:dynamic-component component="{{$comp}}" index="{{$index}}" />
 
         @endif
 

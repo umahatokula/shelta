@@ -1,8 +1,9 @@
+<!-- Content Header (Page header) -->
 <div>
     <div class="row">
         <div class="col">
             <div class="page-description">
-                <h1>{{ config('app.name', 'Real Estate App') }} - Estates</h1>
+                <h1>{{ config('app.name', 'Real Estate App') }} - Add Payment Plan</h1>
             </div>
         </div>
     </div>
@@ -14,7 +15,7 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
-                            <a href="{{ route('estates.create') }}" class="btn-lg btn btn-primary">Add Estate</a>
+                            <a href="{{ route('property-prices.create') }}" class="btn-lg btn btn-primary">Add Property Price</a>
                         </div>
                     </div>
                 </div>
@@ -29,39 +30,32 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="table-responsive-sm">
+
                                 <table class="table mb-0">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th class="text-left">Name</th>
-                                            <th>Address</th>
-                                            <th>Property Types</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-left">Price</th>
+                                            <th class="text-center">Status</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($estates as $estate)
+                                        @foreach ($prices as $price)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td class="text-left">{{ $estate->name }}</td>
-                                            <td>{{ $estate->address }}</td>
+                                            <td class="text-left">{{ number_format($price->price, 2) }}</td>
+                                            <td class="text-center">{{ $price->is_active }}</td>
                                             <td>
-                                                <ul>
-                                                    @foreach ($estate->propertyTypes as $propertyType)
-                                                        <li><a href="{{ route('property-types.show', $propertyType) }}">{{ ucfirst(strtolower($propertyType->name)) }}</a></li>
-                                                    @endforeach     
-                                                </ul>   
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('estates.edit', $estate) }}" class="text-warning p-0" data-original-title=""
-                                                    title="Edit">
+                                                <a href="{{ route('property-prices.edit', $price) }}" class="text-warning p-0" data-original-title="Edit"
+                                                    title="">
                                                     <span class="material-icons-outlined">
                                                         edit
                                                         </span>
-                                                </a>
-                                                <a wire:click="destroy({{ $estate->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
+                                                </a> &nbsp
+                                                <a wire:click="destroy({{ $price->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
                                                     data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
@@ -70,12 +64,10 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
-    
-                                {{ $estates->links() }}
-    
+
                             </div>
                         </div>
                     </div>

@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\DB;
 class Dashboard extends Component
 {
     public $propertyTypes;
-    public $properties;
+    public $properties = [];
+    public $dueIn;
 
     public function mount() {
+        $this->dueIn = 0;
 
         $user = auth()->user();
         if ($user->hasRole('client')) {
@@ -29,23 +31,11 @@ class Dashboard extends Component
 
         });
 
-        // $this->propertyTypes = PropertyType::withWhereHas('properties.transactions', function($query) {
-        //     $query->whereMonth('created_at', Carbon::now()->format('m'))->sum('amount');
-        // })->get();
-
-        // $this->propertyTypes = DB::table('property_types')
-        // ->selectRaw('property_types.*, properties.*, transactions.*, transactions.amount AS transaction_amount')
-        // ->join('estate_property_type', 'property_types.id', '=', 'estate_property_type.property_type_id')
-        // ->join('properties', 'estate_property_type.id', '=', 'properties.estate_property_type_id')
-        // ->join('transactions', function ($join) {
-        //     $join->on('properties.id', '=', 'transactions.property_id') ->whereMonth('transactions.created_at', '=', Carbon::now()->format('m'));
-        // })
-        // ->get();
-
-        $this->properties = (new Property())->getPropertiesDueForReminder(1);
-        // dd($this->properties);
     }
 
+    public function fetchDuePayments() {
+        $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
+    }
 
     public function render()
     {

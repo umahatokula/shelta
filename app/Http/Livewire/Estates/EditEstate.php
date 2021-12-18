@@ -4,8 +4,11 @@ namespace App\Http\Livewire\Estates;
 
 use App\Models\Estate;
 use Livewire\Component;
+use App\Models\PaymentPlan;
 use App\Models\PropertyType;
+use App\Models\PropertyPrice;
 use App\Models\EstatePropertyType;
+use App\Models\EstatePropertyTypePrice;
 
 class EditEstate extends Component
 {
@@ -15,13 +18,15 @@ class EditEstate extends Component
     public $name, $address;
     public $addedProperties = [];
 
+    protected $listeners = ['propertyPriceAdded'];
+
     protected $rules = [
         'name' => 'required|string|min:6',
         'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
         'addedProperties.*.number_of_units' => 'numeric',
         'addedProperties.*.property_id' => 'distinct',
     ];
-    
+
     /**
      * mount
      *
@@ -31,10 +36,12 @@ class EditEstate extends Component
 
         $this->propertyTypes = PropertyType::all();
 
+        $this->paymentPlans = array_combine(PaymentPlan::pluck('id')->toArray(), PaymentPlan::pluck('name')->toArray());
+        $this->propertyPrices = array_combine(PropertyPrice::pluck('id')->toArray(), PropertyPrice::pluck('price')->toArray());
+
         $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) {
             return [
                 'property_id' => $property->id,
-                'price' => $property->pivot->price,
                 'number_of_units' => $property->pivot->number_of_units,
             ];
         })->toArray();
@@ -43,7 +50,7 @@ class EditEstate extends Component
         $this->address = $estate->address;
 
     }
-    
+
     /**
      * addProperty
      *
@@ -52,11 +59,10 @@ class EditEstate extends Component
     public function addProperty() {
         array_push($this->properties, [
             'property' => $this->propertyTypes,
-            'price' => '',
             'number_of_units' => '',
         ]);
     }
-    
+
     /**
      * removeProperty
      *
@@ -74,7 +80,7 @@ class EditEstate extends Component
         array_key_exists($key, $this->addedProperties) ? array_splice($this->addedProperties, $key, 1) : null;
     }
 
-    
+
     /**
      * save
      *
@@ -83,12 +89,12 @@ class EditEstate extends Component
     public function save() {
 
         $this->validate();
- 
+
         $estate = Estate::findOrFail($this->estate->id);
         $estate->name    = $this->name;
         $estate->address = $this->address;
         $estate->save();
-        
+
         // get existing property types attached to this estate
         // $addedPropertyTypesInArrayFormat = collect($this->addedProperties)->map(function($p) {
         //     return $p['property_id'];
@@ -98,20 +104,33 @@ class EditEstate extends Component
         //     return in_array($value->property_type_id, $addedPropertyTypesInArrayFormat);
         // });
         // dd($toBeRemoved, $addedPropertyTypesInArrayFormat);
+        
 
         // attach new properties
         $attachedPropertyTypes = [];
         foreach($this->addedProperties as $property) {
-            EstatePropertyType::updateOrCreate(
+           $estatePropertyType = EstatePropertyType::updateOrCreate(
                 [
-                    'estate_id' => $estate->id, 
+                    'estate_id' => $estate->id,
                     'property_type_id' => $property['property_id'],
                 ],
                 [
-                    'price' => $property['price'], 
                     'number_of_units' => $property['number_of_units']
                 ]
             );
+
+            if (isset($property['prices'])) {
+
+                EstatePropertyTypePrice::where('estate_property_type_id', $estatePropertyType->id)->delete();
+
+                foreach ($property['prices'] as $value) {
+                  EstatePropertyTypePrice::create([
+                    'estate_property_type_id' => $estatePropertyType->id,
+                    'payment_plan_id' => $value['plan_id'],
+                    'property_price_id' => $value['price_id'],
+                  ]);
+                }
+              }
 
             $attachedPropertyTypes[] = $property['property_id'];
         }
@@ -126,6 +145,17 @@ class EditEstate extends Component
 
     }
     
+    /**
+     * propertyPriceAdded
+     *
+     * @param  mixed $index
+     * @param  mixed $prices
+     * @return void
+     */
+    public  function propertyPriceAdded($index, $prices) {
+      $this->addedProperties[$index]['prices'] = $prices;
+    }
+
     public function render()
     {
         return view('livewire.estates.edit-estate');
