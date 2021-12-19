@@ -137,7 +137,13 @@
                                         <td>
                                             @if ($transaction->property)
                                                 @if ($transaction->property->estatePropertyType)
-                                                    <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }} [{{ $transaction->property->unique_number }}]
+                                                    <span class="text-warning">{{ 
+                                                    
+                                                    $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - 
+                                                    
+                                                    {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }} 
+                                                    
+                                                    [{{ $transaction->property->unique_number }}]
                                                 @endif
                                             @endif
                                         </td>
@@ -257,7 +263,7 @@
 
                             @forelse ($client->properties->chunk(3) as $chunk)
 
-                            <div class="row">
+                            <div class="row mb-5">
 
                                 @foreach ($chunk as $property)
                                 <div class="col-12">

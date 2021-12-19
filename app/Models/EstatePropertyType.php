@@ -4,9 +4,10 @@ namespace App\Models;
 
 use App\Models\Estate;
 use App\Models\Property;
-use App\Models\PropertyType;
-use App\Models\PropertyTypePrice;
 use App\Models\PaymentPlan;
+use App\Models\PropertyType;
+use App\Models\PropertyPrice;
+use App\Models\PropertyTypePrice;
 use App\Models\EstatePropertyTypePrice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,7 +37,7 @@ class EstatePropertyType extends Model
     public function estate() {
         return $this->belongsTo(Estate::class)->withDefault();
     }
-
+    
     /**
      * properties
      *
@@ -45,22 +46,35 @@ class EstatePropertyType extends Model
     public function properties() {
         return $this->hasMany(Property::class);
     }
-
-    public function prices() {
-      return $this->hasMany(PropertyTypePrice::class);
+    
+    /**
+     * estatePropertyTypePrices
+     *
+     * @return void
+     */
+    public function estatePropertyTypePrices() {
+      return $this->hasMany(EstatePropertyTypePrice::class);
     }
-
-    public function paymentPlans() {
-      return $this->hasMany(PaymentPlan::class);
-    }
-
+    
+    
+    /**
+     * Get the price of a payment plan
+     *
+     * @param  int $paymentPlanId
+     * @return int
+     */
     public function priceOfPaymentPlan($paymentPlanId) {
-      $estatePropertyTypePrice = EstatePropertyTypePrice::with('propertTypePrice')->where([
+      $estatePropertyTypePrice = EstatePropertyTypePrice::with('propertyPrice')->where([
           'estate_property_type_id' => $this->id,
           'payment_plan_id' => $paymentPlanId,
         ])->first();
 
-      return $estatePropertyTypePrice->propertTypePrice ? $estatePropertyTypePrice->propertTypePrice->price : 0;
+      if (!$estatePropertyTypePrice) {
+        return 0;
+      }
+      
+      return $estatePropertyTypePrice->propertyPrice ? $estatePropertyTypePrice->propertyPrice->price : 0;
+      
     }
 
     public static function boot() {

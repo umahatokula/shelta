@@ -62,74 +62,77 @@
                             </div>
                             <hr class="my-15">
 
-                            @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
-                            <div class="row" style="margin-bottom: 25px">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Estate</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.estate_id" wire:change="onSelectEstate($event.target.value, {{$key}})" class="form-select form-control"
-                                            required>
-                                            <option value="">Please select one</option>
-                                            @foreach ($estates as $estate)
-                                            <option value="{{ $estate->id }}">{{ $estate->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Property Type</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.property_type_id" wire:change="onSelectPropertyType($event.target.value, {{$key}})"
-                                            class="form-select form-control" required>
-                                            <option value="">Please select one</option>
-                                            @foreach ($propertyTypes[$key] as $propertyType)
-                                            <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="form-label">Property</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.property_id"
-                                            class="form-select form-control" required>
-                                            <option value="">Please select one</option>
-                                            @isset($properties[$key])
-                                                @foreach ($properties[$key] as $property)
-                                                <option value="{{ $property['id'] }}">{{ $property['unique_number'] }}</option>
+                            <form wire:submit.prevent="save">
+                                @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
+                                <div class="row" style="margin-bottom: 25px">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Estate</label>
+                                            <select wire:model.lazy="clientProperties.{{$key}}.estate_id" wire:change="onSelectEstate($event.target.value, {{$key}})" class="form-select form-control"
+                                                required>
+                                                <option value="">Please select one</option>
+                                                @foreach ($estates as $estate)
+                                                <option value="{{ $estate->id }}">{{ $estate->name }}</option>
                                                 @endforeach
-                                            @endisset
-                                            
-                                        </select>
-                                        @error('price') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Property Type</label>
+                                            <select wire:model.lazy="clientProperties.{{$key}}.property_type_id" wire:change="onSelectPropertyType($event.target.value, {{$key}})"
+                                                class="form-select form-control" required>
+                                                <option value="">Please select one</option>
+                                                @foreach ($propertyTypes[$key] as $propertyType)
+                                                <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="form-label">Property</label>
+                                            <select wire:model.lazy="clientProperties.{{$key}}.property_id"
+                                                class="form-select form-control" required>
+                                                <option value="">Please select one</option>
+                                                @isset($properties[$key])
+                                                    @foreach ($properties[$key] as $property)
+                                                    <option value="{{ $property['id'] }}">{{ $property['unique_number'] }}</option>
+                                                    @endforeach
+                                                @endisset
+                                                
+                                            </select>
+                                            @error('price') <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Payment Plan</label>
+                                            <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
+                                                class="form-select form-control" required>
+                                                <option value="">Please select one</option>
+                                                @forelse ($paymentPlans[$key] as $paymentPlan)
+                                                    <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>                                                
+                                                @empty
+                                                    <option value="">No options</option>                                                
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 pt-4 d-flex justify-content-end align-items-center">
+                                        <div class="form-group">
+                                            <a wire:click.prevent="removeProperty({{ $key }})" href="#" class="text-white">
+                                                <span class="badge badge-danger">Remove</span> </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Payment Plan</label>
-                                        <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
-                                            class="form-select form-control" required>
-                                            <option value="">Please select one</option>
-                                            @foreach ($paymentPlans as $paymentPlan)
-                                            <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 pt-4 d-flex justify-content-end align-items-center">
-                                    <div class="form-group">
-                                        <a wire:click.prevent="removeProperty({{ $key }})" href="#" class="text-white">
-                                            <span class="badge badge-danger">Remove</span> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
+                                @endforeach
 
-                            <div class="box-footer">
-                                <a class="btn btn-warning me-1 btn-lg" href="{{ url()->previous() }}">Cancel</a>
-                                <input type="submit" class="btn btn-primary btn-lg" value="Save">
-                            </div>
-
+                                <div class="box-footer">
+                                    <a class="btn btn-warning me-1 btn-lg" href="{{ url()->previous() }}">Cancel</a>
+                                    <input type="submit" class="btn btn-primary btn-lg" value="Save">
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

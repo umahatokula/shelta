@@ -39,10 +39,21 @@ class EditEstate extends Component
         $this->paymentPlans = array_combine(PaymentPlan::pluck('id')->toArray(), PaymentPlan::pluck('name')->toArray());
         $this->propertyPrices = array_combine(PropertyPrice::pluck('id')->toArray(), PropertyPrice::pluck('price')->toArray());
 
-        $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) {
+        $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) use($estate) {
+
+            // get payment plans and prices for property type
+            $results = $property->getPaymentPlanAndPriceOfPropertType($estate->id);
+            foreach ($results as $result) {
+                $prices[] = [
+                    'plan_id' => $result->payment_plan_id,
+                    'price_id' => $result->property_price_id,
+                ];
+            }
+
             return [
                 'property_id' => $property->id,
                 'number_of_units' => $property->pivot->number_of_units,
+                'prices' => $prices,
             ];
         })->toArray();
 
@@ -109,7 +120,8 @@ class EditEstate extends Component
         // attach new properties
         $attachedPropertyTypes = [];
         foreach($this->addedProperties as $property) {
-           $estatePropertyType = EstatePropertyType::updateOrCreate(
+
+            $estatePropertyType = EstatePropertyType::updateOrCreate(
                 [
                     'estate_id' => $estate->id,
                     'property_type_id' => $property['property_id'],

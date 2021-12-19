@@ -54,7 +54,13 @@
                                                             <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a></small>
                                                         </td>
                                                         <td class="text-center">{{ $estate->number_of_units }}</td>
-                                                        <td class="text-right">{{ number_format($estate->unit_price) }}</td>
+                                                        <td class="text-right">
+                                                            @forelse ($estate->getPaymentPlanAndPriceOfPropertType($propertyType->id) as $value)
+                                                            {{ $value->paymentPlan->name }} - {{ number_format($value->propertyPrice->price) }} <br>
+                                                            @empty
+                                                                <p>No price assigned</p>
+                                                            @endforelse
+                                                        </td>
                                                         {{-- <td class="text-right">{{ number_format($estate->property_transaction_total) }}</td> --}}
                                                     </tr>
                                                 @empty

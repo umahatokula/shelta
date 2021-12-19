@@ -65,6 +65,35 @@ class PropertyType extends Model implements HasMedia
     {
         return $this->belongsToMany(Estate::class, 'estate_property_type', 'property_type_id', 'estate_id')->withTimestamps()->withPivot(['price', 'number_of_units']);
     }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function estatePropertyType() {
+        return $this->hasMany(EstatePropertyType::class);
+    }
+    
+    /**
+     * Get the payment plan ID and property price ID of a property type
+     *
+     * @param  int $estate_id
+     * @return void
+     */
+    public function getPaymentPlanAndPriceOfPropertType($estate_id) : Array {
+        $ans = [];
+
+        $this->estatePropertyType->where('estate_id', $estate_id)->map(function($estatePropertyType) use(&$ans) {
+            return $estatePropertyType->estatePropertyTypePrices->map(function($estatePropertyTypePrice) use(&$ans) {
+
+                return $ans[] = $estatePropertyTypePrice;
+
+            });
+        });
+
+        return $ans;
+    }
 
     public function scopeWithWhereHas($query, $relationship, $constraint) {
         return $query->with([$relationship => $constraint]);
