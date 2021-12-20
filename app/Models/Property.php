@@ -123,7 +123,14 @@ class Property extends Model
 
         return Carbon::parse($month.'/'.$day.'/'.$year);
     }
-
+    
+    /**
+     * Get Properties Due For Reminder based on the supplied number of days
+     *
+     * @param  mixed $number_of_days_before_due_date
+     * @param  mixed $estatePropertyTypePrice
+     * @return void
+     */
     public function getPropertiesDueForReminder($number_of_days_before_due_date, $estatePropertyTypePrice) {
 
       $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
@@ -154,5 +161,37 @@ class Property extends Model
 
               return ($day == $dueDate) && $property->transactionTotal() < $propertyPrice;
           });
+    }
+    
+    /**
+     * Get the Payment plan and Price this property is attached to
+     *
+     * @return void
+     */
+    public function getPaymentPlanAndPrice() {
+
+        return $this->estatePropertyType->estatePropertyTypePrices->filter(function($estatePropertyTypePrice) {
+            return $this->payment_plan_id == $estatePropertyTypePrice->payment_plan_id;
+        })->first();
+
+    }
+    
+    /**
+     * Get Monthly Payment Amount
+     *
+     * @return void
+     */
+    public function getMonthlyPaymentAmount() {
+
+        $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
+
+        $paymentPlanNumberOfMonths = $paymentPlanAndPrice->paymentPlan->number_of_months;
+        $price = $paymentPlanAndPrice->propertyPrice->price;
+
+        if ($paymentPlanNumberOfMonths == 0) {
+            return 0;
+        }
+
+        return $price / $paymentPlanNumberOfMonths;
     }
 }

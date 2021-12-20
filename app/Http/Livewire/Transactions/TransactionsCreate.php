@@ -106,7 +106,7 @@ class TransactionsCreate extends Modal
 
         if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
             Property::where('id', $transaction->property_id)->update([
-                'date_of_first_payment' => Carbon::now(),
+                'date_of_first_payment' => $transaction->data,
            ]);
         }
 

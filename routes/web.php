@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use App\Models\Property;
+use App\Models\PaymentDefault;
 use Illuminate\Support\Facades\Route;
 use App\Models\PaymentReminderSetting;
 use App\Models\EstatePropertyTypePrice;
@@ -156,29 +157,38 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
 
 Route::get('/mailable', function () {
 
-    $paymentReminderDates = PaymentReminderSetting::all();
+    // $pastDueProperties = Property::where(function($query) {
+    //     return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
+    // })->get();
 
-    $estatePropertyTypePrice = EstatePropertyTypePrice::all();
+    $pastDueProperties = Property::where(function($query) {
+        return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
+    })
+    ->whereNotIn('id', function ($query) {
+        $query->select('transactions.property_id') // get previous day's transactions
+            ->from('transactions')
+            ->whereDate('transactions.date', '=', Carbon::yesterday());
+    })->get();
 
-    foreach ($paymentReminderDates as $paymentReminderDate) {
-      
-        $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date, $estatePropertyTypePrice);
+    $inserts = [];
+    foreach ($pastDueProperties as $property) {
 
-        foreach ($properties as $property) {
+        $monthlyAmount = $property->getMonthlyPaymentAmount();
 
-            // ===========SNED SMS===============
-            $receiverNumber = $property->client ? $property->client->phone : null;
-            $message = $paymentReminderDate->message;
-
-            if ($receiverNumber) {
-                Helpers::sendSMSMessage($receiverNumber, $message); // send sms
-                Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
-            }
-
-            // ================SEND NOTIFICATION (Email & WhatsApp)===================
-            Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
+        if ($monthlyAmount > 0) {
+            $inserts[] = [
+                'client_id'      => $property->client_id,
+                'property_id'    => $property->id,
+                'default_amount' => $monthlyAmount,
+                'created_at'     => Carbon::now(),
+                'updated_at'     => Carbon::now(),
+            ];
         }
+        
     }
+
+    $res = PaymentDefault::insert($inserts);
+    dd($res);
 
 });
 
