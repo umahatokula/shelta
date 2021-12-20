@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use App\Models\EstatePropertyType;
+use App\Models\PropertyTypePrice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -123,7 +124,7 @@ class Property extends Model
         return Carbon::parse($month.'/'.$day.'/'.$year);
     }
 
-    public function getPropertiesDueForReminder($number_of_days_before_due_date) {
+    public function getPropertiesDueForReminder($number_of_days_before_due_date, $estatePropertyTypePrice) {
 
       $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
 
@@ -131,7 +132,7 @@ class Property extends Model
           ->whereNotNull('client_id')
           ->whereNotNull('date_of_first_payment')
           ->get()
-          ->filter(function ($property, $key) use($nextDueDate) {
+          ->filter(function ($property) use($nextDueDate, $estatePropertyTypePrice) {
 
               $day = 28;
               if ($property->date_of_first_payment->day < 28) {
@@ -143,7 +144,15 @@ class Property extends Model
                   $dueDate = $nextDueDate->day;
               }
 
-              return ($day == $dueDate) && $property->transactionTotal() < $property->estatePropertyType->price;
+              $property_type_prices = $estatePropertyTypePrice->filter(function($estatePropertyTypePrice) use($property) {
+                  return $estatePropertyTypePrice->estate_property_type_id == $property->estate_property_type_id && $estatePropertyTypePrice->payment_plan_id == $property->payment_plan_id;
+              })->first();
+
+              if ($property_type_prices) {
+                $propertyPrice = $property_type_prices->propertyPrice->price;
+              }
+
+              return ($day == $dueDate) && $property->transactionTotal() < $propertyPrice;
           });
     }
 }

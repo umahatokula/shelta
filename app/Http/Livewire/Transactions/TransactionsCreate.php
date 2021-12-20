@@ -25,8 +25,8 @@ class TransactionsCreate extends Modal
         'property_id' => 'required',
         'amount'      => 'required',
         'date'      => 'required',
-        'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
-        'proof_reference_number' => 'required|unique:transactions'
+        // 'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
+        // 'proof_reference_number' => 'required|unique:transactions'
     ];
  
     protected $messages = [
@@ -56,8 +56,12 @@ class TransactionsCreate extends Modal
      * @return void
      */
     public function onSelectProperty(Property $property) {
-        $price = $property->estatePropertyType ? $property->estatePropertyType->price : null;
-        $this->propertybalance = $price - $property->totalPaid();
+
+        $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
+            return $price->payment_plan_id == $property->payment_plan_id;
+        })->first()->propertyPrice->price;
+        
+        $this->propertybalance = $propertyPrice - $property->totalPaid();
     }
      
     /**
@@ -93,10 +97,12 @@ class TransactionsCreate extends Modal
             'is_approved'            => 0,
         ]);
 
-        $transaction
+        if ($this->proof) {
+            $transaction
             ->addMedia($this->proof->getRealPath())
             ->usingName($this->proof->getClientOriginalName())
             ->toMediaCollection('proofOfPayment', 'public');
+        }
 
         if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
             Property::where('id', $transaction->property_id)->update([

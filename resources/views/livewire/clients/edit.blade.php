@@ -327,9 +327,11 @@
                                                 <select wire:model.lazy="clientProperties.{{$key}}.payment_plan_id"
                                                     class="form-select form-control" required>
                                                     <option value="">Please select one</option>
-                                                    @foreach ($paymentPlans as $paymentPlan)
-                                                    <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
-                                                    @endforeach
+                                                    @forelse ($paymentPlans[$key] as $paymentPlan)
+                                                        <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>                                                
+                                                    @empty
+                                                        <option value="">No options</option>                                                
+                                                    @endforelse
                                                 </select>
                                             </div>
                                         </div>

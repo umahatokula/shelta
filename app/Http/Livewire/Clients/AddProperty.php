@@ -103,7 +103,6 @@ class AddProperty extends Component
         $this->estate_id = $estateId;
 
         $this->getPaymentPlans($key, $estateId, $this->propertyType_id);
-        // dd($this->paymentPlans);
     }
     
     /**
@@ -122,8 +121,19 @@ class AddProperty extends Component
         $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id);        
         
     }
-
+    
+    /**
+     * Get Payment Plans for the selected estate and property type
+     *
+     * @param  mixed $key
+     * @param  mixed $estate_id
+     * @param  mixed $propertyType_id
+     * @return void
+     */
     public function getPaymentPlans($key, $estate_id, $propertyType_id) {
+        if (!$estate_id || !$propertyType_id) {
+            return;
+        }
         array_key_exists($key, $this->paymentPlans) ? array_splice($this->paymentPlans, $key, 1) : null; // remove existing payment plan at $key
 
         $estatePropertyType = EstatePropertyType::where([
@@ -131,7 +141,7 @@ class AddProperty extends Component
             'property_type_id' => $propertyType_id,
         ])->first();
         
-        $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : [];
+        $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : collect([]);
 
         $estatePropertyTypeIDs = $estatePropertyTypePrices->map(function($estatePropertyTypePrice) {
             return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);

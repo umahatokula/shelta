@@ -26,8 +26,12 @@ class Show extends Component
     protected $listeners = ['onlinePaymentSuccessful'];
 
     public function onSelectProperty(Property $property) {
-        $price = $property->estatePropertyType ? $property->estatePropertyType->price : null;
-        $this->propertybalance = $price - $property->totalPaid();
+
+        $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
+            return $price->payment_plan_id == $property->payment_plan_id;
+        })->first()->propertyPrice->price;
+        
+        $this->propertybalance = $propertyPrice - $property->totalPaid();
     }
 
     public function onlinePaymentSuccessful(Array $data) {

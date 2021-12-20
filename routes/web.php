@@ -1,7 +1,11 @@
 <?php
 
 use Carbon\Carbon;
+use App\Helpers\Helpers;
+use App\Models\Property;
 use Illuminate\Support\Facades\Route;
+use App\Models\PaymentReminderSetting;
+use App\Models\EstatePropertyTypePrice;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\SearchController;
@@ -10,14 +14,16 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
 use App\Http\Controllers\ImportsController;
 use App\Http\Controllers\SettingsController;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PaymentPlansController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\PropertyPriceController;
 use App\Http\Controllers\PropertyTypesController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Notifications\PaymentReminderNotification;
 use App\Http\Controllers\EstatePropertyTypeController;
-use App\Http\Controllers\PropertyPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -150,35 +156,27 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
 
 Route::get('/mailable', function () {
 
-    $nextDueDate = Carbon::today()->addDays(config('payments.payment_reminder_days'));
+    $paymentReminderDates = PaymentReminderSetting::all();
 
-    $properties = App\Models\Property::with('client')
-        ->whereNotNull('client_id')
-        ->whereNotNull('date_of_first_payment')
-        ->get()
-        ->filter(function ($property, $key) use($nextDueDate) {
+    $estatePropertyTypePrice = EstatePropertyTypePrice::all();
 
-            $day = 28;
-            if ($property->date_of_first_payment->day < 28) {
-                $day = $property->date_of_first_payment->day;
+    foreach ($paymentReminderDates as $paymentReminderDate) {
+      
+        $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date, $estatePropertyTypePrice);
+
+        foreach ($properties as $property) {
+
+            // ===========SNED SMS===============
+            $receiverNumber = $property->client ? $property->client->phone : null;
+            $message = $paymentReminderDate->message;
+
+            if ($receiverNumber) {
+                Helpers::sendSMSMessage($receiverNumber, $message); // send sms
+                Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
             }
 
-            $dueDate = 28;
-            if ($nextDueDate->day < 28) {
-                $dueDate = $nextDueDate->day;
-            }
-
-            return $day == $dueDate;
-        })
-        ->filter(function ($property, $key) {
-            return $property->transactionTotal() < $property->estatePropertyType->price;
-        });
-
-        dd($properties);
-
-    foreach ($properties as $property) {
-        if ($property) {
-            return new App\Mail\SendMonthlyPaymentRemindersMailable($property);
+            // ================SEND NOTIFICATION (Email & WhatsApp)===================
+            Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
         }
     }
 

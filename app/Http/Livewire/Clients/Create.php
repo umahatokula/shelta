@@ -11,6 +11,7 @@ use App\Models\Gender;
 use Livewire\Component;
 use App\Models\Property;
 use App\Models\PaymentPlan;
+use Illuminate\Support\Arr;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
 use Illuminate\Support\Facades\Hash;
@@ -54,6 +55,7 @@ class Create extends Component
 
     public $allPropertyTypes;
     public $allProperties;
+    public $allPaymentPlans; 
 
     public $clientProperties = [];
     public $clientSubscribedProperties = [ // properties already subscribed to by client
@@ -88,7 +90,7 @@ class Create extends Component
      * @return void
      */
     public function mount() {
-        $this->paymentPlans = PaymentPlan::all();
+        $this->allPaymentPlans  = PaymentPlan::all();
         $this->staffs = Staff::all();
         $this->genders = Gender::all();
         $this->states = State::all();
@@ -99,6 +101,8 @@ class Create extends Component
 
         $this->propertyTypes[] = [];
         $this->properties[] = [];
+
+        $this->paymentPlans = [];
     }
 
     /**
@@ -117,6 +121,8 @@ class Create extends Component
         $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
 
         $this->estate_id = $estateId;
+
+        $this->getPaymentPlans($key, $estateId, $this->propertyType_id);
     }
 
     /**
@@ -130,6 +136,31 @@ class Create extends Component
         $this->propertyType_id = $propertyTypeId;
 
         $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
+
+        // get payment plans that have been attached to this Estate-ProertyType Relationship
+        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id); 
+    }
+
+    public function getPaymentPlans($key = null, $estate_id, $propertyType_id) {
+        if (!$estate_id || !$propertyType_id) {
+            return;
+        }
+        array_key_exists($key, $this->paymentPlans) ? array_splice($this->paymentPlans, $key, 1) : null; // remove existing payment plan at $key
+
+        $estatePropertyType = EstatePropertyType::where([
+            'estate_id' => $estate_id,
+            'property_type_id' => $propertyType_id,
+        ])->first();
+        
+        $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : collect([]);
+
+        $estatePropertyTypeIDs = $estatePropertyTypePrices->map(function($estatePropertyTypePrice) {
+            return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);
+        });
+        
+        foreach (Arr::flatten($estatePropertyTypeIDs) as $paymentPlan) {
+            $this->paymentPlans[$key][] = $paymentPlan->toArray();
+        }
     }
 
 
@@ -143,6 +174,7 @@ class Create extends Component
 
         // add property types & properties to array
         $this->propertyTypes[] = [];
+        $this->paymentPlans[] = [];
     }
 
     /**
