@@ -99,6 +99,10 @@ class Property extends Model
      */
     public function nextPaymentDueDate() {
 
+        if (is_null($this->date_of_first_payment)) {
+            return;
+        }
+
         $nextDueDate = Carbon::today()->addMonth();
 
         $day = $this->date_of_first_payment->day;

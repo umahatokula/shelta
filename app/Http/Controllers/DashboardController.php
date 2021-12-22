@@ -19,7 +19,12 @@ class DashboardController extends Controller
             return redirect()->route('admin.dashboard');
         }
         
+        return redirect()->route('frontend.dashboard');
         return view('dashboard');
+    }
+
+    public function clientDashboard() {
+        return view('frontend.dashboard');
     }
 
     public function admin()

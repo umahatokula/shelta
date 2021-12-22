@@ -219,11 +219,49 @@ class ClientsController extends Controller
 
         return view('frontend.clients.profile', $data);
     }
+    
+    /**
+     * display profile page
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function security() {
 
-    public function updateClientProfileRequest(UpdateClientProfileRequest $request, $id) {
-        dd($request->all());
+        $user = auth()->user();
+
+        if ($user->hasRole('staff')) {
+
+            $data['enable'] = $user->staff->use_2fa;
+
+        } else {
+
+            $data['enable'] = $user->client->use_2fa;
+
+            $data['client'] = $user->client->load([
+                'transactions.property.estatePropertyType.propertyType', 
+                'transactions.property.estatePropertyType.estate', 
+                'properties.estatePropertyType.propertyType', 
+                'properties.estatePropertyType.estate'
+            ]);
+        }
+        
+
+        return view('frontend.clients.security', $data);
+    }
+
+    public function updateClientProfileRequest(UpdateClientProfileRequest $request) {
 
         $validated = $request->validated();
+
+        $client = Client::findOrFail($request->client_id);
+        $client->sname = $validated['sname'];
+        $client->onames = $validated['onames'];
+        $client->phone = $validated['phone'];
+        $client->email = $validated['email'];
+        $client->save();
+
+        return redirect()->route('frontend.clients.profile');
     }
 
     public function toggle2FA() {

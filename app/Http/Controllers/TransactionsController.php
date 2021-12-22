@@ -77,4 +77,10 @@ class TransactionsController extends Controller
         return view('frontend.transactions.record', compact('client'));
     }
 
+    public function frontendOnlineTransaction() {
+        $data['client'] = auth()->user()->client;
+
+        return view('frontend.transactions.online', $data);
+    }
+
 }

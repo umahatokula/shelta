@@ -51,7 +51,7 @@ Route::get('/', function () {
 Route::get('/home', function () {
 
     if (auth()->user()->hasRole('client')) {
-        return redirect()->route('frontend.dashboard');
+        return redirect()->route('dashboard');
     }
 
     return redirect()->route('dashboard');
@@ -133,12 +133,15 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 
 Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
 
+    Route::get('client/dashboard', [DashboardController::class, 'clientDashboard'])->name('dashboard');
+
     // clients
     Route::get('clients/{transaction_number}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
     Route::get('clients/{transaction_number}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
 
     Route::get('clients/profile', [ClientsController::class, 'profile'])->name('clients.profile');
-    Route::put('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile.updateClientProfileRequest');
+    Route::post('clients/profile', [ClientsController::class, 'updateClientProfileRequest'])->name('clients.profile.updateClientProfileRequest');
+    Route::get('clients/security', [ClientsController::class, 'security'])->name('clients.security');
     Route::post('clients/profile/toggle2FA', [ClientsController::class, 'toggle2FA'])->name('clients.profile.toggle2FA');
 
     Route::get('clients/payments', [ClientsController::class, 'payments'])->name('clients.payments');
@@ -147,10 +150,10 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
     Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
 
     // transactions
-    Route::get('transactions/create/{client}/record', [TransactionsController::class, 'frontendRecordTransaction'])->name('transactions.record');
-    Route::get('transactions/create/{client}/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
-    Route::get('transactions/create/{client}/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
-    Route::get('transactions/create/{client}/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
+    Route::get('transactions/create/record', [TransactionsController::class, 'frontendRecordTransaction'])->name('transactions.record');
+    Route::get('transactions/create/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
+    Route::get('transactions/create/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
+    Route::get('transactions/create/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
 
 
 });
