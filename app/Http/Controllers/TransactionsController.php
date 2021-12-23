@@ -70,11 +70,9 @@ class TransactionsController extends Controller
 
     // =========================CLIENT TRANSACTIONS=================================
     public function frontendRecordTransaction() {
-        
-        $client = Client::findOrFail(auth()->user()->client->id);
-        $client = $client->load(['properties.estatePropertyType.propertyType', 'properties.estatePropertyType.estate']);
+        $data['client'] = auth()->user()->client;
 
-        return view('frontend.transactions.record', compact('client'));
+        return view('frontend.transactions.record', $data);
     }
 
     public function frontendOnlineTransaction() {

@@ -40,7 +40,7 @@
 
                                 &nbsp
 
-                                <a  data-toggle="modal" data-keyboard="false" data-target="#myModal" data-remote="{{ route('frontend.transactions.record', $client) }}" href="#"  class="readon submit">Record Payment</a>
+                                <a href="{{ route('frontend.transactions.record') }}"  class="readon submit">Record Payment</a>
 
                             </div>
                             
@@ -128,18 +128,18 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-left">Property</th>
-                                        <th class="text-right">Amount</th>
-                                        <th class="text-center">Type</th>
                                         <th class="text-center">Date</th>
+                                        <th class="text-center">Type</th>
+                                        <th class="text-right">Amount (&#8358;)</th>
                                         <th class="text-center">Action(s)</th>
                                     </tr>
                             </thead>
                             <tbody>
                                 @foreach ($client->transactions as $transaction)
                                 <tr>
-                                    <th scope="row" class="text-center">{{ $loop->iteration }}</th>
+                                    <td scope="row" class="text-center  style="padding: 15px; line-height: 30px">{{ $loop->iteration }}</td>
 
-                                    <td>
+                                    <td style="padding: 15px; line-height: 30px">
                                         @if ($transaction->property)
                                             @if ($transaction->property->estatePropertyType)
                                                 <span class="text-warning">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
@@ -148,9 +148,11 @@
                                         @endif
                                     </td>
 
-                                    <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
+                                    <td class="text-center" style="padding: 15px; line-height: 30px">
+                                        {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
+                                    </td>
 
-                                    <td class="text-center">
+                                    <td class="text-center" style="padding: 15px; line-height: 30px">
                                         
                                         @if ($transaction->onlinePayment)
                                         <span class="badge bg-primary">online</span>
@@ -159,11 +161,9 @@
                                         @endif
                                     </td>
 
-                                    <td class="text-center">
-                                        {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
-                                    </td>
+                                    <td class="text-right" style="padding: 15px; line-height: 30px">{{ number_format($transaction->amount, 2) }}</td>
 
-                                    <td class="text-center">
+                                    <td class="text-center" style="padding: 15px; line-height: 30px">
                                         <a href="{{ route('frontend.clients.downloadReciept', [$transaction->transaction_number]) }}" class="text-primary p-0" data-original-title="" title="Download Reciept" download>
                                             <i class="fa fa-download font-medium-3 mr-2"></i>
                                         </a>
@@ -187,9 +187,9 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th class="text-left">Property</th>
-                                    <th class="text-right">Amount</th>
-                                    <th class="text-center">Type</th>
                                     <th class="text-center">Date</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-right">Amount (&#8358;)</th>
                                     <th class="text-center">Action(s)</th>
                                 </tr>
                             </tfoot>

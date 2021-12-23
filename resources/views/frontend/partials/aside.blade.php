@@ -15,9 +15,6 @@
                         <nav class="rs-menu hidden-md">
                             <ul class="nav-menu">
                                 <li>
-                                    <a href="{{ route('frontend.dashboard') }}">Dashboard</a>
-                                </li>
-                                <li>
                                     <a href="{{ route('frontend.clients.payments') }}">Payments</a>
                                 </li>
                                 <li>

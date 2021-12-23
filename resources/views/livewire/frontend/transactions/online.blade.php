@@ -2,8 +2,8 @@
     <div class="rs-contact contact-style2 pt-95 pb-100 md-pt-65 md-pb-70">
         <div class="container">
             <div class="sec-title2 mb-55 md-mb-35 text-center">
-                <div class="sub-text">Quick contact</div>
-                <h2 class="title mb-0">Let us help your business to<br> move<span>forward.</span></h2>
+                <div class="sub-text">Online Payment</div>
+                <h2 class="title mb-0">You may make <span>online</span> payments here</h2>
             </div>
             <div class="row y-middle">
                 <div class="col-lg-12">

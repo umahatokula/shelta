@@ -48,6 +48,13 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
         @livewireStyles
+
+        <style>
+            td {
+                padding: 15px;
+                line-break: 30px;
+            }
+        </style>
         
     </head>
 
@@ -72,8 +79,9 @@
                 <!--Header End-->
             </div>
             <!--Full width header End-->
-            
-            @yield('content')
+            <div style="min-height: calc(100vh - 160px)">
+                @yield('content')
+            </div>
             
         </div> 
         <!-- Main content End -->

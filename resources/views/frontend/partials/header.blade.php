@@ -17,9 +17,6 @@
         </div>
         <ul class="nav-menu">
             <li>
-                <a href="{{ route('frontend.dashboard') }}">Dashboard</a>
-            </li>
-            <li>
                 <a href="{{ route('frontend.clients.payments') }}">Payments</a>
             </li>
             <li>
@@ -40,7 +37,11 @@
                         </div>
                         <div class="info-content">
                             <h4 class="title">Address</h4>
-                            <em>05 kandi BR. New York</em>
+                            <em>
+                                @isset($settings)
+                                    {{ $settings->company_address }}
+                                @endisset
+                            </em>
                         </div>
                     </div>
                     <div class="address-list">
@@ -49,7 +50,13 @@
                         </div>
                         <div class="info-content">
                             <h4 class="title">Email</h4>
-                            <em><a href="mailto:support@rstheme.com">support@rstheme.com</a></em>
+                            <em>
+                                <a href="mailto:@isset($settings){{ $settings->company_email }}@endisset">
+                                    @isset($settings)
+                                        {{ $settings->company_email }}
+                                    @endisset
+                                </a>
+                            </em>
                         </div>
                     </div>
                     <div class="address-list">
@@ -58,7 +65,12 @@
                         </div>
                         <div class="info-content">
                             <h4 class="title">Phone</h4>
-                            <em>+019988772</em>
+                            <em>
+                                <a href="tel:@isset($settings){{ $settings->company_phone }}@endisset"></a>
+                                @isset($settings)
+                                    {{ $settings->company_phone }}
+                                @endisset
+                            </em>
                         </div>
                     </div>
                 </div>
