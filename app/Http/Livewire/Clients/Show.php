@@ -24,7 +24,13 @@ class Show extends Component
     public $propertybalance = 0;
 
     protected $listeners = ['onlinePaymentSuccessful'];
-
+    
+    /**
+     * onSelectProperty
+     *
+     * @param  mixed $property
+     * @return void
+     */
     public function onSelectProperty(Property $property) {
 
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
@@ -33,7 +39,13 @@ class Show extends Component
         
         $this->propertybalance = $propertyPrice - $property->totalPaid();
     }
-
+    
+    /**
+     * onlinePaymentSuccessful
+     *
+     * @param  mixed $data
+     * @return void
+     */
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
  
@@ -85,7 +97,13 @@ class Show extends Component
         redirect()->route('clients.show', $this->client->slug);
         
     }
-
+    
+    /**
+     * mount
+     *
+     * @param  mixed $client
+     * @return void
+     */
     public function mount(Client $client) {
 
         $this->client = $client->load([
@@ -95,6 +113,7 @@ class Show extends Component
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);
+
     }
     
     /**

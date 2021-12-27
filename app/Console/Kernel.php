@@ -30,15 +30,17 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('20:00');
 
+        // send payment due reminders
         $schedule->call(new SendMonthlyPaymentReminders)->everyMinute();
         
+        // get payment defaulters
         $schedule->call(function () {
             
             $pastDueProperties = Property::where(function($query) {
                 return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
             })
             ->whereNotIn('id', function ($query) {
-                $query->select('transactions.property_id') // get previous day's transactions
+                $query->select('transactions.property_id') // get all previous day's transactions
                     ->from('transactions')
                     ->whereDate('transactions.date', '=', Carbon::yesterday());
             })->get();
@@ -46,13 +48,13 @@ class Kernel extends ConsoleKernel
             $inserts = [];
             foreach ($pastDueProperties as $property) {
 
-                $monthlyAmount = $property->getMonthlyPaymentAmount();
+                $defaultAmount = $property->getMonthlyPaymentAmount() * 0.2;
 
-                if ($monthlyAmount > 0) {
+                if ($defaultAmount > 0) {
                     $inserts[] = [
                         'client_id'      => $property->client_id,
                         'property_id'    => $property->id,
-                        'default_amount' => $monthlyAmount,
+                        'default_amount' => $defaultAmount,
                         'created_at'     => Carbon::now(),
                         'updated_at'     => Carbon::now(),
                     ];

@@ -39,13 +39,6 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/style.css') }}"> <!-- This stylesheet dynamically changed from style.less -->
         <!-- responsive css -->
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/responsive.css') }}">
-
-        <!-- Scripts -->
-        <script src="{{ asset('assets/js/alpine.min.js') }}"></script>
-        <script src="//unpkg.com/alpinejs" defer></script>
-
-        <!-- Toastr -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
         @livewireStyles
 
@@ -163,41 +156,13 @@
     
             });
     
-            window.addEventListener('showToastr', event => {
-                toastr[event.detail.type](event.detail.message)
-            })
-    
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "3000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-    
         </script>
     
         @livewire('modal')
     
         @livewireScripts
     
-        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
-            data-turbolinks-eval="false"></script>
-    
         @stack('scripts')
-    
-    
-        @yield('javascript')
 
     </body>
 

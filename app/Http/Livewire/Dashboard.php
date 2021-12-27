@@ -13,15 +13,17 @@ class Dashboard extends Component
 {
     public $propertyTypes;
     public $properties = [];
-    public $dueIn;
+    public $dueIn = 0;
 
     public function mount() {
-        $this->dueIn = 0;
+        // $this->dueIn = 0;
 
         $user = auth()->user();
         if ($user->hasRole('client')) {
             redirect()->route('clients.show', $user->client);
         }
+
+        $this->fetchPropertiesDueForPayment();
 
         $this->propertyTypes = PropertyType::with('properties.transactions')->get()->each(function($propertyType) {
 
@@ -33,8 +35,9 @@ class Dashboard extends Component
 
     }
 
-    public function fetchDuePayments() {
+    public function fetchPropertiesDueForPayment() {
         $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
+        // dd($this->properties);
     }
 
     public function render()

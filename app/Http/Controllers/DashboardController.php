@@ -24,7 +24,7 @@ class DashboardController extends Controller
     }
 
     public function clientDashboard() {
-        return view('frontend.dashboard');
+        return redirect()->route('frontend.clients.payments');
     }
 
     public function admin()

@@ -25,11 +25,9 @@ class SendMonthlyPaymentReminders {
 
         $paymentReminderDates = PaymentReminderSetting::all();
     
-        $estatePropertyTypePrice = EstatePropertyTypePrice::all();
-    
         foreach ($paymentReminderDates as $paymentReminderDate) {
           
-            $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date, $estatePropertyTypePrice);
+            $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
     
             foreach ($properties as $property) {
     

@@ -52,7 +52,7 @@
                                             <div class="form-group ">
                                                 <label class="" id="email">Email</label>
                                                 <input wire:model.lazy="email" class="form-control" type="email">
-                                                @error('email') <span class="error">{{ $message }}</span> @enderror
+                                                @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
                                     </div>

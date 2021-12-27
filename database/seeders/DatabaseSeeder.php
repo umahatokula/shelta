@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             // EstatesTableSeeder::class,
             // PropertyTypesTableSeeder::class,
             // EstatePropertyTypeTableSeeder::class,
-            // PropertiesTableSeeder::class,
+            PropertiesTableSeeder::class,
             RolesTableSeeder::class,
             StatesTableSeeder::class,
             LGAsTableSeeder::class,

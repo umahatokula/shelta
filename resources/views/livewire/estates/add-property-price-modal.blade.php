@@ -12,6 +12,12 @@
           </div>
           <hr class="my-15">
 
+          @if ($errors->any())
+              <div class="alert alert-danger" role="alert">
+                  Ensure there are no duplicate selections for Property Type
+              </div>
+          @endif
+
           <table class="table table-bordered">
             <thead>
               <th>Payment Plan</th>
@@ -40,7 +46,10 @@
                   </select>
                 </td>
                 <td class="text-right">
-                  <a wire:click.prevent="removePrice({{ $key }})" href="#" class="text-danger">Remove</a>
+                  <a wire:click.prevent="removePrice({{ $key }})" href="#" class="text-danger">
+                    <span class="material-icons-outlined">
+                      delete
+                      </span></a>
                 </td>
               </tr>
               @endforeach

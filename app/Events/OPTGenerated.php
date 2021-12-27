@@ -15,17 +15,17 @@ class OPTGenerated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $content;
-    public $recipients;
+    public $user;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($content, $recipients)
+    public function __construct($content, $user)
     {
         $this->content = $content;
-        $this->recipients = $recipients;
+        $this->user = $user;
     }
 
     /**

@@ -70,7 +70,7 @@ class Create extends Component
         'sname' => 'required|string|min:2',
         'onames' => 'required|string|min:2',
         'phone' => 'required|string|max:500',
-        'email' => 'email',
+        // 'email' => 'sometimes|required|email',
         'clientProperties' => 'array',
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
@@ -101,7 +101,6 @@ class Create extends Component
 
         $this->propertyTypes[] = [];
         $this->properties[] = [];
-
         $this->paymentPlans = [];
     }
 

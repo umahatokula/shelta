@@ -382,6 +382,12 @@
                                                                             @endif
                                                                         </td>
                                                                     </tr>
+                                                                    <tr>
+                                                                        <td>Payment Default Total:</td>
+                                                                        <td>
+                                                                            &#8358; {{ number_format($property->getClientPaymentDefaultsTotal(), 2) }}
+                                                                        </td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>

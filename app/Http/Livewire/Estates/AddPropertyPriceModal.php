@@ -43,7 +43,8 @@ class AddPropertyPriceModal extends Component
     public function removePrice($key) {
 
         if(count($this->planPrices) == 1) {
-            session()->flash('message', 'There should be at least one price added');
+            // session()->flash('message', 'There should be at least one price added');
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'info', 'message' => 'There should be at least one price added']);
             return;
         }
 

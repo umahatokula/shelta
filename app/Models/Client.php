@@ -11,6 +11,7 @@ use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 use Spatie\Sluggable\HasSlug;
+use App\Models\PaymentDefault;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -185,6 +186,24 @@ class Client extends Model
      */
     public function agent() {
         return $this->belongsTo(Staff::class, 'agent_id', 'id');
+    }
+    
+    /**
+     * Get all the payment defaults on this client
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaults() {
+        return PaymentDefault::where('client_id', $this->id)->get();
+    }
+    
+    /**
+     * Get the total payment defaults on this client
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsTotal() {
+        return PaymentDefault::where('client_id', $this->id)->sum('default_amount');
     }
     
     public static function boot() {

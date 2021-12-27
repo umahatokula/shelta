@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Models\User;
 use App\Mail\SendOPT;
+use App\Helpers\Helpers;
 use App\Events\OPTGenerated;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,10 +28,38 @@ class SendOTPNotification
      * @param  SendOPT  $event
      * @return void
      */
-    public function handle(OPTGenerated $OPTGenerated)
+    public function handle(OPTGenerated $event)
     {
-        Mail::to($OPTGenerated->recipients->email)
-            ->send(new SendOPT($OPTGenerated->content));
+        try {
+            Mail::to($event->user->email)
+            ->send(new SendOPT($event->content));
+        } catch (\Exception $e) {
+            \Log::info($e);
+        }
+    
+        // ===========SNED SMS===============
+        $message = $event->content;
+        $receiverNumber = null;
+
+        if ($event->user->hasRole('staff')) {
+
+            if ($event->user->staff) {
+                $receiverNumber = $event->user->staff->phone;
+            }
+            
+        }
+
+        if ($event->user->hasRole('client')) {
+
+            if ($event->user->client) {
+                $receiverNumber = $event->user->client->phone;
+            }
+
+        }
+
+        if ($receiverNumber) {
+            Helpers::sendSMSMessage($receiverNumber, $message); // send sms
+        }
 
     }
 }

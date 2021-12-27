@@ -6,8 +6,9 @@ use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
-use App\Models\EstatePropertyType;
+use App\Models\PaymentDefault;
 use App\Models\PropertyTypePrice;
+use App\Models\EstatePropertyType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -135,7 +136,9 @@ class Property extends Model
      * @param  mixed $estatePropertyTypePrice
      * @return void
      */
-    public function getPropertiesDueForReminder($number_of_days_before_due_date, $estatePropertyTypePrice) {
+    public function getPropertiesDueForReminder($number_of_days_before_due_date) {
+    
+      $estatePropertyTypePrice = EstatePropertyTypePrice::all();
 
       $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
 
@@ -197,5 +200,24 @@ class Property extends Model
         }
 
         return $price / $paymentPlanNumberOfMonths;
+    }
+    
+    
+    /**
+     * Get all the payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaults() {
+        return PaymentDefault::where('property_id', $this->id)->get();
+    }
+    
+    /**
+     * Get the total payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsTotal() {
+        return PaymentDefault::where('property_id', $this->id)->sum('default_amount');
     }
 }

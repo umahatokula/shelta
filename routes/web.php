@@ -18,6 +18,7 @@ use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PropertiesController;
+use App\Http\Controllers\ParcelationController;
 use App\Http\Controllers\PaymentPlansController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\PropertyPriceController;
@@ -60,7 +61,7 @@ Route::get('/home', function () {
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
@@ -154,6 +155,9 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
     Route::get('transactions/create/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
     Route::get('transactions/create/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
     Route::get('transactions/create/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
+
+    // plot selection
+    Route::get('parcelation/select', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
 
 
 });

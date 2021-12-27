@@ -42,6 +42,7 @@ class EditEstate extends Component
         $this->properties = $this->addedProperties = $estate->propertyTypes->map(function($property) use($estate) {
 
             // get payment plans and prices for property type
+            $prices = [];
             $results = $property->getPaymentPlanAndPriceOfPropertType($estate->id);
             foreach ($results as $result) {
                 $prices[] = [
@@ -83,7 +84,8 @@ class EditEstate extends Component
     public function removeProperty($key) {
 
         if(count($this->properties) == 1) {
-            session()->flash('message', 'Estate should have at least 1 property type.');
+            // session()->flash('message', 'Estate should have at least 1 property type.');
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'info', 'message' => 'Estate should have at least 1 property type.']);
             return;
         }
 
