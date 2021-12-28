@@ -7,14 +7,24 @@
          <div class="row">
              <div class="col-lg-3">
                  <ul class="services-list">
-                     <li><a class="active" href="{{ route('frontend.clients.profile') }}">My Profile</a></li>
-                     <li><a href="{{ route('frontend.clients.security') }}">Security</a></li>
+                     @include('frontend.mini-sidebar')
                  </ul>
              </div>
              <div class="col-lg-9 pr-45 md-pr-15 md-mb-50">
                 <div class="rs-contact contact-style2">
                     <div class="contact-wrap">
                         <div id="form-messages"></div>
+
+                        @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
                         
                         <form action="{{ route('frontend.clients.profile.updateClientProfileRequest') }}" method="post">
                             @csrf

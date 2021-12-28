@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('client_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('password_change_date')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

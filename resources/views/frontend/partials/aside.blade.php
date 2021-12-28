@@ -4,7 +4,7 @@
         <div class="row-table">
             <div class="col-cell header-logo">                                  
                 <div class="logo-area">
-                    <a href="index.html">
+                    <a href="{{ url('/') }}">
                         <img src="{{ asset('assets/images/logo_richboss.png') }}" alt="{{ env('APP_NAME') }}">  
                     </a>
                 </div>
@@ -24,6 +24,12 @@
                                     <a href="#">My Account</a>
                                     <ul class="sub-menu">
                                         <li><a href="{{ route('frontend.clients.profile') }}">My Profile</a></li>
+                                        <li>                
+                                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                Logout
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> {{ csrf_field() }}</form>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul> <!-- //.nav-menu -->

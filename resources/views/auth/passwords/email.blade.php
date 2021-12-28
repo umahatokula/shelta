@@ -1,47 +1,104 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="stacks">
+    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    <!-- Title -->
+    <title>{{ config('app.name', 'Real Estate App') }}</title>
 
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
+    <!-- Styles -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
+    <link href="{{ asset('assets') }}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/plugins/pace/pace.css" rel="stylesheet">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    <!-- Theme Styles -->
+    <link href="{{ asset('assets') }}/css/main.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/css/custom.css" rel="stylesheet">
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets') }}/images/logo_richboss.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets') }}/images/logo_richboss.png" />
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="app app-auth-sign-in align-content-stretch d-flex flex-wrap justify-content-end">
+        <div class="app-auth-background">
+
+        </div>
+        <div class="app-auth-container">
+            <div class="logo">
+                <a href="{{ route('home') }}">&nbsp</a>
             </div>
+            <p class="auth-description">&nbsp</p>
+
+            
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+
+                
+                <div class="row">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="email">{{ __('E-Mail Address') }}</label>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                </div>
+
+                <div class="row mb-0">
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            {{ __('Send Password Reset Link') }}
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
-</div>
-@endsection
+
+    <!-- Javascripts -->
+    <script src="{{ asset('assets') }}/plugins/jquery/jquery-3.5.1.min.js"></script>
+    <script src="{{ asset('assets') }}/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ asset('assets') }}/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
+    <script src="{{ asset('assets') }}/plugins/pace/pace.min.js"></script>
+    <script src="{{ asset('assets') }}/js/main.min.js"></script>
+    <script src="{{ asset('assets') }}/js/custom.js"></script>
+</body>
+
+</html>

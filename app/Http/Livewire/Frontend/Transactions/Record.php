@@ -25,8 +25,8 @@ class Record extends Component
         'property_id' => 'required',
         'amount'      => 'required',
         'date'      => 'required',
-        'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
-        'proof_reference_number' => 'required|unique:transactions'
+        // 'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
+        // 'proof_reference_number' => 'required|unique:transactions'
     ];
  
     protected $messages = [

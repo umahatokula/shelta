@@ -78,7 +78,7 @@
 
                     </div>
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
 
                         <div class="card-body">
                             <div class="example-container">
@@ -141,7 +141,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
 

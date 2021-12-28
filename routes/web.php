@@ -14,10 +14,12 @@ use App\Http\Livewire\Clients\AddProperty;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
 use App\Http\Controllers\ImportsController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PropertiesController;
+use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Controllers\ParcelationController;
 use App\Http\Controllers\PaymentPlansController;
 use App\Http\Controllers\TransactionsController;
@@ -124,6 +126,10 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
 
     // transactions
     // Route::resource('transactions', TransactionsController::class);
+
+    // Auth
+    Route::get('password/change', [PasswordController::class, 'showChangePasswordFormStaff'])->name('password.change');
+    Route::post('password/change', [PasswordController::class, 'changePassword'])->name('password.change.store');
 });
 
 // ======================================================================
@@ -132,7 +138,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
 //
 // ======================================================================
 
-Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
+Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_changed'])->group(function () {
 
     Route::get('client/dashboard', [DashboardController::class, 'clientDashboard'])->name('dashboard');
 
@@ -159,44 +165,18 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
     // plot selection
     Route::get('parcelation/select', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
 
+    // Auth
+    Route::get('password/change', [PasswordController::class, 'showChangePasswordForm'])->name('password.change')->withoutMiddleware([EnsurePasswordChanged::class]);
+    Route::post('password/change', [PasswordController::class, 'changePassword'])->name('password.change.store')->withoutMiddleware([EnsurePasswordChanged::class]);
+
 
 });
 
 Route::get('/mailable', function () {
+    
+    $client = App\Models\Client::find(2);
 
-    // $pastDueProperties = Property::where(function($query) {
-    //     return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
-    // })->get();
-
-    $pastDueProperties = Property::where(function($query) {
-        return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
-    })
-    ->whereNotIn('id', function ($query) {
-        $query->select('transactions.property_id') // get previous day's transactions
-            ->from('transactions')
-            ->whereDate('transactions.date', '=', Carbon::yesterday());
-    })->get();
-
-    $inserts = [];
-    foreach ($pastDueProperties as $property) {
-
-        $monthlyAmount = $property->getMonthlyPaymentAmount();
-
-        if ($monthlyAmount > 0) {
-            $inserts[] = [
-                'client_id'      => $property->client_id,
-                'property_id'    => $property->id,
-                'default_amount' => $monthlyAmount,
-                'created_at'     => Carbon::now(),
-                'updated_at'     => Carbon::now(),
-            ];
-        }
-        
-    }
-
-    $res = PaymentDefault::insert($inserts);
-    dd($res);
-
+    return new App\Mail\ClientAccountCreatedMailable($client);
 });
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

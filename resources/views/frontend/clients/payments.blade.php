@@ -30,7 +30,7 @@
 
                     <div class="col-lg-12">
 
-                        <div x-data="{show: false}" class="row mb-4">
+                        <div class="row mb-4">
                             <div class="col-md-6">
                                 &nbsp;
                             </div>
@@ -43,80 +43,6 @@
                                 <a href="{{ route('frontend.transactions.record') }}"  class="readon submit">Record Payment</a>
 
                             </div>
-                            
-                            <div x-show="show" x-transition.duration.500ms class="col-md-12 ma-5">
-                                <div class="box box-outline-primary">
-                                    <div class="box-header with-border">
-                                    <h4 class="box-title"><strong>Online Payment Details</strong></h4>
-                                    <div class="box-tools pull-right">					
-                                        &nbsp
-                                    </div>
-                                    </div>
-                
-                                    <div class="box-body">
-                                            
-                                        <form id="onlinePaymentForm">
-
-                                            <div class="box-body">
-
-                                                <div class="mb-3 row">
-                                                    <label class="col-form-label col-md-2">Name</label>
-                                                    <div class="col-md-10">
-                                                        <input value="{{ $client->sname.' '.$client->onames }}" class="form-control" type="text" id="payingName" readonly>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mb-3 row">
-                                                    <label class="col-form-label col-md-2">Email</label>
-                                                    <div class="col-md-10">
-                                                        <input value="{{ $client->email }}" class="form-control" type="text" id="payingEmail" readonly>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mb-3 row">
-                                                    <label class="col-form-label col-md-2">Property</label>
-                                                    <div class="col-md-10">
-                                                        
-                                                        <select class="form-control" wire:change="onSelectProperty($event.target.value)" id="payingPropertyId">
-                                                            <option value="">Please select one</option>
-                                                            @foreach ($client->properties as $property)
-                                                                <option value="{{ $property->id }}">
-                                                                    
-                                                                    {{ $property->estatePropertyType ? $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name: null : null }} 
-
-                                                                    [{{ $property->estatePropertyType ? $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name: null : null }}]
-
-                                                                    [{{ $property->unique_number }}]
-                                                                
-                                                                </option>
-                                                            @endforeach
-                                                            
-                                                        </select>
-
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mb-3 row">
-                                                    <label class="col-form-label col-md-2">Amount</label>
-                                                    <div class="col-md-10">
-                                                        <input class="form-control" type="number" max="{{ $propertybalance }}" id="payingAmount">
-                                                        <small>Max: {{ $propertybalance }}</small>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <!-- /.box-body -->
-                                            @if ($client->id)
-                                            <div class="box-footer">
-                                                <a href="#" class="btn btn-primary btn-block" id="onlinePaymentBtn">Pay Now</a>
-                                            </div>    
-                                            @endif
-                                            
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>    
                             
                         </div>
 

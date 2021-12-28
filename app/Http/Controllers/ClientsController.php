@@ -289,7 +289,8 @@ class ClientsController extends Controller
 
         $data['user'] = $user->load('client');
 
-        return redirect()->route('frontend.users.profile');
+        // session()->flash('message', 'Profile edited');
+        return redirect()->route('frontend.users.profile')->with('success', 'Profile edited');
     }
 
     /**

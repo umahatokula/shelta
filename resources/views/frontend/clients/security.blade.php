@@ -7,8 +7,7 @@
          <div class="row">
              <div class="col-lg-3">
                  <ul class="services-list">
-                     <li><a href="{{ route('frontend.clients.profile') }}">My Profile</a></li>
-                     <li><a class="active" href="{{ route('frontend.clients.security') }}">Security</a></li>
+                    @include('frontend.mini-sidebar')
                  </ul>
              </div>
              <div class="col-lg-9 pr-45 md-pr-15 md-mb-50">

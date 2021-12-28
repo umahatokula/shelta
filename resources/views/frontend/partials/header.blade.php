@@ -28,6 +28,12 @@
                     <li><a href="{{ route('frontend.clients.profile') }}">My Profile</a></li>
                 </ul>
             </li>
+            <li>                
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> {{ csrf_field() }}</form>
+            </li>
         </ul> <!-- //.nav-menu -->
         <div class="canvas-contact">
                 <div class="address-area">

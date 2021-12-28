@@ -187,6 +187,10 @@ class Client extends Model
     public function agent() {
         return $this->belongsTo(Staff::class, 'agent_id', 'id');
     }
+
+    public function generatePassword() {
+        return bin2hex(openssl_random_pseudo_bytes(4));
+    }
     
     /**
      * Get all the payment defaults on this client

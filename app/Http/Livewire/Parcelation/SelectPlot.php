@@ -13,7 +13,7 @@ class SelectPlot extends Component
     public $listeners = ['plotSelected'];
 
     public function mount() {
-        $allPlots = Property::all();
+        $allPlots = Property::with('client')->get();
         
         $this->unassignedPlots = $allPlots->filter(function($plot) {
             return $plot->client_id == null;

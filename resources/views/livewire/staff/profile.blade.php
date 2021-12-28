@@ -15,6 +15,23 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+                            <a href="{{ route('password.change') }}" class="btn btn-primary btn-lg">Change Password</a>
+                            &nbsp;
+                            <a href="{{ route('2fa.index') }}" class="btn btn-primary btn-lg">2FA</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">&nbsp</h5>
+                </div>
+                <div class="card-body">
+                    <div class="example-container">
+                        <div class="example-content">
                             <div>
                                 @if (session()->has('message'))
                                     <div class="alert alert-success">

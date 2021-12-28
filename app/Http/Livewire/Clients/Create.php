@@ -14,6 +14,7 @@ use App\Models\PaymentPlan;
 use Illuminate\Support\Arr;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
+use App\Events\ClientAccountCreated;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Countries\Package\Countries;
 
@@ -255,19 +256,10 @@ class Create extends Component
 
         }
 
-        $user = User::updateOrCreate(
-            ['email' =>  $this->email],
-            [
-                'name'      => $client->sname.' '.$client->onames,
-                'client_id' => $client->id,
-                'password'  => Hash::make('12345678'),
-            ]
-        );
+        // trigger event
+        ClientAccountCreated::dispatch($client);
 
-        // assign role
-        $user->assignRole('client');
-
-        // session()->flash('message', 'Client successfully added.');
+        // trigger browser event
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
 
         redirect()->route('clients.index');

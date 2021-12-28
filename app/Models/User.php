@@ -102,7 +102,7 @@ class User extends Authenticatable
         ]);
 
         $user = auth()->user();
-        $message = "Your OTP is ". $code;
+        $message = $code;
 
         // dispatch event
         OPTGenerated::dispatch($message, $user);

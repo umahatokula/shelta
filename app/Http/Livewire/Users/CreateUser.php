@@ -7,6 +7,7 @@ use App\Models\Staff;
 use App\Models\Client;
 use Livewire\Component;
 use Illuminate\Validation\Rule;
+use App\Events\ClientAccountCreated;
 use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends Component
@@ -65,26 +66,19 @@ class CreateUser extends Component
 
         $validatedData = $this->validate(
             [
-            'client_id' => 'required',
-            'client_password'  => 'required|confirmed|min:6',
-            'client_password_confirmation'  => 'required',
+                'client_id' => 'required',
+                // 'client_password'  => 'required|confirmed|min:6',
+                // 'client_password_confirmation'  => 'required',
             ],
             [
-            'client_id.required' => 'This field is required',
-            'client_password_confirmation.required' => 'Please enter the client password confirmation'
-        ]);
+                'client_id.required' => 'This field is required',
+                'client_password_confirmation.required' => 'Please enter the client password confirmation'
+            ]);
 
         $client = Client::findOrFail($this->client_id);
 
-        $user = User::create([
-            'name'      => $client->sname.' '.$client->onames,
-            'email'     => $client->email,
-            'client_id' => $this->client_id,
-            'password'  => Hash::make($this->client_password),
-        ]);
-
-        // assign role
-        $user->assignRole('client');
+        // trigger event
+        ClientAccountCreated::dispatch($client);
 
         redirect()->route('users.index');
     }

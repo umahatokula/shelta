@@ -54,27 +54,32 @@
             <p class="auth-description">&nbsp</p>
 
 
-            @if (session('status'))
-            <div class="alert alert-success mb-3 rounded-0" role="alert">
-                {{ session('status') }}
-            </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             <form action="{{ route('login') }}" method="post">
+
 				@csrf
+
                 <div class="auth-credentials m-b-xxl">
                     <label for="email" class="form-label">Email address</label>
                     <input name="email" value="{{ old('email') }}" type="email"
                         class="form-control m-b-md {{ $errors->has('email') ? ' is-invalid' : '' }}" id="email"
                         aria-describedby="signInEmail" placeholder="user@richboss.com">
-                    <x-jet-input-error for="email"></x-jet-input-error>
+                        @error('email') <span class="text-danger">{{ $message }}</span> @enderror
 
                     <label for="password" class="form-label">Password</label>
                     <input name="password" type="password"
                         class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" id="password"
-                        aria-describedby="password"
-                        placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
-                    <x-jet-input-error for="password"></x-jet-input-error>
+                        aria-describedby="password">
+                        @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="row mb-3 mb-lg-5">

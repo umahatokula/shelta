@@ -6,12 +6,19 @@
 <div id="rs-faq" class="rs-faq pt-100 pb-100 md-pt-70 md-pb-70">
     <div class="container">
 
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-12">
-                <div class="sec-title mb-50">
-                    <h2 class="title black-color">
-                        My<span class="new-text"> Properties</span>
-                    </h2>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="sec-title mb-50">
+                            <h2 class="title black-color">
+                                My<span class="new-text"> Properties</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <a href="{{ route('frontend.parcelation.select') }}" class="readon submit text-center">Select my Plot</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,6 +107,12 @@
                                                                     @if ($property->lastPayment())
                                                                     {{ $property->lastPayment()->date ? $property->lastPayment()->date->toFormattedDateString() : null }}
                                                                     @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Payment Default Total:</td>
+                                                                <td>
+                                                                    &#8358; {{ number_format($property->getClientPaymentDefaultsTotal(), 2) }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
