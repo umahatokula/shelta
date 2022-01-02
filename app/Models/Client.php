@@ -11,6 +11,7 @@ use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 use Spatie\Sluggable\HasSlug;
+use App\Models\PaymentDefault;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -61,6 +62,40 @@ class Client extends Model
         $onames = isset($this->attributes['onames']) ? $this->attributes['onames'] : '';
         
         return $sname .' '.$onames;
+    }
+
+    public function routeNotificationForWhatsApp() {
+        return $this->phone;
+    }
+    /**
+     * Set the user's first name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = trim(str_replace(' ', '', $value));
+    }
+
+    /**
+     * Ensure phone number has country code.
+     *
+     * @return bool
+     */
+    public function getPhoneAttribute($value)
+    {
+        $phone = $value;
+
+        if (strlen($value) == 11) {
+           $phone = '+234'.substr($value, 1);
+        }
+
+        if (strlen($value) == 10) {
+           $phone = '+234'.$value;
+        }
+
+        return $phone;
     }
     
     /**
@@ -151,6 +186,28 @@ class Client extends Model
      */
     public function agent() {
         return $this->belongsTo(Staff::class, 'agent_id', 'id');
+    }
+
+    public function generatePassword() {
+        return bin2hex(openssl_random_pseudo_bytes(4));
+    }
+    
+    /**
+     * Get all the payment defaults on this client
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaults() {
+        return PaymentDefault::where('client_id', $this->id)->get();
+    }
+    
+    /**
+     * Get the total payment defaults on this client
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsTotal() {
+        return PaymentDefault::where('client_id', $this->id)->sum('default_amount');
     }
     
     public static function boot() {

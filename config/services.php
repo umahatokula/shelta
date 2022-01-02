@@ -30,4 +30,18 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'nexmo' => [
+        'sms_from' => '15556666666',
+    ],
+
+    'twilio' => [
+      'sid' => env('TWILIO_SID'),
+      'token' => env('TWILIO_TOKEN'),
+      'whatsapp_from' => env('TWILIO_FROM')
+    ],
+
+    'send_bulk_sms_nigeria' => [
+      'api_token' => env('SEND_BULK_SMS_NIGERIA_API_TOKEN')
+    ],
+
 ];

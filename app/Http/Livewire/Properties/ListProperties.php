@@ -9,6 +9,8 @@ use Livewire\WithPagination;
 class ListProperties extends Component
 {
     use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
     
     public $search;
     

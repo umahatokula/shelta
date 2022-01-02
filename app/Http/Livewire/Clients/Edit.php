@@ -10,6 +10,7 @@ use App\Models\Gender;
 use Livewire\Component;
 use App\Models\Property;
 use App\Models\PaymentPlan;
+use Illuminate\Support\Arr;
 use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
 use PragmaRX\Countries\Package\Countries;
@@ -55,7 +56,8 @@ class Edit extends Component
     public $estatePropertyType;
     
     public $allPropertyTypes;
-    public $allProperties;  
+    public $allProperties;
+    public $allPaymentPlans; 
 
     public $clientProperties = [];
     public $clientSubscribedProperties = [ // properties already subscribed to by client
@@ -117,8 +119,9 @@ class Edit extends Component
 
         $this->allPropertyTypes = PropertyType::all()->toArray();  // get all property types once on mount of component to reduce DB calls
         $this->allProperties    = Property::all();                 // get all properties once on mount of component to reduce DB calls
+        $this->allPaymentPlans  = PaymentPlan::all();
 
-        $this->clientProperties = $this->clientSubscribedProperties = $client->properties->map(function($property) {
+        $this->clientProperties = $this->clientSubscribedProperties = $client->properties->map(function($property, $key) {
 
             $property_type_id = null;
             $estate_id = null;
@@ -130,6 +133,8 @@ class Edit extends Component
 
             // this ensures the property types array matches the number of properties
             $this->propertyTypes[] = $this->allPropertyTypes;
+            $this->paymentPlans[$key] = [];
+            $this->getPaymentPlans($key, $estate_id, $property_type_id);
 
             $this->properties[] = $this->getUnallocatedAndClientAllocatedProperties($estate_id, $property_type_id);
 
@@ -142,7 +147,6 @@ class Edit extends Component
 
         })->toArray();
 
-        $this->paymentPlans = PaymentPlan::all();
         $this->staffs = Staff::all();
         $this->genders = Gender::all();
         $this->states = State::all();
@@ -167,6 +171,8 @@ class Edit extends Component
         $this->propertyTypes[$key] = Estate::findOrFail($estateId)->propertyTypes->toArray();
 
         $this->estate_id = $estateId;
+
+        $this->getPaymentPlans($key, $estateId, $this->propertyType_id);
     }
     
     /**
@@ -180,6 +186,39 @@ class Edit extends Component
         $this->propertyType_id = $propertyTypeId;
         
         $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
+
+        // get payment plans that have been attached to this Estate-ProertyType Relationship
+        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id);  
+    }
+    
+    /**
+     * Get Payment Plans for the selected estate and property type
+     *
+     * @param  mixed $key
+     * @param  mixed $estate_id
+     * @param  mixed $propertyType_id
+     * @return void
+     */
+    public function getPaymentPlans($key, $estate_id, $propertyType_id) {
+        if (!$estate_id || !$propertyType_id) {
+            return;
+        }
+        array_key_exists($key, $this->paymentPlans) ? array_splice($this->paymentPlans, $key, 1) : null; // remove existing payment plan at $key
+
+        $estatePropertyType = EstatePropertyType::where([
+            'estate_id' => $estate_id,
+            'property_type_id' => $propertyType_id,
+        ])->first();
+        
+        $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : collect([]);
+
+        $estatePropertyTypeIDs = $estatePropertyTypePrices->map(function($estatePropertyTypePrice) {
+            return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);
+        });
+        
+        foreach (Arr::flatten($estatePropertyTypeIDs) as $paymentPlan) {
+            $this->paymentPlans[$key][] = $paymentPlan->toArray();
+        }
     }
     
     /**
@@ -197,6 +236,7 @@ class Edit extends Component
         
         // add empty property types array
         $this->propertyTypes[] = [];
+        $this->paymentPlans[] = [];
     }
     
     /**

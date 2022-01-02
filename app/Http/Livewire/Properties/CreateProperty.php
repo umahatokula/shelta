@@ -24,7 +24,7 @@ class CreateProperty extends Component
 
     protected $messages = [
         'unique_number.required' => 'Please enter the Property Number',
-        'unique_number.unique' => 'This property number has already been used',
+        'unique_number.unique' => 'There is an existing property with this number',
         'estate_id.required' => 'Please select an estate',
         'property_type_id.required' => 'Please select a  Property Type',
     ];

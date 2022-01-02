@@ -14,16 +14,18 @@ class PaymentReminderNotification extends Notification implements ShouldQueue
 
     public $property;
     public $notification_message;
+    public $number_of_days_before_due_date;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($property, $notification_message)
+    public function __construct($property, $notification_message, $number_of_days_before_due_date)
     {
         $this->property = $property;
         $this->notification_message = $notification_message;
+        $this->number_of_days_before_due_date = $number_of_days_before_due_date;
     }
 
     /**
@@ -45,7 +47,7 @@ class PaymentReminderNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new SendMonthlyPaymentRemindersMailable($this->property, $this->notification_message))
+        return (new SendMonthlyPaymentRemindersMailable($this->property, $this->notification_message, $this->number_of_days_before_due_date))
                     ->to($notifiable->email);
     }
 

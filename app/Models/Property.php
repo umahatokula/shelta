@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
+use App\Models\PaymentDefault;
+use App\Models\PropertyTypePrice;
 use App\Models\EstatePropertyType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +19,7 @@ class Property extends Model
     protected $dates = ['date_of_first_payment'];
 
     protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id', 'date_of_first_payment'];
-    
+
     /**
      * properties
      *
@@ -26,7 +28,7 @@ class Property extends Model
     public function estatePropertyType() {
         return $this->belongsTo(EstatePropertyType::class)->withDefault();
     }
-    
+
     /**
      * properties
      *
@@ -35,7 +37,7 @@ class Property extends Model
     public function scopeUnallocated($query) {
         return $query->where('client_id', null);
     }
-    
+
     /**
      * client
      *
@@ -44,7 +46,7 @@ class Property extends Model
     public function client() {
         return $this->belongsTo(Client::class)->withDefault();
     }
-    
+
     /**
      * paymentPlan
      *
@@ -54,7 +56,7 @@ class Property extends Model
 
         return $this->belongsTo(PaymentPlan::class)->withDefault();
     }
-    
+
     /**
      * totalPaid
      *
@@ -63,7 +65,7 @@ class Property extends Model
     public function totalPaid() {
         return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->sum('amount');
     }
-    
+
     /**
      * lastPayment
      *
@@ -72,7 +74,7 @@ class Property extends Model
     public function lastPayment() {
         return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->latest('id')->first();
     }
-    
+
     /**
      * client
      *
@@ -81,7 +83,7 @@ class Property extends Model
     public function transactions() {
         return $this->hasMany(Transaction::class);
     }
-    
+
     /**
      * client
      *
@@ -90,7 +92,7 @@ class Property extends Model
     public function transactionTotal() {
         return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
     }
-    
+
     /**
      * nextPaymentDueDate
      *
@@ -98,10 +100,29 @@ class Property extends Model
      */
     public function nextPaymentDueDate() {
 
-        $nextDueDate = Carbon::today()->addMonth()->addDays(7);
-        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
-        
+        if (is_null($this->date_of_first_payment)) {
+            return;
+        }
+
+        $nextDueDate = Carbon::today()->addMonth();
+
         $day = $this->date_of_first_payment->day;
+        $month = $nextDueDate->month;
+        $year = $nextDueDate->year;
+
+        return Carbon::parse($month.'/'.$day.'/'.$year);
+    }
+
+    /**
+     * getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue
+     *
+     * @return void
+     */
+    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_before_due_date) {
+
+        $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
+
+        $day = $nextDueDate->day;
         $month = $nextDueDate->month;
         $year = $nextDueDate->year;
 
@@ -109,19 +130,94 @@ class Property extends Model
     }
     
     /**
-     * getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue
+     * Get Properties Due For Reminder based on the supplied number of days
+     *
+     * @param  mixed $number_of_days_before_due_date
+     * @param  mixed $estatePropertyTypePrice
+     * @return void
+     */
+    public function getPropertiesDueForReminder($number_of_days_before_due_date) {
+    
+      $estatePropertyTypePrice = EstatePropertyTypePrice::all();
+
+      $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
+
+      return $this->with('client')
+          ->whereNotNull('client_id')
+          ->whereNotNull('date_of_first_payment')
+          ->get()
+          ->filter(function ($property) use($nextDueDate, $estatePropertyTypePrice) {
+
+              $day = 28;
+              if ($property->date_of_first_payment->day < 28) {
+                  $day = $property->date_of_first_payment->day;
+              }
+
+              $dueDate = 28;
+              if ($nextDueDate->day < 28) {
+                  $dueDate = $nextDueDate->day;
+              }
+
+              $property_type_prices = $estatePropertyTypePrice->filter(function($estatePropertyTypePrice) use($property) {
+                  return $estatePropertyTypePrice->estate_property_type_id == $property->estate_property_type_id && $estatePropertyTypePrice->payment_plan_id == $property->payment_plan_id;
+              })->first();
+
+              if ($property_type_prices) {
+                $propertyPrice = $property_type_prices->propertyPrice->price;
+              }
+
+              return ($day == $dueDate) && $property->transactionTotal() < $propertyPrice;
+          });
+    }
+    
+    /**
+     * Get the Payment plan and Price this property is attached to
      *
      * @return void
      */
-    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue() {
+    public function getPaymentPlanAndPrice() {
 
-        $nextDueDate = Carbon::today()->addDays(7);
-        // $nextDueDate = Carbon::parse('12/30/2021')->addDays(7);
-        
-        $day = $nextDueDate->day;
-        $month = $nextDueDate->month;
-        $year = $nextDueDate->year;
+        return $this->estatePropertyType->estatePropertyTypePrices->filter(function($estatePropertyTypePrice) {
+            return $this->payment_plan_id == $estatePropertyTypePrice->payment_plan_id;
+        })->first();
 
-        return Carbon::parse($month.'/'.$day.'/'.$year);
+    }
+    
+    /**
+     * Get Monthly Payment Amount
+     *
+     * @return void
+     */
+    public function getMonthlyPaymentAmount() {
+
+        $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
+
+        $paymentPlanNumberOfMonths = $paymentPlanAndPrice->paymentPlan->number_of_months;
+        $price = $paymentPlanAndPrice->propertyPrice->price;
+
+        if ($paymentPlanNumberOfMonths == 0) {
+            return 0;
+        }
+
+        return $price / $paymentPlanNumberOfMonths;
+    }
+    
+    
+    /**
+     * Get all the payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaults() {
+        return PaymentDefault::where('property_id', $this->id)->get();
+    }
+    
+    /**
+     * Get the total payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsTotal() {
+        return PaymentDefault::where('property_id', $this->id)->sum('default_amount');
     }
 }

@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class Plans extends Component
 {
     use WithPagination;
-            
+
     /**
      * destroy
      *
@@ -17,10 +17,11 @@ class Plans extends Component
      * @return void
      */
     public function destroy($id) {
-        
+
         PaymentPlan::findOrFail($id)->delete();
 
-        session()->flash('message', 'Client deleted.');
+        // session()->flash('message', 'Client deleted.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment Plan successfully deleted.']);
 
     }
 

@@ -1,43 +1,32 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="stacks">
+    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <title>{{ config('app.name', 'Real Estate App') }}</title>
-
-    @livewireStyles
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
 
+    @include('imports.stylesheets')
+
     <!-- Scripts -->
-    <script src="{{ asset('assets/js/alpine.min.js') }}"></script>
+    <script src="{{ asset('assets/js/alpine.min.js') }}" defer></script>
     {{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.7.0/css/font-awesome.css') }}">
-
-    <!-- Vendors Style-->
-    <link rel="stylesheet" href="{{ asset('assets/css/vendors_css.css') }}">
-
-    <!-- Style-->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/skin_color.css') }}">
-
     <!-- Toastr -->
-    <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+    @livewireStyles
 
 </head>
-
-<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+<body>
 
     @php
         $settings = App\Models\Setting::first();
@@ -45,71 +34,36 @@
         $logoDark = $settings ? $settings->getFirstMediaUrl('logoDark') : '';
     @endphp
 
-    <div class="wrapper">
+    <div class="app sidebar-colored align-content-stretch d-flex flex-wrap">
+    
+        {{-- sidebar start --}}
+        @include('partials.sidebar')
+        {{-- sidebar end --}}
 
-        <header class="main-header">
-            <div class="d-flex align-items-center logo-box justify-content-start">
-                <a href="#"
-                    class="waves-effect waves-light nav-link d-none d-md-inline-block mx-10 push-btn bg-transparent text-white"
-                    data-toggle="push-menu" role="button">
-                    <span class="icon-Align-left"><span class="path1"></span><span class="path2"></span><span
-                            class="path3"></span></span>
-                </a>
-                <!-- Logo -->
-                <a href="index.html" class="logo">
-                    <!-- logo-->
-                    <div class="logo-lg ma-5">
-                        <span class="light-logo"><img src="{{ $logoDark }}"
-                                alt="logo" width="60px"></span>
-                        <span class="dark-logo"><img src="{{ $logoLight }}"
-                                alt="logo" width="60px"></span>
+        <div class="app-container">
+            {{-- searchbar start --}}
+            @include('partials.searchbar')
+            {{-- searchbar end --}}
+
+            {{-- header start --}}
+            @include('partials.header')
+            {{-- header end --}}
+
+            {{-- page content start --}}
+            <div class="app-content">
+                <div class="content-wrapper">
+                    <div class="container-fluid">
+
+                        @yield('content')
+                        
                     </div>
-                </a>
+                </div>
             </div>
-            <!-- Header Navbar -->
-            @include('partials.nav')
-
-        </header>
-
-        @include('partials.aside')
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <div class="container-full">
-                <!-- Main content -->
-
-                {{-- {{ $slot }} --}}
-                
-                @yield('content')
-
-                <!-- /.content -->
-            </div>
+            {{-- page content end --}}
         </div>
-        <!-- /.content-wrapper -->
-        @include('partials.aside')
-
     </div>
-    <!-- ./wrapper -->
 
-    <!-- Vendor JS -->
-    <script src="{{ asset('assets/js/vendors.min.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/chat-popup.js') }}"></script>
-    <script src="{{ asset('assets/icons/feather-icons/feather.min.js') }}"></script>
-
-    <script src="{{ asset('assets/vendor_components/moment/min/moment.min.js') }}"></script>
-
-
-    <script src="{{ asset('assets/vendor_plugins/bootstrap-slider/bootstrap-slider.js') }}"></script>
-    <script src="{{ asset('assets/vendor_components/OwlCarousel2/dist/owl.carousel.js') }}"></script>
-    <script src="{{ asset('assets/vendor_components/flexslider/jquery.flexslider.js') }}"></script>
-
-    <!-- EduAdmin App -->
-    <script src="{{ asset('assets/js/template.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/dashboard.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/slider.js') }}"></script>
-	
-	<script src="{{ asset('assets/js/pages/advanced-form-element.js') }}"></script>
-	<script src="{{ asset('assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
+    @include('imports.javascripts')
 
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -155,53 +109,32 @@
     </script>
 
     @livewire('modal')
+
     @livewireScripts
+
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false"></script>
 
     @stack('scripts')
 
-</body>
 
+    @yield('javascript')
+</body>
 </html>
 
 
 
 
-  <!-- Modal -->
-  <div id="modal-center" class="modal center-modal fade" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">&nbsp</h5>
-          <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>loading...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- /.modal -->
-
-
-<div id="modal-large" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal-center" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">&nbsp</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">&nbsp;</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>loading...</p>
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->

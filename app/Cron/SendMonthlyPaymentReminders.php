@@ -4,15 +4,18 @@ namespace App\Cron;
 
 use Carbon\Carbon;
 use App\Models\Client;
+use App\Helpers\Helpers;
 use App\Models\Property;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PaymentReminderSetting;
+use App\Models\EstatePropertyTypePrice;
+use Twilio\Rest\Client as TwilioClient;
 use Illuminate\Support\Facades\Notification;
 use App\Mail\SendMonthlyPaymentRemindersMailable;
 use App\Notifications\PaymentReminderNotification;
 
 class SendMonthlyPaymentReminders {
-    
+
     /**
      * __invoke
      *
@@ -21,39 +24,27 @@ class SendMonthlyPaymentReminders {
     public function __invoke () {
 
         $paymentReminderDates = PaymentReminderSetting::all();
-
+    
         foreach ($paymentReminderDates as $paymentReminderDate) {
-
-            $nextDueDate = Carbon::today()->addDays($paymentReminderDate->number_of_days_before_due_date);
-            // dd($nextDueDate);
-        
-            $properties = Property::with('client')
-                ->whereNotNull('client_id')
-                ->whereNotNull('date_of_first_payment')
-                ->get()
-                ->filter(function ($property, $key) use($nextDueDate) {
-                    
-                    $day = 28;
-                    if ($property->date_of_first_payment->day < 28) {
-                        $day = $property->date_of_first_payment->day;
-                    }
-        
-                    $dueDate = 28;
-                    if ($nextDueDate->day < 28) {
-                        $dueDate = $nextDueDate->day;
-                    }
-        
-                    return $day == $dueDate;
-                })
-                ->filter(function ($property, $key) {
-                    return $property->transactionTotal() < $property->estatePropertyType->price;
-                });
-
+          
+            $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
+    
             foreach ($properties as $property) {
-                Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message));
+    
+                // ===========SNED SMS===============
+                $receiverNumber = $property->client ? $property->client->phone : null;
+                $message = $paymentReminderDate->message;
+    
+                if ($receiverNumber) {
+                    Helpers::sendSMSMessage($receiverNumber, $message); // send sms
+                    Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
+                }
+    
+                // ================SEND NOTIFICATION (Email & WhatsApp)===================
+                Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
             }
         }
-        
+
     }
-    
+
 }

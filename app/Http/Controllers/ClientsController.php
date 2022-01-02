@@ -6,10 +6,12 @@ use PDF;
 use Mail;
 use App\Models\User;
 use App\Models\Client;
+use App\Helpers\Helpers;
 use App\Models\Transaction;
 use App\Mail\CustomMailable;
 use Illuminate\Http\Request;
 use App\Mail\PaymentMadeMailable;
+use Twilio\Rest\Client as TwilioClient;
 use App\Http\Requests\UpdateClientProfileRequest;
 
 class ClientsController extends Controller
@@ -128,7 +130,7 @@ class ClientsController extends Controller
     public function sendMail(Client $client) {
         $data['client'] = $client;
         
-        return view('admin.clients.send-mail', $data);
+        return view('admin.clients.send-notification', $data);
     }
 
     public function sendMailPost(Request $request) {
@@ -136,12 +138,35 @@ class ClientsController extends Controller
 
         $client = Client::findOrFail($request->client_id);
 
-        if ($client ->email) {
-            Mail::to($client->email)
-            ->send(new CustomMailable($request->subject, $request->message));
+        // send SMS
+        if ($request->has('sms')) {        
+            if ($client->phone) {
+
+                Helpers::sendSMSMessage($client->phone, $request->message);
+
+            }
+        }
+        
+
+        // send whatsapp
+        if ($request->has('whatsapp')) {        
+            if ($client->phone) {
+
+                Helpers::sendWhatsAppMessage($client->phone, $request->message);
+
+            }
+        }
+        
+
+        // send email
+        if ($request->has('email')) {
+            if ($client->email) {
+                Mail::to($client->email)
+                ->send(new CustomMailable($request->subject, $request->message));
+            }
         }
 
-        session()->flash('message', 'Message sent to client');
+        session()->flash('message', 'Notification sent to client');
         return redirect()->back();
         
     }
@@ -194,11 +219,49 @@ class ClientsController extends Controller
 
         return view('frontend.clients.profile', $data);
     }
+    
+    /**
+     * display profile page
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function security() {
 
-    public function updateClientProfileRequest(UpdateClientProfileRequest $request, $id) {
-        dd($request->all());
+        $user = auth()->user();
+
+        if ($user->hasRole('staff')) {
+
+            $data['enable'] = $user->staff->use_2fa;
+
+        } else {
+
+            $data['enable'] = $user->client->use_2fa;
+
+            $data['client'] = $user->client->load([
+                'transactions.property.estatePropertyType.propertyType', 
+                'transactions.property.estatePropertyType.estate', 
+                'properties.estatePropertyType.propertyType', 
+                'properties.estatePropertyType.estate'
+            ]);
+        }
+        
+
+        return view('frontend.clients.security', $data);
+    }
+
+    public function updateClientProfileRequest(UpdateClientProfileRequest $request) {
 
         $validated = $request->validated();
+
+        $client = Client::findOrFail($request->client_id);
+        $client->sname = $validated['sname'];
+        $client->onames = $validated['onames'];
+        $client->phone = $validated['phone'];
+        $client->email = $validated['email'];
+        $client->save();
+
+        return redirect()->route('frontend.clients.profile');
     }
 
     public function toggle2FA() {
@@ -226,7 +289,8 @@ class ClientsController extends Controller
 
         $data['user'] = $user->load('client');
 
-        return redirect()->route('frontend.users.profile');
+        // session()->flash('message', 'Profile edited');
+        return redirect()->route('frontend.users.profile')->with('success', 'Profile edited');
     }
 
     /**

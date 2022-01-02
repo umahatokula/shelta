@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Clients;
 
 use PDF;
+use DB;
 use Mail;
 use Carbon\Carbon;
 use App\Models\Client;
@@ -23,43 +24,62 @@ class Show extends Component
     public $propertybalance = 0;
 
     protected $listeners = ['onlinePaymentSuccessful'];
-
+    
+    /**
+     * onSelectProperty
+     *
+     * @param  mixed $property
+     * @return void
+     */
     public function onSelectProperty(Property $property) {
-        $price = $property->estatePropertyType ? $property->estatePropertyType->price : null;
-        $this->propertybalance = $price - $property->totalPaid();
-    }
 
+        $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
+            return $price->payment_plan_id == $property->payment_plan_id;
+        })->first()->propertyPrice->price;
+        
+        $this->propertybalance = $propertyPrice - $property->totalPaid();
+    }
+    
+    /**
+     * onlinePaymentSuccessful
+     *
+     * @param  mixed $data
+     * @return void
+     */
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
  
-        if ($data['status'] === 'success') {
-            $transaction = Transaction::create([
-                'client_id'          => $data['client_id'],
-                'property_id'        => $data['property_id'],
-                'amount'             => $data['amount'],
-                'type'               => 'online',
-                'transaction_number' => $data['reference'],
-                'date'               => Carbon::now(),
-                'recorded_by'        => auth()->id(),
-                'status'             => 1,
-                'is_approved'        => 1,
-            ]);
-
-            if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
-                Property::where('id', $transaction->property_id)->update([
-                    'date_of_first_payment' => Carbon::now(),
-               ]);
+        $transaction = null;
+        DB::transaction(function () use($data, &$transaction) {
+            if ($data['status'] === 'success') {
+                $transaction = Transaction::create([
+                    'client_id'          => $data['client_id'],
+                    'property_id'        => $data['property_id'],
+                    'amount'             => $data['amount'],
+                    'type'               => 'online',
+                    'transaction_number' => $data['reference'],
+                    'date'               => Carbon::now(),
+                    'recorded_by'        => auth()->id(),
+                    'status'             => 1,
+                    'is_approved'        => 1,
+                ]);
+    
+                if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
+                    Property::where('id', $transaction->property_id)->update([
+                        'date_of_first_payment' => Carbon::now(),
+                   ]);
+                }
             }
-        }
-
-        OnlinePayment::create([
-            'client_id'      => $data['client_id'],
-            'transaction_id' => $transaction ? $transaction->id : null,
-            'message'        => $data['message'],
-            'reference'      => $data['reference'],
-            'status'         => $data['status'],
-            'amount'         => $data['amount'],
-        ]);
+    
+            OnlinePayment::create([
+                'client_id'      => $data['client_id'],
+                'transaction_id' => $transaction ? $transaction->id : null,
+                'message'        => $data['message'],
+                'reference'      => $data['reference'],
+                'status'         => $data['status'],
+                'amount'         => $data['amount'],
+            ]);
+        });
 
         // log this transaction
         activity()
@@ -77,9 +97,14 @@ class Show extends Component
         redirect()->route('clients.show', $this->client->slug);
         
     }
-
+    
+    /**
+     * mount
+     *
+     * @param  mixed $client
+     * @return void
+     */
     public function mount(Client $client) {
-        
 
         $this->client = $client->load([
             'transactions.property.estatePropertyType.propertyType', 
@@ -88,6 +113,7 @@ class Show extends Component
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);
+
     }
     
     /**

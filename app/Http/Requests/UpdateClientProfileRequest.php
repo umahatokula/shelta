@@ -24,9 +24,10 @@ class UpdateClientProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'sname'  => 'required|min:6',
-            'onames' => 'required|min:6',
-            'email'  => 'required|email',
+            'sname'  => 'required|min:2',
+            'onames' => 'required|min:2',
+            'phone'  => 'required',
+            'email'  => 'email',
         ];
     }
 }

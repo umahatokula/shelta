@@ -2,63 +2,61 @@
 
 @section('content')
 
-    <div class="content-header">
-        <div class="d-flex align-items-center">
-            <div class="me-auto">
-                <h4 class="page-title">{{ config('app.name', 'Real Estate App') }} Clients</h4>
-                <div class="d-inline-block align-items-center">
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('home') }}">
-                                    <i class="mdi mdi-home-outline"></i>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item" aria-current="page"><a
-                                    href="{{ route('clients.index') }}">Clients</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ $client->sname }}</li>
-                        </ol>
-                    </nav>
-                </div>
+    <div class="row">
+        <div class="col">
+            <div class="page-description">
+                <h1>{{ config('app.name', 'Real Estate App') }} - Client's Details</h1>
             </div>
-
         </div>
     </div>
+    
+    @if (session()->has('message'))
+    <div class="col-lg-12">
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    </div>
+    @endif
 
-    <!-- Main content -->
-    <section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">&nbsp</h5>
+                </div>
+                <div class="card-body">
+                    <div class="example-container">
+                        <div class="example-content">
+                            
+                            <div class="row">
+                                <div class="col-12">
 
-        <div class="row">
-
-            <div class="col-lg-12">
-                <div class="box p-15">
-                    <div class="row">
-                        <div class="col-12">
-
-                            @can('manage clients')
-                                <div class="col-12 float-right">
-                                    <a href="{{ route('clients.edit', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Edit Profile</a>
-                                    <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="waves-effect waves-light btn btn-warning btn-sm float-right mx-3">Send email</a>
-                                </div>  
-                            @endcan
-                        
-                            <div>
-                                <p>
-                                    <h5>{{ $client->sname }}, {{ $client->onames }}</h5>
-                                </p>
-                                <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
-                                </p>
-                                <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
-                                <p>Address :<span class="text-gray ps-10"> {{ $client->address }}</span></p>
+                                    @can('manage clients')
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary btn-lg float-right" >Edit Profile</a>
+                                            <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning btn-lg float-right mx-3">Send notification</a>
+                                        </div>  
+                                    @endcan
+                                
+                                    <div>
+                                        <p>
+                                            <h5>{{ $client->sname }}, {{ $client->onames }}</h5>
+                                        </p>
+                                        <p>Email :<span class="text-gray ps-10"> <a href="mailto:{{ $client->email }}">{{ $client->email }}</a></span>
+                                        </p>
+                                        <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
+                                        <p>Address :<span class="text-gray ps-10"> {{ $client->address }}</span></p>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
-
         </div>
 
         <livewire:clients.show :client="$client" />
-        
-    </section>
+
+        </div>
+    </div>
 @endsection

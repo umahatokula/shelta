@@ -41,7 +41,7 @@ class Estate extends Model
      * @return void
      */
     public function estatePropertyType() {
-        return $this->belongsTo(EstatePropertyType::class)->withDefault();
+        return $this->hasMany(EstatePropertyType::class);
     }
 
     /**
@@ -70,15 +70,23 @@ class Estate extends Model
     }
 
     
-    // public static function boot() {
+    /**
+     * Get the payment plan ID and property price ID of an estate
+     *
+     * @param  int $estate_id
+     * @return void
+     */
+    public function getPaymentPlanAndPriceOfPropertType($property_type_id) : Array {
+        $ans = [];
 
-    //     parent::boot();
-        
-    //     self::deleting(function($estate) { 
-    //          $estate->propertyTypes()->each(function($propertyType) {
-    //             $propertyType->delete(); 
-    //          });
-    //     });
+        $this->estatePropertyType->where('property_type_id', $property_type_id)->map(function($estatePropertyType) use(&$ans) {
+            return $estatePropertyType->estatePropertyTypePrices->map(function($estatePropertyTypePrice) use(&$ans) {
 
-    // }
+                return $ans[] = $estatePropertyTypePrice;
+
+            });
+        });
+
+        return $ans;
+    }
 }

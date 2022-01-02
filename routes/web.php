@@ -1,20 +1,32 @@
 <?php
 
 use Carbon\Carbon;
+use App\Helpers\Helpers;
+use App\Models\Property;
+use App\Models\PaymentDefault;
 use Illuminate\Support\Facades\Route;
+use App\Models\PaymentReminderSetting;
+use App\Models\EstatePropertyTypePrice;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\SearchController;
 use App\Http\Livewire\Clients\AddProperty;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
+use App\Http\Controllers\ImportsController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SettingsController;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PropertiesController;
+use App\Http\Middleware\EnsurePasswordChanged;
+use App\Http\Controllers\ParcelationController;
 use App\Http\Controllers\PaymentPlansController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\PropertyPriceController;
 use App\Http\Controllers\PropertyTypesController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Notifications\PaymentReminderNotification;
 use App\Http\Controllers\EstatePropertyTypeController;
 
 /*
@@ -36,23 +48,22 @@ Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name(
 Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend')->middleware(['auth']);
 
 Route::get('/', function () {
-    return redirect()->route('home');    
+    return redirect()->route('home');
 });
 
 Route::get('/home', function () {
 
     if (auth()->user()->hasRole('client')) {
-        return redirect()->route('frontend.dashboard');
+        return redirect()->route('dashboard');
     }
 
     return redirect()->route('dashboard');
-    
+
 })->name('home')->middleware('auth');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-
-Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
@@ -74,16 +85,23 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     Route::resource('properties', PropertiesController::class);
 
     // estates
+    // Route::get('estates/add-property-price', [EstatesController::class, 'addPropertyPrice'])->name('estates.add-property-price');
+    // Route::post('estates/add-property-price', [EstatesController::class, 'addPropertyPriceStore'])->name('estates.add-property-price.store');
     Route::resource('estates', EstatesController::class);
 
     // property-types
     Route::resource('property-types', PropertyTypesController::class);
 
     // estate property-type
+    Route::get('estate-property-type/{estate}/{propertyType}/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotification'])->name('estate-property-type.clients.send-notification');
+    Route::post('estate-property-type/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotificationStore'])->name('estate-property-type.clients.send-notification.store');
     Route::get('estate-property-type/{estate}/{propertyType}/clients', [EstatePropertyTypeController::class, 'showClients'])->name('estate-property-type.clients');
 
     // payment-plans
     Route::resource('payment-plans', PaymentPlansController::class);
+
+    // property prices
+    Route::resource('property-prices', PropertyPriceController::class);
 
     // settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -100,12 +118,19 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
     // search
     Route::get('search/result/{query}', [SearchController::class, 'result'])->name('search.result');
 
+    // imports
+    Route::get('imports/clients', [ImportsController::class, 'importClients'])->name('imports.clients');
+    Route::post('imports/clients', [ImportsController::class, 'importClientsStore'])->name('imports.clients.store');
+    Route::get('imports/property', [ImportsController::class, 'importProperty'])->name('imports.property');
+    Route::post('imports/property', [ImportsController::class, 'importPropertyStore'])->name('imports.property.store');
+
     // transactions
     // Route::resource('transactions', TransactionsController::class);
+
+    // Auth
+    Route::get('password/change', [PasswordController::class, 'showChangePasswordFormStaff'])->name('password.change');
+    Route::post('password/change', [PasswordController::class, 'changePassword'])->name('password.change.store');
 });
-
-
-
 
 // ======================================================================
 //
@@ -113,14 +138,17 @@ Route::prefix('admin')->middleware(['auth', 'role:staff'])->group(function () {
 //
 // ======================================================================
 
-Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function () {
+Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_changed'])->group(function () {
+
+    Route::get('client/dashboard', [DashboardController::class, 'clientDashboard'])->name('dashboard');
 
     // clients
     Route::get('clients/{transaction_number}/download-reciept', [ClientsController::class, 'downloadReciept'])->name('clients.downloadReciept');
     Route::get('clients/{transaction_number}/mail-reciept', [ClientsController::class, 'mailReciept'])->name('clients.mailReciept');
 
     Route::get('clients/profile', [ClientsController::class, 'profile'])->name('clients.profile');
-    Route::put('clients/{client}/profile', [ClientsController::class, 'profile'])->name('clients.profile.updateClientProfileRequest');
+    Route::post('clients/profile', [ClientsController::class, 'updateClientProfileRequest'])->name('clients.profile.updateClientProfileRequest');
+    Route::get('clients/security', [ClientsController::class, 'security'])->name('clients.security');
     Route::post('clients/profile/toggle2FA', [ClientsController::class, 'toggle2FA'])->name('clients.profile.toggle2FA');
 
     Route::get('clients/payments', [ClientsController::class, 'payments'])->name('clients.payments');
@@ -129,50 +157,26 @@ Route::name('frontend.')->middleware(['auth', 'role:client'])->group(function ()
     Route::get('clients/{client}', [ClientsController::class, 'show'])->name('clients.show');
 
     // transactions
-    Route::get('transactions/create/{client}/record', [TransactionsController::class, 'frontendRecordTransaction'])->name('transactions.record');
-    Route::get('transactions/create/{client}/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
-    Route::get('transactions/create/{client}/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
-    Route::get('transactions/create/{client}/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
+    Route::get('transactions/create/record', [TransactionsController::class, 'frontendRecordTransaction'])->name('transactions.record');
+    Route::get('transactions/create/record/store', [TransactionsController::class, 'frontendRecordTransactionStore'])->name('transactions.record.store');
+    Route::get('transactions/create/online', [TransactionsController::class, 'frontendOnlineTransaction'])->name('transactions.online');
+    Route::get('transactions/create/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
+
+    // plot selection
+    Route::get('parcelation/select', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
+
+    // Auth
+    Route::get('password/change', [PasswordController::class, 'showChangePasswordForm'])->name('password.change')->withoutMiddleware([EnsurePasswordChanged::class]);
+    Route::post('password/change', [PasswordController::class, 'changePassword'])->name('password.change.store')->withoutMiddleware([EnsurePasswordChanged::class]);
 
 
 });
-
 
 Route::get('/mailable', function () {
-
-    $nextDueDate = Carbon::today()->addDays(config('payments.payment_reminder_days'));
-
-    $properties = App\Models\Property::with('client')
-        ->whereNotNull('client_id')
-        ->whereNotNull('date_of_first_payment')
-        ->get()
-        ->filter(function ($property, $key) use($nextDueDate) {
-            
-            $day = 28;
-            if ($property->date_of_first_payment->day < 28) {
-                $day = $property->date_of_first_payment->day;
-            }
-
-            $dueDate = 28;
-            if ($nextDueDate->day < 28) {
-                $dueDate = $nextDueDate->day;
-            }
-
-            return $day == $dueDate;
-        })
-        ->filter(function ($property, $key) {
-            return $property->transactionTotal() < $property->estatePropertyType->price;
-        });
-
-        dd($properties);
-
-    foreach ($properties as $property) {
-        if ($property) {
-            return new App\Mail\SendMonthlyPaymentRemindersMailable($property);
-        }
-    }
     
-});
+    $client = App\Models\Client::find(2);
 
+    return new App\Mail\ClientAccountCreatedMailable($client);
+});
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

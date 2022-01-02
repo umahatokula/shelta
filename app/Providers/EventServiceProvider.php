@@ -29,6 +29,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ClientPropertiesUpdated' => [
             'App\Listeners\SendPropertyAssignedNotification'
         ],
+        'App\Events\ClientAccountCreated' => [
+            'App\Listeners\ClientAccountCreated'
+        ],
     ];
 
     /**

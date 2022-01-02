@@ -1,100 +1,59 @@
 @extends('layouts.frontend')
 
 @section('content')
-<div>
-    <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="page-title mb-0 font-size-18">Properties</h4>
-    
-    
-            </div>
-        </div>
-    </div>
-    <!-- end page title -->
 
-    <!-- Main content -->
+<!-- Faq Section Start -->
+<div id="rs-faq" class="rs-faq pt-100 pb-100 md-pt-70 md-pb-70">
+    <div class="container">
 
-    <div class="row">
-
-        <div>
-            @if (session()->has('message'))
-            <div class="col-lg-12">
-                <div class="alert alert-success">
-                    {{ session('message') }}
-                </div>
-            </div>
-            @endif
-        </div>
-
-        <div class="col-lg-12">
-            <div class="card p-15">
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-md-6 float-right">
-                            <h3>Properties</h3>
-                        </div>
-                        <div class="col-md-6 float-right">
-                            @if (auth()->user()->hasRole('staff'))
-                            <a href="{{ route('clients.add-property', $client) }}" class="waves-effect waves-light btn btn-primary btn-sm float-right" >Add properties</a>
-                            @endif
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="sec-title mb-50">
+                            <h2 class="title black-color">
+                                My<span class="new-text"> Properties</span>
+                            </h2>
                         </div>
                     </div>
+                    <div class="col-md-3 mt-3">
+                        <a href="{{ route('frontend.parcelation.select') }}" class="readon submit text-center">Select my Plot</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    @forelse ($client->properties->chunk(3) as $chunk)
+        <div class="row y-middle">
+            <div class="col-lg-12 pl-30 md-pl-15">
+                <div class="faq-content">
+                    <div id="accordion" class="accordion">
+                        <div class="col-lg-12">
 
-                    <div class="row">
+                            @forelse ($client->properties as $property)
 
-                        @foreach ($chunk as $property)
-                        <div class="col-12">
-                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <a class="card-link {{ $loop->first ? 'collapsed' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{ $property->id }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}">
+                                            @if ($property->estatePropertyType)
+                                            {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }} 
+                                            
+                                                <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
 
-                                <div class="col-lg-12 col-12">
-                                    <div class="box">
-                                        <div class="box-header">
-                                            <h4 class="box-title">
                                                 @if ($property->estatePropertyType)
-                                                {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }} 
-                                                
-                                                    <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
-
-                                                    @if ($property->estatePropertyType)
-                                                        <span class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
-                                                    @endif
-                                                @else
-                                                Property
+                                                    <span class="black-text">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
                                                 @endif
-                                            </h4>
-                                        </div>
-                                        <!-- /.box-header -->
-                                        <div class="box-body">
-                                            <!-- Place somewhere in the <body> of your page -->
+
+                                                 - {{ $property->unique_number }}
+                                                 
+                                            @else
+                                            Property
+                                            @endif
+                                        </a>
+                                    </div>
+                                    <div id="collapseOne-{{ $property->id }}" class="collapse show" data-bs-parent="#accordion">
+                                        <div class="card-body">
                                             <div class="row">
-                                                <div class="col-lg-4">
-                                                    <div class="flexslider2">
-                                                        <ul class="slides" style="list-style: none">
-
-                                                            @if ($property->estatePropertyType)
-                                                                @if ($property->estatePropertyType->propertyType)
-
-                                                                    @foreach ($property->estatePropertyType->propertyType->getMedia('propertyTypephotos') as $photo)
-                                                                        <li
-                                                                            data-thumb="{{ $photo->getUrl('thumb') }}">
-                                                                            <img src="{{ $photo->getUrl() }}"
-                                                                                alt="slide" width="300px" />
-                                                                        </li>
-                                                                    @endforeach
-                                                                    
-                                                                @endif
-                                                            @endif
-                                                            
-                                                        </ul>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-8 col-12">
+                                                <div class="col-lg-6 col-12">
                                                     <table class="table table-hover">
                                                         <tbody>
                                                             <tr>
@@ -111,8 +70,8 @@
                                                             <tr>
                                                                 <td>Price:</td>
                                                                 <td> 
-                                                                    @if ($property->estatePropertyType)
-                                                                    &#x20A6; {{ number_format($property->estatePropertyType->price, 2) }} 
+                                                                    @if ($property->getPaymentPlanAndPrice())
+                                                                    &#x20A6; {{ number_format($property->getPaymentPlanAndPrice()->propertyPrice->price, 2) }} 
                                                                     @endif
                                                                 </td>
                                                             </tr>
@@ -120,12 +79,27 @@
                                                                 <td>House number:</td>
                                                                 <td>{{ $property->unique_number }}</td>
                                                             </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="col-lg-6 col-12">
+                                                    <table class="table table-hover">
+                                                        <tbody>
                                                             <tr>
                                                                 <td colspan="2"><b>Payment Info:</b></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Total Paid:</td>
                                                                 <td>&#x20A6; {{ number_format($property->totalPaid(), 2) }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Next Payment Date:</td>
+                                                                <td>
+                                                                    @if ($property->nextPaymentDueDate())
+                                                                    {{ $property->nextPaymentDueDate()->toFormattedDateString() }}
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Last Payment:</td>
@@ -135,34 +109,36 @@
                                                                     @endif
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td>Payment Default Total:</td>
+                                                                <td>
+                                                                    &#8358; {{ number_format($property->getClientPaymentDefaultsTotal(), 2) }}
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
 
                                             </div>
                                         </div>
-                                        <!-- /.box-body -->
                                     </div>
                                 </div>
-                            </div>
+
+                            @empty
+                    
+                                <p>No properties yet</p>
+                    
+                            @endforelse
+                    
                         </div>
-                        @endforeach
-
                     </div>
-
-                    @empty
-
-                    <p>No properties yet</p>
-
-                    @endforelse
                 </div>
-            </div>
-        </div>    
-        
+            </div>  
+        </div>
 
     </div>
-
 </div>
+<!-- Faq Section End -->
 
 @push('scripts')
 

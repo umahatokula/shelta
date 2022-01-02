@@ -79,9 +79,11 @@ class LoginController extends Controller
 
         Auth::logout();
 
-        if ($isClient) {
-            return redirect()->route('clients.login');
-        }
+        \Session::forget('user_2fa');
+
+        // if ($isClient) {
+        //     return redirect()->route('clients.login');
+        // }
 
         return redirect('/login');
 
