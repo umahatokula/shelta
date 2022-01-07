@@ -64,10 +64,15 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($clients as $client)
+                                                    @if(!is_null($client))
+                                                        {{$client}} <br> <br> <br>                                                         
+                                                    @endif
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td class="text-left">
-                                                            <a href="{{ route('clients.show', $client) }}">{{ $client->name }}</a>
+                                                            {{-- @if(!is_null($client))
+                                                                <a href="{{ route('clients.show', $client->slug) }}">{{ $client->name }}</a>                                                                
+                                                            @endif --}}
                                                         </td>
                                                         <td class="text-right">{{ number_format($client->paid) }}</td>
                                                         <td class="text-right">{{ number_format($client->unpaid) }}</td>

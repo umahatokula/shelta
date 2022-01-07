@@ -63,11 +63,13 @@ class Show extends Component
                     'status'             => 1,
                     'is_approved'        => 1,
                 ]);
-    
-                if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
-                    Property::where('id', $transaction->property_id)->update([
-                        'date_of_first_payment' => Carbon::now(),
-                   ]);
+
+                // set date of first transaction
+                $property = Property::where('id', $transaction->property_id)->first();
+        
+                if (!$property->date_of_first_payment) {
+                    $property->date_of_first_payment = $transaction->date;
+                    $property->save();
                 }
             }
     
@@ -107,10 +109,10 @@ class Show extends Component
     public function mount(Client $client) {
 
         $this->client = $client->load([
-            'transactions.property.estatePropertyType.propertyType', 
-            'transactions.property.estatePropertyType.estate', 
-            'transactions.recordedBy', 
-            'properties.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.propertyType',
+            'transactions.property.estatePropertyType.estate',
+            'transactions.recordedBy',
+            'properties.estatePropertyType.propertyType',
             'properties.estatePropertyType.estate'
         ]);
 

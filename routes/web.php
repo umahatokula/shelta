@@ -26,6 +26,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\PropertyPriceController;
 use App\Http\Controllers\PropertyTypesController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\PaymentDetaultController;
 use App\Notifications\PaymentReminderNotification;
 use App\Http\Controllers\EstatePropertyTypeController;
 
@@ -130,6 +131,9 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     // Auth
     Route::get('password/change', [PasswordController::class, 'showChangePasswordFormStaff'])->name('password.change');
     Route::post('password/change', [PasswordController::class, 'changePassword'])->name('password.change.store');
+
+    // payment-defaults
+    Route::get('payment-defaults/{unique_number}/{client_id}/pay', [PaymentDetaultController::class, 'showPaymentForm'])->name('payment-defaults.pay');
 });
 
 // ======================================================================
@@ -163,6 +167,7 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
     Route::get('transactions/create/online/store', [TransactionsController::class, 'frontendOnlineTransactionStore'])->name('transactions.online.store');
 
     // plot selection
+    Route::get('parcelation/{plot_unique_number}/pay', [ParcelationController::class, 'pay'])->name('parcelation.pay');
     Route::get('parcelation/select', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
 
     // Auth
@@ -174,9 +179,16 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 
 Route::get('/mailable', function () {
     
-    $client = App\Models\Client::find(2);
+    $transactions = App\Models\Transaction::all();
 
-    return new App\Mail\ClientAccountCreatedMailable($client);
+    foreach ($transactions as $transaction) {
+        $property = App\Models\Property::where('id', $transaction->property_id)->first();
+
+        if (!$property->date_of_first_payment) {
+            $property->date_of_first_payment = $transaction->date;
+            $property->save();
+        }
+    }
 });
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

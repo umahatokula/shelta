@@ -15,23 +15,18 @@
                                 <div class="col-md-6">
                                     <h3 class="box-title">Payments</h3>
                                 </div>
-                                <div class="col-md-6 mb-4 d-flex justify-content-end">
+                                <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
+                                        @can('online payment')
+                                            <a @click="show = true" x-show="!show" href="#"  class="btn btn-primary me-md-2" type="button">Online
+                                                Payment</a>
+                                            <a @click="show = false" x-show="show" href="#"  class="btn btn-danger me-md-2" type="button">Cancel Online
+                                                Payment</a>
+                                        @endcan
 
-                                    @can('online payment')
-                                    <a @click="show = true" x-show="!show" href="#" class=" btn btn-success btn-lg float-right ml-3">Online
-                                        Payment</a>
-
-                                    <a @click="show = false" x-show="show" href="#" class=" btn btn-danger btn-lg float-right ml-3">Cancel Online
-                                        Payment</a>
-                                    @endcan
-
-                                    &nbsp
-
-                                    @can('record payment')
-                                    <a href="{{ route('transactions.create', $client) }}" class=" btn btn-primary btn-lg float-right">Record
-                                        Payment</a>
-                                    @endcan
-
+                                        @can('record payment')
+                                            <a href="{{ route('transactions.create', $client) }}"  class="btn btn-success" type="button">Record
+                                                Payment</a>
+                                        @endcan
 
                                     <!-- Taking namespace into account for component Admin/Actions/EditUser -->
                                     {{-- <button x-data="{}" x-on:click="$wire.emitTo('transactions.transactions-create', 'openModal')">Make Payment</button> --}}
@@ -254,9 +249,9 @@
                                 <div class="col-md-6 float-right">
                                     <h3>Properties</h3>
                                 </div>
-                                <div class="col-md-6 float-right d-flex justify-content-end">
+                                <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
                                     @if (auth()->user()->hasRole('staff'))
-                                    <a href="{{ route('clients.add-property', $client) }}" class="btn btn-primary btn-lg float-right" >Add properties</a>
+                                    <a href="{{ route('clients.add-property', $client) }}" class="btn btn-primary" >Add properties</a>
                                     @endif
                                 </div>
                             </div>
@@ -385,7 +380,7 @@
                                                                     <tr>
                                                                         <td>Payment Default Total:</td>
                                                                         <td>
-                                                                            &#8358; {{ number_format($property->getClientPaymentDefaultsTotal(), 2) }}
+                                                                            &#8358; {{ number_format($property->getClientPaymentDefaultsBalance(), 2) }} &nbsp; <a href="{{ route('payment-defaults.pay', [$property->unique_number, $client->id]) }}">[Pay]</a>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

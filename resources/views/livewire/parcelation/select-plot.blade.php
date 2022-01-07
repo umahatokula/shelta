@@ -37,6 +37,7 @@
                         <div class="col-12">
                             <div class="sec-title mb-50">
                                 <h2 class="title black-color">
+                                    <div class="sub-text">Phase 1 Parcelation</div>
                                     <span class="new-text">Select Plot</span>
                                 </h2>
                             </div>

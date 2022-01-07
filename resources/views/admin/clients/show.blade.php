@@ -32,10 +32,10 @@
                                 <div class="col-12">
 
                                     @can('manage clients')
-                                        <div class="col-12 d-flex justify-content-end">
-                                            <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary btn-lg float-right" >Edit Profile</a>
-                                            <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning btn-lg float-right mx-3">Send notification</a>
-                                        </div>  
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary" >Edit Profile</a>
+                                        <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning">Send notification</a>
+                                    </div>  
                                     @endcan
                                 
                                     <div>

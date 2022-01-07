@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Mail;
 
 class ListTransactions extends Component
 {
-    use WithPagination;
+    use WithPagination; 
+
+    protected $paginationTheme = 'bootstrap';
     
     public $search;
     

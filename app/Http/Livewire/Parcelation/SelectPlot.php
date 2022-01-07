@@ -31,18 +31,9 @@ class SelectPlot extends Component
      * @return void
      */
     public function plotSelected($plot_unique_number) {
-        // dd($plot_unique_number);
 
-        $assignedProperty[] = Property::where('unique_number', $plot_unique_number)->update([
-            'client_id'               => auth()->user()->client->id,
-            'payment_plan_id'         => 1,
-        ]);
-
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
-
-        ClientPropertiesUpdated::dispatch(auth()->user()->client, $assignedProperty);
-
-        redirect()->route('frontend.parcelation.select');
+        return redirect()->route('frontend.parcelation.pay', $plot_unique_number);
+        
     }
 
     public function render()

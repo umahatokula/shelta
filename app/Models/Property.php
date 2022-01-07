@@ -220,4 +220,22 @@ class Property extends Model
     public function getClientPaymentDefaultsTotal() {
         return PaymentDefault::where('property_id', $this->id)->sum('default_amount');
     }
+    
+    /**
+     * Get the total paid to clear up payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsCreditTotal() {
+        return PaymentDefault::where('property_id', $this->id)->sum('paid_amount');
+    }
+    
+    /**
+     * Get the total paid to clear up payment defaults on this property
+     *
+     * @return void
+     */
+    public function getClientPaymentDefaultsBalance() {
+        return $this->getClientPaymentDefaultsTotal() - $this->getClientPaymentDefaultsCreditTotal();
+    }
 }

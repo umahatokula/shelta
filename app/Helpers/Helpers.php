@@ -16,6 +16,14 @@ class Helpers {
      */
     public static function sendSMSMessage($to, $message) {
 
+      // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
+      //   'email' => 'umahatokula@gmail.com',
+      //   'password' => 'addiction',
+      //   'sender' => config('app.name'),
+      //   'numbers' => $to,
+      //   'message' => $message,
+      // ]);
+
         $response = Http::post('https://www.bulksmsnigeria.com/api/v1/sms/create', [
           'api_token' => config('services.send_bulk_sms_nigeria.api_token'),
           'from' => config('app.name'),

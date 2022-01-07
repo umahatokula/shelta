@@ -56,7 +56,7 @@
                                                         <td class="text-center">{{ $estate->number_of_units }}</td>
                                                         <td class="text-right">
                                                             @forelse ($estate->getPaymentPlanAndPriceOfPropertType($propertyType->id) as $value)
-                                                            {{ $value->paymentPlan->name }} - {{ number_format($value->propertyPrice->price) }} <br>
+                                                            {{ $value->paymentPlan->name }} - &#8358; {{ number_format($value->propertyPrice->price) }} <br>
                                                             @empty
                                                                 <p>No price assigned</p>
                                                             @endforelse
