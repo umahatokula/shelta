@@ -42,7 +42,9 @@
                                         @foreach($properties as $property)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $property->client->name }}</td>
+                                            <td>
+                                                <a href="{{ route('clients.show', $property->client) }}">{{ $property->client->name }}</a>
+                                            </td>
                                             <td>
                                                 {{ $property->unique_number }}
                                                 <small>

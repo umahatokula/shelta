@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <div class="page-description">
-                <h1>{{ config('app.name', 'Real Estate App') }} - Add Property</h1>
+                <h1>{{ config('app.name', 'Real Estate App') }} - Offset Payment Defaults</h1>
             </div>
         </div>
     </div>
@@ -18,7 +18,6 @@
                             <form wire:submit.prevent="save">
         
                                 <div class="box-header">
-                                    <h4 class="box-title">Offset Payment Defaults</h4>
                                 </div>
                                 <div class="box-body">
         

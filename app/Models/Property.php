@@ -92,6 +92,7 @@ class Property extends Model
     public function transactionTotal() {
         return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
     }
+    
 
     /**
      * nextPaymentDueDate
@@ -106,11 +107,23 @@ class Property extends Model
 
         $nextDueDate = Carbon::today()->addMonth();
 
-        $day = $this->date_of_first_payment->day;
+        // ensure due date is not greater than 28. This is because Feb has 28 days in leap years so we use this minimum number of days as our payment cycle.
+        $day = 28;
+        if ($this->date_of_first_payment->day < 28) {
+            $day = $this->date_of_first_payment->day;
+        }
+
         $month = $nextDueDate->month;
         $year = $nextDueDate->year;
 
-        return Carbon::parse($month.'/'.$day.'/'.$year);
+        $dueDate = Carbon::parse($month.'/'.$day.'/'.$year);
+
+        // ensure that due date is within current month if monthly payment day is greater than or equal to day of current month
+        if ($day >= Carbon::today()->day) {
+            $dueDate = $dueDate->subMonth();
+        }
+
+        return $dueDate;
     }
 
     /**
@@ -181,6 +194,19 @@ class Property extends Model
             return $this->payment_plan_id == $estatePropertyTypePrice->payment_plan_id;
         })->first();
 
+    }
+
+    
+    /**
+     * Get the price for this property
+     *
+     * @return void
+     */
+    public function getPropertyPrice() {
+
+        $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
+
+        return $paymentPlanAndPrice->propertyPrice->price;
     }
     
     /**

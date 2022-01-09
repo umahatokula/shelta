@@ -43,13 +43,17 @@ class Kernel extends ConsoleKernel
                 $query->select('transactions.property_id') // get all previous day's transactions
                     ->from('transactions')
                     ->whereDate('transactions.date', '=', Carbon::yesterday());
-            })->get();
-
+            })
+            ->get()
+            ->filter(function($property) {
+                return $property->getPropertyPrice() > $property->totalPaid();
+            });
+        
             $inserts = [];
             foreach ($pastDueProperties as $property) {
-
+        
                 $defaultAmount = $property->getMonthlyPaymentAmount() * 0.2;
-
+        
                 if ($defaultAmount > 0) {
                     $inserts[] = [
                         'client_id'      => $property->client_id,

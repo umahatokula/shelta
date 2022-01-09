@@ -17,10 +17,10 @@
                                 </div>
                                 <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
                                         @can('online payment')
-                                            <a @click="show = true" x-show="!show" href="#"  class="btn btn-primary me-md-2" type="button">Online
-                                                Payment</a>
-                                            <a @click="show = false" x-show="show" href="#"  class="btn btn-danger me-md-2" type="button">Cancel Online
-                                                Payment</a>
+                                            <button @click="show = true" x-show="!show" href="#"  class="btn btn-primary me-md-2" type="button">Online
+                                                Payment</button>
+                                            <button @click="show = false" x-show="show" href="#"  class="btn btn-danger me-md-2" type="button">Cancel Online
+                                                Payment</button>
                                         @endcan
 
                                         @can('record payment')
@@ -165,7 +165,7 @@
                                         </td>
 
                                         <td class="text-center">
-                                            {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
+                                            {{ $transaction->date ? $transaction->date->toFormattedDateString() : null }}
                                         </td>
 
                                         <td class="text-center">
