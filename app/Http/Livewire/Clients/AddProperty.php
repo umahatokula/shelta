@@ -67,8 +67,8 @@ class AddProperty extends Component
                 $estate_id = $property->estatePropertyType->estate ? $property->estatePropertyType->estate->id : null;
             }
 
-            // this ensures the property types array matches the number of properties
-            $this->propertyTypes[] = $this->allPropertyTypes;
+            $this->propertyTypes[] = $this->allPropertyTypes;// this ensures the property types array matches the number of properties
+
             $this->paymentPlans[$key] = [];
             $this->getPaymentPlans($key, $estate_id, $property_type_id);
 

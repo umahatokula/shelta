@@ -3,10 +3,13 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Client;
+use App\Models\Estate;
 use Livewire\Component;
-use App\Models\Transaction;
 use App\Models\Property;
+use App\Models\Transaction;
 use App\Models\PropertyType;
+use App\Models\PaymentDefault;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Component
@@ -14,16 +17,28 @@ class Dashboard extends Component
     public $propertyTypes;
     public $properties = [];
     public $dueIn = 0;
+    public $estates, $clients;
+
+    // Payment defaults
+    public $defaulters, $defaulters_start_date, $defaulters_end_date, $defaulters_estate = 1;
 
     public function mount() {
-        // $this->dueIn = 0;
 
         $user = auth()->user();
         if ($user->hasRole('client')) {
             redirect()->route('clients.show', $user->client);
         }
 
+        $this->estates = Estate::all();
+        $this->clients = Client::all();
+
+        // get due payments
         $this->fetchPropertiesDueForPayment();
+
+        // get defaulters
+        $this->defaulters_start_date = Carbon::today()->startOfMonth();
+        $this->defaulters_end_date = Carbon::today()->endOfMonth();
+        $this->getPaymentDefaultersList();
 
         $this->propertyTypes = PropertyType::with('properties.transactions')->get()->each(function($propertyType) {
 
@@ -34,10 +49,48 @@ class Dashboard extends Component
         });
 
     }
-
+    
+    /**
+     * fetchPropertiesDueForPayment
+     *
+     * @return void
+     */
     public function fetchPropertiesDueForPayment() {
         $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
-        // dd($this->properties);
+    }
+    
+    /**
+     * get list of payment defaulters
+     *
+     * @return void
+     */
+    public function getPaymentDefaultersList() {
+        $defaultersQuery = PaymentDefault::query();
+        $defaultersQuery = $defaultersQuery->with('client');
+
+        if ($this->defaulters_start_date || $this->defaulters_end_date) {
+            $defaultersQuery = $defaultersQuery->whereBetween('created_at', [$this->defaulters_start_date, $this->defaulters_end_date]);
+        }
+
+        if ($this->defaulters_estate) {
+
+            $this->defaults = $defaultersQuery->get()->filter(function($query) {
+                return $query->property->estatePropertyType->estate->id == $this->defaulters_estate;
+            });
+
+            $defaults = $this->defaults->groupBy('client_id');
+            
+        } else {
+            $defaults = $defaultersQuery->groupBy('client_id')->get();
+        }
+
+        $this->defaulters = [];
+        foreach ($defaults as $clientId => $default) {
+            $this->defaulters[] = $this->clients->where('id', $clientId)->first()->toArray();
+            // dd($this->defaulters->total_payment_default_owed);
+        }
+        // dd($this->defaulters);
+        
     }
 
     public function render()

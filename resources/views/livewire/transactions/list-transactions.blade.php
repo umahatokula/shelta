@@ -11,11 +11,11 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-3 mb-4 mb-md-0">
                             <input wire:model="search" type="search" class="form-control" placeholder="Filter transactions...">
                         </div>
-                        <div class="col-md-6 d-flex justify-content-end float-right">
-                            &nbsp
+                        <div class="col-md-9 text-md-end">
+                            <span class="display-6">Total: 	&#8358; {{ number_format($transactionTotal, 2) }}</span> 
                         </div>
                     </div>
                 </div>

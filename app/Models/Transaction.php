@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Property;
+use App\Models\Transaction;
 use App\Models\OnlinePayment;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
@@ -96,5 +97,9 @@ class Transaction extends Model implements HasMedia
      */
     public function processedBy() {
         return $this->belongsTo(User::class, 'processed_by', 'id')->withDefault();
+    }
+
+    public function getTotal() {
+        return Transaction::sum('amount');
     }
 }

@@ -178,17 +178,39 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 });
 
 Route::get('/mailable', function () {
-    
-    $transactions = App\Models\Transaction::all();
+            
+    $pastDueProperties = Property::where(function($query) {
+        return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
+    })
+    ->whereNotIn('id', function ($query) {
+        $query->select('transactions.property_id') // get all previous day's transactions
+            ->from('transactions')
+            ->whereDate('transactions.date', '=', Carbon::yesterday());
+    })
+    ->get()
+    ->filter(function($property) {
+        return $property->getPropertyPrice() > $property->totalPaid();
+    });
 
-    foreach ($transactions as $transaction) {
-        $property = App\Models\Property::where('id', $transaction->property_id)->first();
+    $inserts = [];
+    foreach ($pastDueProperties as $property) {
 
-        if (!$property->date_of_first_payment) {
-            $property->date_of_first_payment = $transaction->date;
-            $property->save();
+        $defaultAmount = $property->getMonthlyPaymentAmount() * 0.2;
+
+        if ($defaultAmount > 0) {
+            $inserts[] = [
+                'client_id'      => $property->client_id,
+                'property_id'    => $property->id,
+                'default_amount' => $defaultAmount,
+                'created_at'     => Carbon::now(),
+                'updated_at'     => Carbon::now(),
+            ];
         }
+        
     }
+    dd($inserts);
+
+    PaymentDefault::insert($inserts);
 });
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');

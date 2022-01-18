@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
         // $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('20:00');
 
         // send payment due reminders
-        $schedule->call(new SendMonthlyPaymentReminders)->everyMinute();
+        $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('10:00');
         
         // get payment defaulters
         $schedule->call(function () {
@@ -68,7 +68,7 @@ class Kernel extends ConsoleKernel
 
             PaymentDefault::insert($inserts);
 
-        })->everyMinute();
+        })->dailyAt('01:00');
     }
 
     /**

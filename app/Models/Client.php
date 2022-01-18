@@ -29,7 +29,7 @@ class Client extends Model
      *
      * @var array
      */
-    protected $appends = ['name'];
+    protected $appends = ['name', 'total_payment_default_owed', 'total_payment_default_paid'];
 
     /**
      * Get the options for generating the slug.
@@ -49,6 +49,24 @@ class Client extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /**
+     * getTotalPaymentDefaultOwed
+     *
+     * @return void
+     */
+    public function getTotalPaymentDefaultOwedAttribute() {
+        return $this->paymentDefaults()->sum('default_amount');
+    }
+    
+    /**
+     * get Total Payment Default Paid
+     *
+     * @return void
+     */
+    public function getTotalPaymentDefaultPaidAttribute() {
+        return $this->paymentDefaults()->sum('paid_amount');
     }
 
     /**
@@ -177,6 +195,15 @@ class Client extends Model
      */
     public function onlinePayment() {
         return $this->hasMany(OnlinePayment::class);
+    }
+    
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function paymentDefaults() {
+        return $this->hasMany(PaymentDefault::class);
     }
     
     /**

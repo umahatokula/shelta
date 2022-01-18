@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <div class="page-description">
-                <h1>{{ config('app.name', 'Real Estate App') }} - Add Property Price</h1>
+                <h1>{{ config('app.name', 'Real Estate App') }} - Edit Property Price</h1>
             </div>
         </div>
     </div>

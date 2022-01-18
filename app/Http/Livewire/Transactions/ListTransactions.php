@@ -17,7 +17,11 @@ class ListTransactions extends Component
 
     protected $paginationTheme = 'bootstrap';
     
-    public $search;
+    public $search, $transactionTotal;
+
+    public function mount() {
+        $this->transactionTotal = (new Transaction)->getTotal();
+    }
     
     /**
      * downloadReciept
@@ -69,7 +73,8 @@ class ListTransactions extends Component
     public function render()
     {
         return view('livewire.transactions.list-transactions', [
-            'transactions' => Transaction::where('transaction_number', 'LIKE', '%'.$this->search.'%')->paginate(20),
+            'transactions' => Transaction::where('transaction_number', 'LIKE', '%'.$this->search.'%')
+            ->paginate(20),
         ]);
     }
 }

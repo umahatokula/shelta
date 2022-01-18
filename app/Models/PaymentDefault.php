@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Client;
+use App\Models\Property;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PaymentDefault extends Model
 {
@@ -26,4 +28,22 @@ class PaymentDefault extends Model
     // public function setPaidAmountAttribute($value) {
     //     return $this->attributes['paid_amount'] = $value * 100;
     // }
+
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function client() {
+        return $this->belongsTo(Client::class)->withDefault();
+    }
+
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function property() {
+        return $this->belongsTo(Property::class)->withDefault();
+    }
 }
