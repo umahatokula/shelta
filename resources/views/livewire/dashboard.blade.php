@@ -41,32 +41,36 @@
                                         <th>Property</th>
                                     </thead>
                                     <tbody>
-                                        @foreach($properties as $property)
-                                        <tr>
-                                            <td>
-                                                <a href="{{ route('clients.show', $property->client) }}">{{ $property->client->name }}</a>
-                                            </td>
-                                            <td>
-                                                {{ $property->unique_number }}
-                                                <small>
-                                                    (
-                                                    @if ($property->estatePropertyType)
-                                                    {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }}
+                                        @forelse ($properties as $property)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ route('clients.show', $property->client) }}">{{ $property->client->name }}</a>
+                                                </td>
+                                                <td>
+                                                    {{ $property->unique_number }}
+                                                    <small>
+                                                        (
+                                                        @if ($property->estatePropertyType)
+                                                        {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }}
 
-                                                    <span class="font-weight-bold font-italic">-</span>
+                                                        <span class="font-weight-bold font-italic">-</span>
 
-                                                    @if ($property->estatePropertyType)
-                                                    <span
-                                                        class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
-                                                    @endif
-                                                    @else
-                                                    Property
-                                                    @endif
-                                                    )
-                                                </small>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                                        @if ($property->estatePropertyType)
+                                                        <span
+                                                            class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
+                                                        @endif
+                                                        @else
+                                                        Property
+                                                        @endif
+                                                        )
+                                                    </small>
+                                                </td>
+                                            </tr>    
+                                        @empty
+                                            <tr>
+                                                <td colspan="2">No due payments</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -103,10 +107,11 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered table-nowrap">
                                     <thead>
                                         <th>Client</th>
                                         <th class="text-end">Default balance</th>
+                                        <td>Last Default Date</td>
                                     </thead>
                                     <tbody>
                                         @forelse($defaulters as $defaulter)
@@ -116,6 +121,9 @@
                                             </td>
                                             <td class="text-end">
                                                {{ number_format($defaulter['total_payment_default_owed'] - $defaulter['total_payment_default_paid']) }}
+                                            </td>
+                                            <td>
+                                                {{ Carbon\Carbon::parse($defaulter['missed_date'])->toFormattedDateString() }}
                                             </td>
                                         </tr>
                                         @empty

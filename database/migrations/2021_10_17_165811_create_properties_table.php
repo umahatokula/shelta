@@ -21,6 +21,7 @@ class CreatePropertiesTable extends Migration
             $table->string('unique_number')->unique()->nullable();
             $table->foreignId('payment_plan_id')->nullable();
             $table->date('date_of_first_payment')->nullable()->comment('This is used to get date of monthly payment');
+            $table->date('next_due_date')->nullable()->comment('Next due date for instalment payments');
             $table->timestamps();
         });
     }

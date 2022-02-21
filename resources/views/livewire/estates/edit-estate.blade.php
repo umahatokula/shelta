@@ -2,121 +2,128 @@
     <div class="row">
         <div class="col">
             <div class="page-description">
-                <h1>{{ config('app.name', 'Real Estate App') }} - Edit Estate</h1>
+                <h4>{{ config('app.name', 'Real Estate App') }} - Transactions</h4>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">&nbsp</h5>
-                </div>
+                
                 <div class="card-body">
-                    <div class="example-container">
-                        <div class="example-content">
-                            <form wire:submit.prevent="save">
 
-                                <div class="box-body">
+                    @if (session()->has('message'))
+                    <div class="col-lg-12">
+                        <div class="alert alert-success">
+                            {{ session('message') }}
+                        </div>
+                    </div>
+                    @endif
 
-                                    <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Estate Details</h4>
-                                    <hr class="my-15">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-5">
-                                            <div class="form-group">
-                                                <label class="form-label">Name</label>
-                                                <input wire:model.lazy="name" class="form-control" type="text">
-                                                @error('name') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-5">
-                                            <div class="form-group">
-                                                <label class="form-label">Address</label>
-                                                <input wire:model.lazy="address" class="form-control" type="text">
-                                                @error('address') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <span class="lead">Total: 	&#8358; {{ number_format($transactionTotal, 2) }}</span> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-inline float-md-end mb-3">
+                                <div class="search-box ms-2">
+                                    <div class="position-relative">
+                                        <input wire:model="search" type="text" class="form-control rounded bg-light border-0" placeholder="Txn number...">
+                                        <i class="mdi mdi-magnify search-icon"></i>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-5">
-                                            <h4 class="box-title text-info mb-0 mt-20"><i class="ti-save me-15"></i> Properties
-                                            </h4>
-                                        </div>
-                                        <div class="col-md-6 mb-5 d-flex justify-content-end  d-flex align-items-center">
-                                            <a wire:click.prevent="addProperty" href="#" class="mt-4"> <span class="badge badge-success">Add Property Type</span> </a>
-                                        </div>
-                                    </div>
-                                    <hr class="my-15">
-
-                                    @if ($errors->any())
-                                        <div class="alert alert-danger" role="alert">
-                                            Ensure there are no duplicate selections for Property Type
-                                        </div>
-                                    @endif
-
-                                    @foreach ($this->properties as $key => $property)
-                                    <div class="row">
-                                        <div class="col-md-3 mb-3 mb-md-5">
-                                            <div class="form-group">
-                                                <label class="form-label">Property Type</label>
-                                                <select wire:model.lazy="addedProperties.{{$key}}.property_id"
-                                                    class="form-select form-control" required>
-                                                    <option value="">Please select one</option>
-                                                    @foreach ($propertyTypes as $propertyType)
-                                                    <option value="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3 mb-md-5">
-                                            <div class="form-group">
-                                                <label class="form-label">Number of Units</label>
-                                                <input wire:model.lazy="addedProperties.{{$key}}.number_of_units" class="form-control"
-                                                    type="number" required>
-                                                @error('number_of_units') <span class="error">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 mb-3 mb-md-5 text-left text-md-center">
-                                            <div class="form-group mt-4">
-
-                                                @if(isset($addedProperties[$key]['prices']))
-
-                                                  @foreach ($addedProperties[$key]['prices'] as $key => $value)
-                                                    {{ $paymentPlans[$value['plan_id']] }} - &#8358;{{ number_format($propertyPrices[$value['price_id']]) }} <br>
-                                                  @endforeach
-
-                                                @else
-                                                  <p>No price(s) attached</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1 mb-3 mb-md-5 pt-4 d-flex justify-content-end align-items-center">
-                                            <div class="form-group">
-                                                <a wire:click="$emit('openModal', 'estates.add-property-price-modal', {{$key}})" href="#" class="text-white"> <span class="badge badge-primary">Add Price</span> </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1 mb-5 pt-4 d-flex justify-content-end align-items-center">
-                                            <div class="form-group">
-                                                <a wire:click.prevent="removeProperty({{ $key }})" href="#"
-                                                    class="text-white"> <span class="badge badge-danger">Remove</span> </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-
                                 </div>
-                                <!-- /.box-body -->
-                                <div class="box-footer">
-                                    <a class="btn-lg btn btn-warning me-1" href="{{ url()->previous() }}">Cancel</a>
-                                    <input type="submit" class="btn-lg btn btn-primary" value="Save">
-                                </div>
-                            </form>
+                                
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="table-responsive-md">
+                        <table class="table table-centered table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="text-left">Txn Number</th>
+                                    <th class="text-end">Amt (&#8358;)</th>
+                                    <th class="text-left">Client</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-left">Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($transactions as $transaction)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td class="text-left">{{ $transaction->transaction_number }}</td>
+                                        <td class="text-end">{{ number_format($transaction->amount, 2) }}</td>
+                                        <td class="text-left">
+                                            <a href="{{ route('clients.show', $transaction->client) }}">
+                                                {{ $transaction->client->name }}
+                                            </a>
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if ($transaction->status == 1)
+                                                <span class="badge bg-success">approved</span>
+                                            @elseif ($transaction->status == 2)
+                                                <span class="badge bg-danger">unapproved</span>
+                                            @else
+                                                <span class="badge bg-dark">unprocessed</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-left">
+                                            {{ $transaction->date->toFormattedDateString() }}
+                                        </td>
+
+                                        <td class="text-center">
+
+                                            <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.show', $transaction) }}" href="#" class="text-primary p-0" data-original-title="" title="View Details" >
+                                                <i class="bx bx-show font-size-18"></i>
+                                            </a>
+
+                                            <a wire:click.prevent="downloadReciept({{$transaction->client->id}}, {{$transaction->id}})" href="#" class="text-dark p-0" data-original-title="" title="Download Reciept" download>
+                                                <i class="bx bx-download font-size-18"></i>
+                                            </a>
+                
+                                            @if (!$transaction->onlinePayment)
+                                            <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
+                                                data-original-title="" title="Proof of Payment" target="_blank">
+                                                <i class="bx bx-file font-size-18"></i>
+                                            </a>    
+                                            @endif
+                                            
+                                            <a wire:click.prevent="mailReciept({{$transaction->client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
+                                                data-original-title="" title="Email Reciept">
+                                                <i class="bx bx-envelope font-size-18"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6">No transactions</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-6">
+                            <div>
+                                <p class="mb-sm-0">Showing {{ $transactions->currentPage() }} to {{ $transactions->perPage() }} of {{ $transactions->total() }} entries</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-sm-end">
+                                {{ $transactions->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\Client;
+use App\Events\PaymentMade;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Events\PaymentMade;
+use ProtoneMedia\LaravelCrossEloquentSearch\Search;
+use Carbon\Carbon;
 
 class TransactionsController extends Controller
 {    
@@ -14,8 +17,100 @@ class TransactionsController extends Controller
      *
      * @return void
      */
-    public function index() {        
-        return view('admin.transactions.transactions-index');
+    public function index() {
+
+        $data['banks'] = Bank::all();
+        $date_from = Carbon::now()->startOfMonth();
+        $date_to = Carbon::now()->endOfMonth();
+        $bank_id = null;
+        $transaction_number = null;
+        $status = null;
+
+        $transactionsQuery = Transaction::query();
+        $transactionsQuery = $transactionsQuery->orderBy('created_at', 'desc');
+
+        if (request('date_from')) {
+            $date_from = request('date_from');
+            $date_to = request('date_to');
+        }
+        $transactionsQuery = $transactionsQuery->whereBetween('date', [$date_from, $date_to]);
+
+        if (request('bank_id')) {
+            $bank_id = request('bank_id');
+            $transactionsQuery = $transactionsQuery->where('bank_id', request('bank_id'));
+        }
+
+        if (request('status')) {
+            $status = request('status');
+            // dd($status);
+            $transactionsQuery = $transactionsQuery->where('status', request('status'));
+        }
+
+        if (request('transaction_number')) {
+            $transaction_number  = request('transaction_number');
+            $transactionsQuery = $transactionsQuery->where('transaction_number', 'LIKE', "%{$transaction_number}%");
+        }
+
+        $data['transactions'] = $transactionsQuery ->paginate(20);
+        $data['transactionTotal'] = (new Transaction)->getTotal();
+
+        $data['date_from'] = $date_from;
+        $data['date_to'] = $date_to;
+        $data['bank_id'] = $bank_id;
+        $data['status'] = $status;
+        $data['transaction_number'] = $transaction_number;
+        // dd($data);
+
+        return view('admin.transactions.transactions-index', $data);
+    }
+    
+    /**
+     * downloadReciept
+     *
+     * @param  mixed $clientId
+     * @param  mixed $transactionId
+     * @return void
+     */
+    public function downloadReciept($clientId, $transactionId) {
+
+        $data['client'] = Client::where('id', $clientId)->first();
+        $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+
+        $pdfContent = PDF::loadView('pdf.reciept', $data)->output();
+        
+        return response()->streamDownload(
+            fn () => print($pdfContent),
+            "filename.pdf"
+        );
+
+    }
+    
+    /**
+     * Send transsaction receipt
+     *
+     * @param  mixed $clientId
+     * @param  mixed $transactionId
+     * @return void
+     */
+    public function mailReciept($clientId, $transactionId) {
+
+        $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
+        Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
+        
+        session()->flash('message', 'Email sent successfully.');
+        return redirect()->back();
+    }
+    
+    /**
+     * destroy
+     *
+     * @return void
+     */
+    public function destroy($id) {
+        Property::findOrFail($id)->delete();
+        session()->flash('message', 'Property deleted.');
+
+        return redirect()->back();
     }
 
 
@@ -41,6 +136,20 @@ class TransactionsController extends Controller
         return view('admin.transactions.transactions-create', $data);
     }
 
+    
+    /**
+     * index
+     *
+     * @return void
+     */
+    public function edit(Client $client, Transaction $transaction) {
+
+        $data['client'] = $client;
+        $data['transaction'] = $transaction;
+
+        return view('admin.transactions.transactions-edit', $data);
+    }
+
 
     /**
      * index
@@ -62,7 +171,9 @@ class TransactionsController extends Controller
         $transaction->save();
 
         // dispatch event
-        PaymentMade::dispatch($transaction);
+        if ($request->status == 1) {
+            PaymentMade::dispatch($transaction);
+        }
 
         return redirect()->back();
     }

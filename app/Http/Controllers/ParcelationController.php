@@ -24,7 +24,7 @@ class ParcelationController extends Controller
      *
      * @return void
      */
-    public function selectPlot() {
-        return view('frontend.parcelation.plots');
+    public function selectPlot($estate_slug) {
+        return view('frontend.parcelation.plots', compact('estate_slug'));
     }
 }

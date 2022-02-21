@@ -86,7 +86,11 @@ class Dashboard extends Component
 
         $this->defaulters = [];
         foreach ($defaults as $clientId => $default) {
-            $this->defaulters[] = $this->clients->where('id', $clientId)->first()->toArray();
+
+            $client = $this->clients->where('id', $clientId)->first()->toArray();
+            $client['missed_date'] = $default->last() ? $default->last()['missed_date'] : null;
+
+            $this->defaulters[] = $client;
             // dd($this->defaulters->total_payment_default_owed);
         }
         // dd($this->defaulters);

@@ -61,10 +61,12 @@ class ShowClients extends Component
             $client->unpaid = $this->estatePropertyType->price;
 
             $client->transactions->each(function($transaction) use($client) {
-                if ($transaction->property->estatePropertyType->propertyType->id == $this->propertyType->id) {
+
+                // ensure tnx is approved and matches proprty type
+                if (($transaction->property->estatePropertyType->propertyType->id == $this->propertyType->id) && $transaction->is_approved) {
 
                     $client->paid = $client->paid + $transaction->amount;
-                    $client->unpaid = $client->unpaid - $transaction->amount;
+                    // $client->unpaid = $client->unpaid - $transaction->amount;
 
                 }
             });
@@ -84,8 +86,8 @@ class ShowClients extends Component
     
         // $this->validate();
 
-        Mail::to($this->clients->pluck('email'))
-            ->bcc($this->company_email)
+        Mail::to($this->company_email)
+            ->bcc($this->clients->pluck('email'))
             ->send(new CustomMailable($this->subject, $this->message));
 
         $this->reset(['subject', 'message']);

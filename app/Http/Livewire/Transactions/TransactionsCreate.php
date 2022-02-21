@@ -16,7 +16,7 @@ class TransactionsCreate extends Modal
 {
     use WithFileUploads;
 
-    public $client_id, $property_id, $amount, $date, $proof, $proof_reference_number;
+    public $client_id, $property_id, $amount, $date, $proof, $proof_reference_number, $instalment_date;
     public $propertybalance = 0;
     public Client $client;
 
@@ -92,10 +92,16 @@ class TransactionsCreate extends Modal
             'proof_reference_number' => $this->proof_reference_number,
             'transaction_number'     => substr(hash('sha256', mt_rand() . microtime()), 0, 20),
             'date'                   => $this->date,
+            'instalment_date'        => $this->instalment_date,
             'recorded_by'            => auth()->id(),
             'status'                 => 3,
             'is_approved'            => 0,
         ]);
+
+        // set new date for next payment
+        $property = $transaction->property;
+        $property->next_due_date = $transaction->property->nextPaymentDueDate();
+        $property->save();
 
         if ($this->proof) {
             $transaction

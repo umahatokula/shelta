@@ -37,7 +37,10 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             
             $pastDueProperties = Property::where(function($query) {
-                return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
+
+                $nextPaymentDueDate = Carbon::parse($query->first()->nextPaymentDueDate());
+        
+                return $query->whereDay('next_due_date', '=', Carbon::yesterday());
             })
             ->whereNotIn('id', function ($query) {
                 $query->select('transactions.property_id') // get all previous day's transactions
@@ -52,17 +55,18 @@ class Kernel extends ConsoleKernel
             $inserts = [];
             foreach ($pastDueProperties as $property) {
         
-                $defaultAmount = $property->getMonthlyPaymentAmount() * 0.2;
+                $defaultAmount = $property->getMonthlyPaymentAmount() * 0;
         
-                if ($defaultAmount > 0) {
+                // if ($defaultAmount > 0) {
                     $inserts[] = [
                         'client_id'      => $property->client_id,
                         'property_id'    => $property->id,
                         'default_amount' => $defaultAmount,
+                        'missed_date'    => $property->next_due_date,
                         'created_at'     => Carbon::now(),
                         'updated_at'     => Carbon::now(),
                     ];
-                }
+                // }
                 
             }
 

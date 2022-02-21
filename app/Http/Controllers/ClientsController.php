@@ -6,6 +6,7 @@ use PDF;
 use Mail;
 use App\Models\User;
 use App\Models\Client;
+use App\Models\Estate;
 use App\Helpers\Helpers;
 use App\Models\Transaction;
 use App\Mail\CustomMailable;
@@ -336,6 +337,8 @@ class ClientsController extends Controller
             'properties.estatePropertyType.propertyType', 
             'properties.estatePropertyType.estate'
         ]);
+        
+        $data['estates'] = Estate::all();
         
         $data['propertybalance'] = 0;
 

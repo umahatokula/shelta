@@ -79,10 +79,18 @@
                                     </div>
                                     
                                     <div class="form-group row mb-5">
-                                        <label class="col-form-label col-md-2" id="amount">Date <span class="text-danger">*</span></label>
+                                        <label class="col-form-label col-md-2" id="date">Transaction Date <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
                                             <input wire:model="date" class="form-control" type="date">
                                             @error('date') <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row mb-5">
+                                        <label class="col-form-label col-md-2" id="instalment_date">Instalment Date </label>
+                                        <div class="col-md-10">
+                                            <input wire:model="instalment_date" class="form-control" type="date">
+                                            @error('instalment_date') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
                                     

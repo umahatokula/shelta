@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Estates;
 
 use App\Models\Estate;
 use Livewire\Component;
+use App\Models\Property;
 use Livewire\WithPagination;
 use App\Models\EstatePropertyType;
 
@@ -23,7 +24,10 @@ class ListEstates extends Component
         Estate::findOrFail($id)->delete();
 
         $estatePropertyTypes = EstatePropertyType::where('estate_id', $id)->each(function($estatePropertyType) {
-            $estatePropertyType->properties()->delete();
+            // $estatePropertyType->properties()->delete();
+            Property::where('estate_property_type_id', $estatePropertyType->id)->update([
+                'estate_property_type_id ' => null,
+            ]);
         });
         
         EstatePropertyType::where('estate_id', $id)->delete();

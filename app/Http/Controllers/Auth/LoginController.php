@@ -66,9 +66,8 @@ class LoginController extends Controller
             
         }
 
-        return redirect()
-            ->route('login')
-            ->with('error', 'You have entered invalid credentials');
+        session()->flash('error', 'You have entered invalid credentials');
+        return redirect()->route('login');
     }
 
     

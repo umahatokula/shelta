@@ -30,6 +30,8 @@ class ClientAccountCreated
     public function handle(ClientAccountCreatedEvent $event)
     {
         $password = $event->client->generatePassword();
+        // $password = '12345678';
+        
         // create user account
         $user = User::updateOrCreate(
             ['email' =>  $event->client->email],

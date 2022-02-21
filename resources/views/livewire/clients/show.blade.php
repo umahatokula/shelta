@@ -172,7 +172,7 @@
 
                                             <a  data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.process', $transaction) }}" href="#" class="text-default p-0" data-original-title="" title="Process Transaction">
                                                 <span class="material-icons-outlined">
-                                                    account_tree
+                                                    flaky
                                                     </span>
                                             </a>
 
@@ -202,6 +202,12 @@
                                                 data-original-title="" title="Email Reciept">
                                                 <span class="material-icons-outlined">
                                                     email
+                                                    </span>
+                                            </a>
+
+                                            <a href="{{ route('transactions.edit', [$client, $transaction]) }}" class="text-default p-0" data-original-title="" title="Edit Transaction">
+                                                <span class="material-icons-outlined">
+                                                    edit
                                                     </span>
                                             </a>
                                         </td>
@@ -372,8 +378,12 @@
                                                                     <tr>
                                                                         <td>Next Payment:</td>
                                                                         <td>
-                                                                            @if ($property->lastPayment())
-                                                                            {{ $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->toFormattedDateString() : null }}
+                                                                            @if($property->totalPaid() >= $property->estatePropertyType->priceOfPaymentPlan($property->payment_plan_id) ) Payent completed
+
+                                                                            @else
+                                                                                @if ($property->lastPayment())
+                                                                                {{ $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->toFormattedDateString() : null }}
+                                                                                @endif
                                                                             @endif
                                                                         </td>
                                                                     </tr>

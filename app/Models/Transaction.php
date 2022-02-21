@@ -30,9 +30,10 @@ class Transaction extends Model implements HasMedia
                             'status',
                             'is_approved',
                             'processed_by',
+                            'instalment_date',
                         ];
 
-    protected $dates = ['date'];
+    protected $dates = ['date', 'instalment_date'];
 
     /**
      * The attributes that should be cast.
@@ -60,7 +61,7 @@ class Transaction extends Model implements HasMedia
      * @return void
      */
     public function property() {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Property::class)->withDefault();
     }
     
     /**
@@ -69,7 +70,7 @@ class Transaction extends Model implements HasMedia
      * @return void
      */
     public function client() {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class)->withDefault();
     }
         
     /**
@@ -78,7 +79,7 @@ class Transaction extends Model implements HasMedia
      * @return void
      */
     public function onlinePayment() {
-        return $this->hasOne(OnlinePayment::class);
+        return $this->hasOne(OnlinePayment::class)->withDefault();
     }
     
     /**

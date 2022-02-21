@@ -25,6 +25,7 @@ class CreateTransactionsTable extends Migration
             $table->boolean('recorded_by_staff')->nullable()->default(1);
             $table->string('proof_reference_number')->unique()->nullable();
             $table->date('date')->nullable();
+            $table->date('instalment_date')->nullable()->comment('The month this instalment payment is for');
             $table->integer('status')->nullable()->default(3)->comment('1=Approved / 2=Unapproved / 3=Unprocessed');
             $table->boolean('is_approved')->nullable()->default(0);
             $table->foreignId('processed_by')->nullable()->comment('User who made or processedrecorded_ this transaction');

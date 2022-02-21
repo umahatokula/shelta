@@ -18,7 +18,7 @@ class Property extends Model
 
     protected $dates = ['date_of_first_payment'];
 
-    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id', 'date_of_first_payment'];
+    protected $fillable = ['estate_property_type_id', 'unique_number', 'client_id', 'payment_plan_id', 'date_of_first_payment', 'next_due_date'];
 
     /**
      * properties
@@ -63,7 +63,7 @@ class Property extends Model
      * @return void
      */
     public function totalPaid() {
-        return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->sum('amount');
+        return Transaction::where(['client_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->sum('amount');
     }
 
     /**
@@ -72,7 +72,16 @@ class Property extends Model
      * @return void
      */
     public function lastPayment() {
-        return Transaction::where(['property_id' => $this->client->id, 'property_id' => $this->id])->latest('id')->first();
+        return Transaction::where(['client_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->latest('id')->first();
+    }
+
+    /**
+     * last instalment Payment
+     *
+     * @return void
+     */
+    public function lastInstalmentPayment() {
+        return Transaction::where(['client_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->latest('instalment_date')->first();
     }
 
     /**
@@ -101,11 +110,16 @@ class Property extends Model
      */
     public function nextPaymentDueDate() {
 
-        if (is_null($this->date_of_first_payment)) {
+        if (is_null($this->date_of_first_payment) || is_null($this->lastInstalmentPayment())) {
             return;
         }
 
-        $nextDueDate = Carbon::today()->addMonth();
+        // $nextDueDate = Carbon::today()->addMonth();
+        $nextDueDate = Carbon::parse($this->lastInstalmentPayment()->instalment_date)->addMonth();
+
+        if ($nextDueDate ->isPast()) {
+            $nextDueDate = Carbon::today();
+        }
 
         // ensure due date is not greater than 28. This is because Feb has 28 days in leap years so we use this minimum number of days as our payment cycle.
         $day = 28;
@@ -131,9 +145,9 @@ class Property extends Model
      *
      * @return void
      */
-    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_before_due_date) {
+    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_to_due_date) {
 
-        $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
+        $nextDueDate = Carbon::today()->addDays($number_of_days_to_due_date);
 
         $day = $nextDueDate->day;
         $month = $nextDueDate->month;
@@ -145,41 +159,41 @@ class Property extends Model
     /**
      * Get Properties Due For Reminder based on the supplied number of days
      *
-     * @param  mixed $number_of_days_before_due_date
+     * @param  mixed $number_of_days_to_due_date
      * @param  mixed $estatePropertyTypePrice
      * @return void
      */
-    public function getPropertiesDueForReminder($number_of_days_before_due_date) {
+    public function getPropertiesDueForReminder($number_of_days_to_due_date) {
     
       $estatePropertyTypePrice = EstatePropertyTypePrice::all();
 
-      $nextDueDate = Carbon::today()->addDays($number_of_days_before_due_date);
+      $nextDueDate = Carbon::today()->addDays($number_of_days_to_due_date);
 
       return $this->with('client')
           ->whereNotNull('client_id')
           ->whereNotNull('date_of_first_payment')
           ->get()
-          ->filter(function ($property) use($nextDueDate, $estatePropertyTypePrice) {
+          ->filter(function ($property) use ($nextDueDate, $estatePropertyTypePrice) {
 
-              $day = 28;
-              if ($property->date_of_first_payment->day < 28) {
-                  $day = $property->date_of_first_payment->day;
-              }
+            //   $day = 28;
+            //   if ($property->date_of_first_payment->day < 28) {
+            //       $day = $property->date_of_first_payment->day;
+            //   }
 
-              $dueDate = 28;
-              if ($nextDueDate->day < 28) {
-                  $dueDate = $nextDueDate->day;
-              }
+            //   $dueDate = 28;
+            //   if ($nextDueDate->day < 28) {
+            //       $dueDate = $nextDueDate->day;
+            //   }
 
-              $property_type_prices = $estatePropertyTypePrice->filter(function($estatePropertyTypePrice) use($property) {
-                  return $estatePropertyTypePrice->estate_property_type_id == $property->estate_property_type_id && $estatePropertyTypePrice->payment_plan_id == $property->payment_plan_id;
-              })->first();
+            //   $property_type_prices = $estatePropertyTypePrice->filter(function($estatePropertyTypePrice) use($property) {
+            //       return $estatePropertyTypePrice->estate_property_type_id == $property->estate_property_type_id && $estatePropertyTypePrice->payment_plan_id == $property->payment_plan_id;
+            //   })->first();
 
-              if ($property_type_prices) {
-                $propertyPrice = $property_type_prices->propertyPrice->price;
-              }
+            //   if ($property_type_prices) {
+            //     $propertyPrice = $property_type_prices->propertyPrice->price;
+            //   }
 
-              return ($day == $dueDate) && $property->transactionTotal() < $propertyPrice;
+              return ($property->nextPaymentDueDate() == $nextDueDate) && $property->transactionTotal() < $property->getPropertyPrice();
           });
     }
     
@@ -206,7 +220,11 @@ class Property extends Model
 
         $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
 
-        return $paymentPlanAndPrice->propertyPrice->price;
+        if (!$paymentPlanAndPrice) {
+            return null;
+        }
+
+        return $paymentPlanAndPrice->propertyPrice ? $paymentPlanAndPrice->propertyPrice->price : null;
     }
     
     /**

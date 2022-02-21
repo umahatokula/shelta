@@ -74,7 +74,7 @@ class ListTransactions extends Component
     {
         return view('livewire.transactions.list-transactions', [
             'transactions' => Transaction::where('transaction_number', 'LIKE', '%'.$this->search.'%')
-            ->paginate(20),
+            ->orderBy('date', 'desc')->paginate(20),
         ]);
     }
 }

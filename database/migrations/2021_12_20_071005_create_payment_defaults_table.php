@@ -21,6 +21,7 @@ class CreatePaymentDefaultsTable extends Migration
             $table->foreign('property_id')->references('id')->on('properties')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('default_amount')->nullable();
             $table->integer('paid_amount')->nullable();
+            $table->date('missed_date')->nullable();
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class PaymentDefault extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['client_id', 'property_id', 'default_amount', 'paid_amount'];
+    protected $fillable = ['client_id', 'property_id', 'default_amount', 'paid_amount', 'missed_date'];
 
     // public function getDefaultAmountAttribute() {
     //     return $this->attributes['default_amount'] / 100;

@@ -51,7 +51,6 @@
                                             <td class="text-left">
                                                 {{ $transaction->client->sname.' '.$transaction->client->onames }}
                                             </td>
-    
                                             <td class="text-center">
                                                 @if ($transaction->status == 1)
                                                     <span class="badge badge-success">approved</span>

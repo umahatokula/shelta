@@ -1,6 +1,6 @@
 <div class="app-sidebar">
     <div class="logo">
-        <a href="index.html" class="logo-icon"><span class="logo-text">&nbsp</span></a>
+        <a href="{{ url('/') }}" class="logo-icon"><span class="logo-text">&nbsp</span></a>
     </div>
     <div class="app-menu">
         <ul class="accordion-menu">

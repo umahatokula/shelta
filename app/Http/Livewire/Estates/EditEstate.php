@@ -21,7 +21,7 @@ class EditEstate extends Component
     protected $listeners = ['propertyPriceAdded'];
 
     protected $rules = [
-        'name' => 'required|string|min:6',
+        'name' => 'required|string|min:2',
         'addedProperties.*.price' => 'regex:/^\d+(\.\d{1,2})?$/',
         'addedProperties.*.number_of_units' => 'numeric',
         'addedProperties.*.property_id' => 'distinct',
@@ -167,7 +167,7 @@ class EditEstate extends Component
      * @return void
      */
     public  function propertyPriceAdded($index, $prices) {
-      $this->addedProperties[$index]['prices'] = $prices;
+        $this->addedProperties[$index]['prices'] = $prices;
     }
 
     public function render()

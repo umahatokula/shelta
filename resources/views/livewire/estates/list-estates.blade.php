@@ -48,7 +48,7 @@
                                             <td class="text-left">{{ $estate->name }}</td>
                                             <td>{{ $estate->address }}</td>
                                             <td>
-                                                <ul>
+                                                <ul class="list-unstyled">
                                                     @foreach ($estate->propertyTypes as $propertyType)
                                                         <li><a href="{{ route('property-types.show', $propertyType) }}">{{ ucfirst(strtolower($propertyType->name)) }}</a></li>
                                                     @endforeach     

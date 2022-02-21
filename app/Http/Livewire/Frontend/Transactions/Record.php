@@ -104,10 +104,13 @@ class Record extends Component
             ->toMediaCollection('proofOfPayment', 'public');
         }
 
-        if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
-            Property::where('id', $transaction->property_id)->update([
-                'date_of_first_payment' => $transaction->data,
-           ]);
+        
+        // set date of first transaction
+        $property = Property::where('id', $transaction->property_id)->first();
+
+        if (!$property->date_of_first_payment) {
+            $property->date_of_first_payment = $transaction->date;
+            $property->save();
         }
 
         // log this transaction

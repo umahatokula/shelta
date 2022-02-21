@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <div class="page-description">
-                <h1>{{ config('app.name', 'Real Estate App') }} - Estate Property Type Clients</h1>
+                <h4>{{ config('app.name', 'Real Estate App') }} - Estate Property Type Clients</h4>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
                                                 </h4>
                                             </div>
                                             <div class="col-md-4 mb-5 d-flex justify-content-end">
-                                                <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('estate-property-type.clients.send-notification', [$estate, $propertyType]) }}" href="#" class="btn btn-warning btn-lg float-right mx-3">Send notification</a>
+                                                <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('estate-property-type.clients.send-notification', [$estate, $propertyType]) }}" href="#" class="btn btn-warning  float-right mx-3">Send notification</a>
                                             </div>
                                         </div>
                                     </div>
@@ -52,30 +52,27 @@
                     
                                         @if ($clients->isNotEmpty())
                                             
-                                        <div class="table-responsive">
-                                            <table id="propertyTypeEstateShowClients" class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
+                                        <div class="table-responsive-md">
+                                            <table class="table table-centered table-nowrap mb-0">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th class="text-left">Name</th>
-                                                        <th class="text-right">Paid (&#x20A6;)</th>
-                                                        <th class="text-right">Unpaid (&#x20A6;)</th>
+                                                        <th class="text-end">Paid (&#x20A6;)</th>
+                                                        {{-- <th class="text-end">Unpaid (&#x20A6;)</th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($clients as $client)
-                                                    @if(!is_null($client))
-                                                        {{$client}} <br> <br> <br>                                                         
-                                                    @endif
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td class="text-left">
-                                                            {{-- @if(!is_null($client))
+                                                            @if(!is_null($client))
                                                                 <a href="{{ route('clients.show', $client->slug) }}">{{ $client->name }}</a>                                                                
-                                                            @endif --}}
+                                                            @endif
                                                         </td>
-                                                        <td class="text-right">{{ number_format($client->paid) }}</td>
-                                                        <td class="text-right">{{ number_format($client->unpaid) }}</td>
+                                                        <td class="text-end">{{ number_format($client->paid) }}</td>
+                                                        {{-- <td class="text-end">{{ number_format($client->unpaid) }}</td> --}}
                                                     </tr>
                                                     @endforeach
                                                     

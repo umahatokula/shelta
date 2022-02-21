@@ -52,15 +52,16 @@
                 <a href="{{ route('home') }}">&nbsp</a>
             </div>
             <p class="auth-description">&nbsp</p>
-
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                    
+            @if (session()->has('error'))
+                <div class="alert alert-danger alert-style-light" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
+            @if (session()->has('success'))
+                <div class="alert alert-success alert-style-light" role="alert">
+                    {{ session('success') }}
                 </div>
             @endif
 

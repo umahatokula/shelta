@@ -84,7 +84,14 @@ class EstatePropertyTypeController extends Controller
             });
 
         });
+        
 
+        // send email
+        if ($request->has('email')) {
+            Mail::to($company_email)
+                ->bcc($clients->pluck('email'))
+                ->send(new CustomMailable($request->subject, $request->message));
+        }
 
         foreach ($clients as $client ) {
 
@@ -108,16 +115,8 @@ class EstatePropertyTypeController extends Controller
             }
 
         }
-        
-
-        // send email
-        if ($request->has('email')) {
-            Mail::to($clients->pluck('email'))
-                ->bcc($company_email)
-                ->send(new CustomMailable($request->subject, $request->message));
-        }
 
         session()->flash('message', 'Email sent successfully.');
-        redirect()->back();
+        return redirect()->back();
     }
 }

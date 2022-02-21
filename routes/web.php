@@ -3,7 +3,9 @@
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use App\Models\Property;
+use App\Models\Transaction;
 use App\Models\PaymentDefault;
+use App\Mail\PaymentMadeMailable;
 use Illuminate\Support\Facades\Route;
 use App\Models\PaymentReminderSetting;
 use App\Models\EstatePropertyTypePrice;
@@ -11,6 +13,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\SearchController;
 use App\Http\Livewire\Clients\AddProperty;
+use App\Mail\ClientAccountCreatedMailable;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EstatesController;
 use App\Http\Controllers\ImportsController;
@@ -62,7 +65,7 @@ Route::get('/home', function () {
 
 })->name('home')->middleware('auth');
 
-Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
 
@@ -80,6 +83,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
     Route::get('transactions/create/{client}', [TransactionsController::class, 'create'])->name('transactions.create');
     Route::post('transactions', [TransactionsController::class, 'index'])->name('transactions.store');
+    Route::get('transactions/edit/{client}/{transaction}', [TransactionsController::class, 'edit'])->name('transactions.edit');
     Route::get('transactions/{transaction}', [TransactionsController::class, 'show'])->name('transactions.show');
 
     // properties
@@ -168,7 +172,7 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 
     // plot selection
     Route::get('parcelation/{plot_unique_number}/pay', [ParcelationController::class, 'pay'])->name('parcelation.pay');
-    Route::get('parcelation/select', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
+    Route::get('parcelation/{estate_slug}', [ParcelationController::class, 'selectPlot'])->name('parcelation.select');
 
     // Auth
     Route::get('password/change', [PasswordController::class, 'showChangePasswordForm'])->name('password.change')->withoutMiddleware([EnsurePasswordChanged::class]);
@@ -177,40 +181,58 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 
 });
 
-Route::get('/mailable', function () {
-            
-    $pastDueProperties = Property::where(function($query) {
-        return $query->whereDay('date_of_first_payment', '=', Carbon::yesterday()->format('d'));
-    })
-    ->whereNotIn('id', function ($query) {
-        $query->select('transactions.property_id') // get all previous day's transactions
-            ->from('transactions')
-            ->whereDate('transactions.date', '=', Carbon::yesterday());
-    })
-    ->get()
-    ->filter(function($property) {
-        return $property->getPropertyPrice() > $property->totalPaid();
-    });
+Route::get('/resetpasswords', function () {
+    dd('sdsdsds');
+    
 
-    $inserts = [];
-    foreach ($pastDueProperties as $property) {
+    // create user accounts for clients who dont have a user account
+    $clients = App\Models\Client::pluck('email');
+    $users = App\Models\User::pluck('email');
 
-        $defaultAmount = $property->getMonthlyPaymentAmount() * 0.2;
+    $diff = $clients->diff($users);
+    // dd($diff);
 
-        if ($defaultAmount > 0) {
-            $inserts[] = [
-                'client_id'      => $property->client_id,
-                'property_id'    => $property->id,
-                'default_amount' => $defaultAmount,
-                'created_at'     => Carbon::now(),
-                'updated_at'     => Carbon::now(),
-            ];
-        }
+    foreach ($diff as $email) {
+
+        $client = App\Models\Client::where('email', $email)->first();
         
+        $user = App\Models\User::Create(
+            [
+                'name'      => $client->sname.' '.$client->onames,
+                'client_id' => $client->id,
+                'email' => $client->email,
+                'password'  => \Hash::make('12345678'),
+            ]
+        );
     }
-    dd($inserts);
 
-    PaymentDefault::insert($inserts);
+    // ==================================================================================
+    $password = '12345678';
+    $users = App\Models\User::whereNull('password_change_date')->whereNull('staff_id')->get();
+    // dd($users);
+
+    foreach ($users as $user) {
+        
+        $user->password  = \Hash::make($password);
+        $user->save();
+        // dd($user->client);
+
+        // assign role
+        $user->assignRole('client');
+        
+        // send email
+        Mail::to($user->client->email)->send(new ClientAccountCreatedMailable($user->client, $password));
+
+    }
+
+    echo ('done');
+
+});
+
+Route::get('/mailable', function () {
+    $transaction = Transaction::findOrFail(1);
+ 
+    return new App\Mail\PaymentMadeMailable($transaction);
 });
 
 Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');
