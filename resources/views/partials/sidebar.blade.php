@@ -12,7 +12,7 @@
                 <a href="{{route('dashboard')}}" class="active"><i class="material-icons-two-tone">dashboard</i>Dashboard</a>
             </li>
 
-            <li class="{{ url()->current() == route('clients.index') ? 'active-page' : '' || url()->current() == route('clients.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('clients.index') ? 'active-page' : '') || (url()->current() == route('clients.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">people</i>Clients<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('clients.index') ? 'active' : '' }}">
@@ -24,7 +24,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('properties.index') ? 'active-page' : '' || url()->current() == route('properties.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('properties.index') ? 'active-page' : '') || (url()->current() == route('properties.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">other_houses</i>Properties<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('properties.index') ? 'active' : '' }}">
@@ -36,7 +36,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('estates.index') ? 'active-page' : '' || url()->current() == route('estates.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('estates.index') ? 'active-page' : '') || (url()->current() == route('estates.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">home_work</i>Estates<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('estates.index') ? 'active' : '' }}">
@@ -48,7 +48,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('property-types.index') ? 'active-page' : '' || url()->current() == route('property-types.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('property-types.index') ? 'active-page' : '') || (url()->current() == route('property-types.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">holiday_village</i>Property
                             Types<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
@@ -63,7 +63,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('payment-plans.index') ? 'active-page' : '' || url()->current() == route('payment-plans.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('payment-plans.index') ? 'active-page' : '') || (url()->current() == route('payment-plans.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">paid</i>Payment Plans<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('payment-plans.index') ? 'active' : '' }}">
@@ -75,7 +75,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('property-prices.index') ? 'active-page' : '' || url()->current() == route('property-prices.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('property-prices.index') ? 'active-page' : '') || (url()->current() == route('property-prices.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">paid</i>Property Prices<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('payment-plans.index') ? 'active' : '' }}">
@@ -87,7 +87,7 @@
                 </ul>
             </li>
 
-            <li class="{{ url()->current() == route('staff.index') ? 'active-page' : '' || url()->current() == route('staff.create') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('staff.index') ? 'active-page' : '') || (url()->current() == route('staff.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">supervisor_account</i>Staff<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('staff.index') ? 'active' : '' }}">
@@ -107,7 +107,7 @@
                 Settings
             </li>
 
-            <li class="{{ url()->current() == route('staff.profile') ? 'active-page' : '' || url()->current() == route('users.index') ? 'active-page' : '' || url()->current() == route('settings.index') ? 'active-page' : '' }}">
+            <li class="{{ (url()->current() == route('staff.profile') ? 'active-page' : '') || (url()->current() == route('users.index') ? 'active-page' : '') || (url()->current() == route('settings.index') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">settings</i>Settings<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
                     <li class="{{ url()->current() == route('staff.profile') ? 'active' : '' }}">

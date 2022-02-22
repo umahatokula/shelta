@@ -26,20 +26,17 @@
                                                             <div class="col-md-6 mb-30">
                                                                 <select wire:model.lazy="estate_id" wire:change="onSelectEstate($event.target.value)"
                                                                     class="from-select from-control">
-                                                                    <option value="">Please select one</option>
+                                                                    <option value="">Please select estate</option>
                                                                     @foreach ($estates as $estate)
                                                                     <option value="{{ $estate->slug }}">
                                                                         {{ $estate->name }}
                                                                     </option>
                                                                     @endforeach
-                    
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-6 mb-30">
-                                                                <a href="{{ route('frontend.parcelation.select', $selectedEstate) }}"
-                                                                class="readon submit text-center">See Plots</a>
+                                                                <a href="{{ route('frontend.parcelation.select', $selectedEstate) }}" class="readon submit text-center" style="{{ empty($selectedEstate) ? 'pointer-events: none;' : null }}">See Plots <span wire:loading>[loading...]</span></a>
                                                             </div>
-                                                    
                                                         </div> 
                                                     </fieldset>
                                                 </form>
