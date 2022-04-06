@@ -62,7 +62,7 @@
                                             </td>
                                             <td>
                                                 @if ($property->client )
-                                                    {{ $property->client->sname.' '.$property->client->onames }}                                                
+                                                    {{ $property->client->sname.' '.$property->client->onames }}
                                                 @else
                                                     <span class="badge badge-danger">not subscribed</span>
                                                 @endif
@@ -71,7 +71,7 @@
                                                 @if ($property->paymentPlan)
                                                     {{ $property->paymentPlan->name }}
                                                 @else
-                                                    <span class="badge badge-danger">not subscribed</span>                                                
+                                                    <span class="badge badge-danger">not subscribed</span>
                                                 @endif
                                             </td>
                                             <td>
@@ -96,14 +96,14 @@
                                             </td>
                                         </tr>
                                         @endforeach
-    
+
                                     </tbody>
                                 </table>
                             </div>
-    
+
                             <div class="row my-5">
                               <div class="col-12 d-flex justify-content-center">
-    
+
                                 {{ $properties->links() }}
                               </div>
                             </div>

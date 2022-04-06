@@ -120,7 +120,8 @@
                                             <th class="text-right">Amount</th>
                                             <th class="text-center">Type</th>
                                             <th class="text-center">Status</th>
-                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Date Recorded</th>
+                                            <th class="text-center">Last Instalment</th>
                                             <th class="text-center">Action(s)</th>
                                         </tr>
                                     </thead>
@@ -132,12 +133,12 @@
                                         <td>
                                             @if ($transaction->property)
                                                 @if ($transaction->property->estatePropertyType)
-                                                    <span class="text-warning">{{ 
-                                                    
-                                                    $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> - 
-                                                    
-                                                    {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }} 
-                                                    
+                                                    <span class="text-warning">{{
+
+                                                    $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span> -
+
+                                                    {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
+
                                                     [{{ $transaction->property->unique_number }}]
                                                 @endif
                                             @endif
@@ -166,6 +167,10 @@
 
                                         <td class="text-center">
                                             {{ $transaction->date ? $transaction->date->toFormattedDateString() : null }}
+                                        </td>
+
+                                        <td class="text-center">
+                                            {{ $transaction->instalment_date ? $transaction->instalment_date->toFormattedDateString() : null }}
                                         </td>
 
                                         <td class="text-center">

@@ -87,6 +87,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     Route::get('transactions/{transaction}', [TransactionsController::class, 'show'])->name('transactions.show');
 
     // properties
+    Route::get('properties/export', [PropertiesController::class, 'export'])->name('properties.export');
     Route::resource('properties', PropertiesController::class);
 
     // estates
@@ -183,7 +184,7 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 
 Route::get('/resetpasswords', function () {
     dd('sdsdsds');
-    
+
 
     // create user accounts for clients who dont have a user account
     $clients = App\Models\Client::pluck('email');
@@ -195,7 +196,7 @@ Route::get('/resetpasswords', function () {
     foreach ($diff as $email) {
 
         $client = App\Models\Client::where('email', $email)->first();
-        
+
         $user = App\Models\User::Create(
             [
                 'name'      => $client->sname.' '.$client->onames,
@@ -212,14 +213,14 @@ Route::get('/resetpasswords', function () {
     // dd($users);
 
     foreach ($users as $user) {
-        
+
         $user->password  = \Hash::make($password);
         $user->save();
         // dd($user->client);
 
         // assign role
         $user->assignRole('client');
-        
+
         // send email
         Mail::to($user->client->email)->send(new ClientAccountCreatedMailable($user->client, $password));
 
@@ -231,7 +232,7 @@ Route::get('/resetpasswords', function () {
 
 Route::get('/mailable', function () {
     $transaction = Transaction::findOrFail(1);
- 
+
     return new App\Mail\PaymentMadeMailable($transaction);
 });
 

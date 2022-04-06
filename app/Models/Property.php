@@ -101,7 +101,7 @@ class Property extends Model
     public function transactionTotal() {
         return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
     }
-    
+
 
     /**
      * nextPaymentDueDate
@@ -155,7 +155,7 @@ class Property extends Model
 
         return Carbon::parse($month.'/'.$day.'/'.$year);
     }
-    
+
     /**
      * Get Properties Due For Reminder based on the supplied number of days
      *
@@ -164,7 +164,7 @@ class Property extends Model
      * @return void
      */
     public function getPropertiesDueForReminder($number_of_days_to_due_date) {
-    
+
       $estatePropertyTypePrice = EstatePropertyTypePrice::all();
 
       $nextDueDate = Carbon::today()->addDays($number_of_days_to_due_date);
@@ -196,7 +196,7 @@ class Property extends Model
               return ($property->nextPaymentDueDate() == $nextDueDate) && $property->transactionTotal() < $property->getPropertyPrice();
           });
     }
-    
+
     /**
      * Get the Payment plan and Price this property is attached to
      *
@@ -210,7 +210,7 @@ class Property extends Model
 
     }
 
-    
+
     /**
      * Get the price for this property
      *
@@ -226,7 +226,7 @@ class Property extends Model
 
         return $paymentPlanAndPrice->propertyPrice ? $paymentPlanAndPrice->propertyPrice->price : null;
     }
-    
+
     /**
      * Get Monthly Payment Amount
      *
@@ -245,8 +245,8 @@ class Property extends Model
 
         return $price / $paymentPlanNumberOfMonths;
     }
-    
-    
+
+
     /**
      * Get all the payment defaults on this property
      *
@@ -255,7 +255,7 @@ class Property extends Model
     public function getClientPaymentDefaults() {
         return PaymentDefault::where('property_id', $this->id)->get();
     }
-    
+
     /**
      * Get the total payment defaults on this property
      *
@@ -264,7 +264,7 @@ class Property extends Model
     public function getClientPaymentDefaultsTotal() {
         return PaymentDefault::where('property_id', $this->id)->sum('default_amount');
     }
-    
+
     /**
      * Get the total paid to clear up payment defaults on this property
      *
@@ -273,7 +273,7 @@ class Property extends Model
     public function getClientPaymentDefaultsCreditTotal() {
         return PaymentDefault::where('property_id', $this->id)->sum('paid_amount');
     }
-    
+
     /**
      * Get the total paid to clear up payment defaults on this property
      *

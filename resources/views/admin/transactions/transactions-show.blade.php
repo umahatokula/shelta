@@ -6,8 +6,17 @@
     </thead>
     <tbody>
         <tr>
-            <td scope="row">Date</td>
-            <td>{{ $transaction->date }}</td>
+            <td scope="row">Recorded on</td>
+            <td>
+
+                {{ $transaction->date ? $transaction->date->toFormattedDateString() : null }}
+            </td>
+        </tr>
+        <tr>
+            <td scope="row">Being Instalment for</td>
+            <td>
+                {{ $transaction->instalment_date ? $transaction->instalment_date->toFormattedDateString() : null }}
+            </td>
         </tr>
         <tr>
             <td scope="row">Client</td>

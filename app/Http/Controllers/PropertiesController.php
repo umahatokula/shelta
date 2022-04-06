@@ -11,8 +11,10 @@ use App\Models\Transaction;
 use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use App\Models\PropertyPrice;
+use App\Exports\PropertiesExport;
 use App\Helpers\PaginationHelper;
 use App\Models\EstatePropertyType;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Eloquent\Builder;
 
 class PropertiesController extends Controller
@@ -38,21 +40,21 @@ class PropertiesController extends Controller
         $propertiesQuery = $propertiesQuery
         // ->whereNotNull('client_id')
         ->orderBy('unique_number', 'asc');
-        
+
         if (request('price_id')) {
             $price_id = request('price_id');
             $propertiesQuery = $propertiesQuery
                 ->whereHas('estatePropertyType.estatePropertyTypePrices.propertyPrice', fn (Builder $q) => $q->whereId($price_id));
 
         }
-        
+
         if (request('plan_id')) {
             $plan_id = request('plan_id');
             $propertiesQuery = $propertiesQuery
                 ->whereHas('estatePropertyType.estatePropertyTypePrices', function (Builder $q) use($plan_id) {
                     $q->where('payment_plan_id', '=', $plan_id);
                 });
-            
+
         }
 
         if (request('estate_id')) {
@@ -62,7 +64,7 @@ class PropertiesController extends Controller
                     $q->where('estate_id', '=', $estate_id);
                 });
         }
-    
+
         if (request('property_type_id')) {
             $property_type_id = request('property_type_id');
             $propertiesQuery = $propertiesQuery
@@ -70,13 +72,13 @@ class PropertiesController extends Controller
                     $q->where('property_type_id', '=', $property_type_id);
                 });
         }
-        
+
         if (request('unique_number')) {
             $unique_number = request('unique_number');
             $propertiesQuery = $propertiesQuery->where('unique_number', 'LIKE', '%'.$unique_number.'%');
-            
+
         }
-        
+
 
         $data['unique_number'] = $unique_number;
         $data['price_id'] = $price_id;
@@ -153,7 +155,7 @@ class PropertiesController extends Controller
      */
     public function destroy($id)
     {
-        
+
         $property_number = Property::findOrFail($id)->unique_number;
         DB::transaction(function () use($id) {
 
@@ -166,5 +168,15 @@ class PropertiesController extends Controller
 
         session()->flash('message', 'Property #'.$property_number.' deleted.');
         return redirect()->route('properties.index');
+    }
+
+    /**
+     * export
+     *
+     * @return void
+     */
+    public function export()
+    {
+        return Excel::download(new PropertiesExport, 'properties.xlsx');
     }
 }

@@ -56,7 +56,7 @@ class Create extends Component
 
     public $allPropertyTypes;
     public $allProperties;
-    public $allPaymentPlans; 
+    public $allPaymentPlans;
 
     public $clientProperties = [];
     public $clientSubscribedProperties = [ // properties already subscribed to by client
@@ -71,7 +71,7 @@ class Create extends Component
         'sname' => 'required|string|min:2',
         'onames' => 'required|string|min:2',
         'phone' => 'required|string|max:500',
-        // 'email' => 'sometimes|required|email',
+        'email' => 'unique:App\Models\User,email',
         'clientProperties' => 'array',
         'clientProperties.*.estate_id' => 'required',
         'clientProperties.*.property_type_id' => 'required',
@@ -83,6 +83,7 @@ class Create extends Component
         'sname.required' => 'This field is required',
         'onames.required' => 'This field is required',
         'phone.required' => 'This field is required',
+        'email.unique' => 'This email has been used by another user',
     ];
 
     /**
@@ -138,7 +139,7 @@ class Create extends Component
         $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
 
         // get payment plans that have been attached to this Estate-ProertyType Relationship
-        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id); 
+        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id);
     }
 
     public function getPaymentPlans($key = null, $estate_id, $propertyType_id) {
@@ -151,13 +152,13 @@ class Create extends Component
             'estate_id' => $estate_id,
             'property_type_id' => $propertyType_id,
         ])->first();
-        
+
         $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : collect([]);
 
         $estatePropertyTypeIDs = $estatePropertyTypePrices->map(function($estatePropertyTypePrice) {
             return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);
         });
-        
+
         foreach (Arr::flatten($estatePropertyTypeIDs) as $paymentPlan) {
             $this->paymentPlans[$key][] = $paymentPlan->toArray();
         }

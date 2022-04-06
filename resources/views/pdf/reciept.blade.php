@@ -1,156 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
+<link href="{{ public_path('assets/bootstrap-4.6.1-dist/css/bootstrap.css') }}" rel="stylesheet">
+<link href="{{ public_path('assets/bootstrap-4.6.1-dist/css/bootstrap-theme.css') }}" rel="stylesheet">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Document</title>
+<style>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap-3.3.7-dist/css/bootstrap.css') }}" crossorigin="anonymous">
+.receiptPDF {
+    font-size: 0.7rem;
+}
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap-3.3.7-dist/css/bootstrap-theme.css') }}"
-        crossorigin="anonymous">
+</style>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="{{ asset('assets/bootstrap-3.3.7-dist/js/bootstrap.js') }}"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">
-    </script>
+<div class="row receiptPDF">
+    <div class="col-md-12">
 
-    <style>
-        
-    </style>
+        <table class="table" style="border: 0px;">
+            <tbody>
+                <tr>
+                    <td class="text-left" style="vertical-align: middle;">
 
-</head>
+                        {{ $transaction->property->unique_number }} <br>
 
-<body>
-    <div class="" id="invoice">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="p-3 bg-white rounded">
+                        {{ $transaction->date->toFormattedDateString();  }}
 
-                    <div class="row" style="margin-bottom: 50px">
-                        <div class="col-3"  style="display: inline-grid; width: 30%; padding-top: -90px;">
-                            <div><span class="font-weight-bold text-uppercase">Ref ID:</span><span class="ml-1">
-                                    {{ $transaction->property->unique_number }}</span></div>
-                            <div><span class=""> {{ $transaction->date->toFormattedDateString();  }}</span></div>
+                    </td>
+                    <td class="text-center" style="vertical-align: middle;">
+                        <h4>RECEIPT</h4>
+                    </td>
+                    <td class="text-right" style="vertical-align: middle; text-align: right;">
+                        <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-responsive" width="100px">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table" style="border: 0px;">
+            <tbody>
+                <tr>
+                    <td class="text-left" colspan="2" style="vertical-align: middle;">
+                        <div class="text-bold">Richboss Realty Limited</div>
+                        <div>
+                            <span class="text-muted">Suite F31-32, Melita Plaza, Area 11, Garki, Abuja</span>
                         </div>
-                        <div class="col-6 text-center"  style="display: inline-grid; width: 30%; padding-top: 0">
-                            <h1 class="text-uppercase"><b>RECEIPT</b></h1>
+                        <div>
+                            <span class="text-muted">08023557905</span>
                         </div>
-                        <div class="col-3 text-right float-right"  style="display: inline-grid; width: 30%; margin-top: 0">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-responsive"
-                                width="100px">
+                        <div>
+                            <span class="text-muted">
+                                richbossrealty@gmail.com</span>
                         </div>
-                    </div>
+                    </td>
+                    <td class="text-center" style="vertical-align: middle; text-align: right;">
+                        <img src="{{ asset('assets/images/paid.jpg') }}" alt="" class="img-responsive" width="100px">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-                    <div style="display: flex; margin-bottom: 50px">
-                        <div style="max-width: 30%; flex: 1; padding-top: -90px;">
-                            <div>
-                                <span class="font-weight-bold text-uppercase">Ref ID:</span><span class="ml-1">
-                                    {{ $transaction->property->unique_number }}</span>
-                            </div>
-                            <div>
-                                <span class=""> {{ $transaction->date->toFormattedDateString();  }}</span>
-                            </div>
+        <table class="table" style="border: 0px;">
+            <tbody>
+                <tr>
+                    <td class="text-left" colspan="2" style="vertical-align: top;">
+                        <h3 class="">Billing Address</h3>
+                        <div>
+                            <span class="text-muted">{{ $client->address}}</span>
                         </div>
-                        <div style="max-width: 30%; flex: 1; padding-top: 0">
-                            <h1 class="text-uppercase"><b>RECEIPT</b></h1>
+                        <div>
+                            <span class="text-muted">{{ $client->phone}}</span>
                         </div>
-                        <div style="max-width: 30%; flex: 1; margin-top: 0">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-responsive"
-                                width="100px">
+                        <div>
+                            <span class="text-muted">{{ $client->email}}</span>
                         </div>
-                    </div>
+                    </td>
+                    <td class="text-center" style="vertical-align: top; text-align: center;">
+                        <h3 class="">Shipping Address</h3>
+                        Same as billing address
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-                    <div class="row" style="margin-bottom: 50px">
-                        <div class="col-md-8" style="display: inline-grid; width: 60%">
-                            <div class="text-bold">Richboss Realty Limited</div>
-                            <div>
-                                <span class="text-muted">Suite F31-32, Melita Plaza, Area 11, Garki, Abuja</span>
-                            </div>
-                            <div>
-                                <span class="text-muted">08023557905</span>
-                            </div>
-                            <div>
-                                <span class="text-muted">
-                                    richbossrealty@gmail.com</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-right float-right" style="display: inline-grid; width: 30%">
-                            <img src="{{ asset('assets/images/paid.jpg') }}" alt="" class="img-responsive"
-                                width="100px">
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 50px">
-                        <div class="col-md-6 text-left" style="display: inline-grid">
-                            <h3 class="">Billing Address</h3>
-                            <div>
-                                <span class="text-muted">{{ $client->address}}</span>
-                            </div>
-                            <div>
-                                <span class="text-muted">{{ $client->phone}}</span>
-                            </div>
-                            <div>
-                                <span class="text-muted">{{ $client->email}}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-right" style="display: inline-grid; width: 30%; padding-top: -30px;">
-                            <h3 class="">Shipping Address</h3>
-                            Same as billing address
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr class="bg-dark text-white">
-                                            <th class="text-uppercase">Product</th>
-                                            <th class="text-center text-uppercase">QTY</th>
-                                            <th class="text-right text-uppercase">Price (NGN)</th>
-                                            <th class="text-right text-uppercase">Total (NGN)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                @if ($transaction->property)
-                                                @if ($transaction->property->estatePropertyType)
-                                                <span
-                                                    class="">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span>
-                                                -
-                                                {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
-                                                - {{ $transaction->property->unique_number }}
-                                                @endif
-                                                @endif
-                                            </td>
-                                            <td class="text-center">1</td>
-                                            <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
-                                            <td class="text-right">
-                                                {{ number_format($transaction->amount, 2) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right text-uppercase" colspan="3"><b>Total</b></td>
-                                            <td class="text-right text-uppercase">
-                                                <b>{{ number_format($transaction->sum('amount'), 2) }}</b></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr class="bg-dark text-white">
+                    <th class="text-uppercase">Product</th>
+                    <th class="text-center text-uppercase">QTY</th>
+                    <th class="text-right text-uppercase">Price (NGN)</th>
+                    <th class="text-right text-uppercase">Total (NGN)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="width: 30%">
+                        @if ($transaction->property)
+                        @if ($transaction->property->estatePropertyType)
+                        <span
+                            class="">{{ $transaction->property->estatePropertyType->estate ? $transaction->property->estatePropertyType->estate->name : null }}</span>
+                        -
+                        {{ $transaction->property->estatePropertyType->propertyType ? $transaction->property->estatePropertyType->propertyType->name : null }}
+                        - {{ $transaction->property->unique_number }}
+                        @endif
+                        @endif
+                    </td>
+                    <td class="text-center">1</td>
+                    <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
+                    <td class="text-right">
+                        {{ number_format($transaction->amount, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right text-uppercase" colspan="3"><b>Total</b></td>
+                    <td class="text-right text-uppercase">
+                        <b>{{ number_format($transaction->amount, 2) }}</b></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-</body>
-
-</html>
+</div>

@@ -18,8 +18,13 @@
                             <div class="col-md-6">
                                 <h4>List of Property</h4>
                             </div>
-                            <div class="col-md-6 d-flex justify-content-end float-right">
-                                <a href="{{ route('properties.create') }}" class="btn btn-primary ">Add Property</a>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <div class="mb-3 d-grid">
+                                    <a href="{{ route('properties.create') }}" class="btn btn-primary btn-md m">Add Property</a>
+                                </div>
+                                <div class="mb-3 d-grid">
+                                    <a href="{{ route('properties.export') }}" class="btn btn-success btn-md m">CSV</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,7 +100,7 @@
                                             </td>
                                             <td>
                                                 @if ($property->client )
-                                                    {{ $property->client->sname.' '.$property->client->onames }}                                                
+                                                    {{ $property->client->sname.' '.$property->client->onames }}
                                                 @else
                                                     <span class="badge bg-danger">not subscribed</span>
                                                 @endif
@@ -118,7 +123,7 @@
                                                 </a>
 
                                                 <form action="{{ route('properties.destroy', $property) }}" method="post" class="form-inline">
-                                                    
+
                                                     <a onclick="confirm('Are you sure?') || event.stopImmediatePropagation(); this.closest('form').submit();return false;" href="#" class="text-danger p-0"
                                                         data-original-title="" title="Delete">
                                                         <span class="material-icons-outlined">
@@ -159,7 +164,7 @@
                 </div>
             </div>
         </div>
-    
+
     </div>
-    
+
 @endsection

@@ -32,31 +32,32 @@ class Kernel extends ConsoleKernel
 
         // send payment due reminders
         $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('10:00');
-        
+
         // get payment defaulters
         $schedule->call(function () {
-            
+
             $pastDueProperties = Property::where(function($query) {
 
                 $nextPaymentDueDate = Carbon::parse($query->first()->nextPaymentDueDate());
-        
+
                 return $query->whereDay('next_due_date', '=', Carbon::yesterday());
             })
             ->whereNotIn('id', function ($query) {
-                $query->select('transactions.property_id') // get all previous day's transactions
+                $query
+                    ->select('transactions.property_id') // get all previous day's transactions
                     ->from('transactions')
-                    ->whereDate('transactions.date', '=', Carbon::yesterday());
+                    ->whereMonth('transactions.instalment_date', '=', Carbon::yesterday());
             })
             ->get()
             ->filter(function($property) {
                 return $property->getPropertyPrice() > $property->totalPaid();
             });
-        
+
             $inserts = [];
             foreach ($pastDueProperties as $property) {
-        
+
                 $defaultAmount = $property->getMonthlyPaymentAmount() * 0;
-        
+
                 // if ($defaultAmount > 0) {
                     $inserts[] = [
                         'client_id'      => $property->client_id,
@@ -67,7 +68,7 @@ class Kernel extends ConsoleKernel
                         'updated_at'     => Carbon::now(),
                     ];
                 // }
-                
+
             }
 
             PaymentDefault::insert($inserts);
