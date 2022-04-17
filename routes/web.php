@@ -75,6 +75,8 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     Route::get('clients/{client}/sendMail', [ClientsController::class, 'sendMail'])->name('clients.sendMail');
     Route::post('clients/sendMail/post', [ClientsController::class, 'sendMailPost'])->name('clients.sendMail.post');
     Route::get('clients/{client}/add-property', [ClientsController::class, 'addProperty'])->name('clients.add-property');
+    Route::get('clients/{client}/reset-password', [ClientsController::class, 'resetPassword'])->name('clients.resetPassword');
+    Route::post('clients/reset-password-post', [ClientsController::class, 'resetPasswordPost'])->name('clients.resetPasswordPost');
     Route::resource('clients', ClientsController::class);
 
     // transactions

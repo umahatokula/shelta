@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    
+
     @if (session()->has('message'))
     <div class="col-lg-12">
         <div class="alert alert-success">
@@ -27,17 +27,20 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
-                            
+
                             <div class="row">
                                 <div class="col-12">
 
                                     @can('manage clients')
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                         <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary" >Edit Profile</a>
+
+                                        <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.resetPassword', $client) }}" href="#" class="btn btn-success">Reset Password</a>
+
                                         <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning">Send notification</a>
-                                    </div>  
+                                    </div>
                                     @endcan
-                                
+
                                     <div>
                                         <p>
                                             <h5>{{ $client->sname }}, {{ $client->onames }}</h5>

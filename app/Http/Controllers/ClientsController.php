@@ -13,6 +13,7 @@ use App\Mail\CustomMailable;
 use Illuminate\Http\Request;
 use App\Mail\PaymentMadeMailable;
 use Twilio\Rest\Client as TwilioClient;
+use App\Mail\ClientAccountCreatedMailable;
 use App\Http\Requests\UpdateClientProfileRequest;
 
 class ClientsController extends Controller
@@ -63,18 +64,18 @@ class ClientsController extends Controller
      */
     public function show(Client $client)
     {
-        
+
         $data['client'] = $client->load([
-            'transactions.property.estatePropertyType.propertyType', 
-            'transactions.property.estatePropertyType.estate', 
-            'properties.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.propertyType',
+            'transactions.property.estatePropertyType.estate',
+            'properties.estatePropertyType.propertyType',
             'properties.estatePropertyType.estate'
         ]);
 
         $data['propertybalance'] = 0;
 
         if (auth()->user()->hasRole('client')) {
-    
+
             return view('frontend.clients.show', $data);
         }
 
@@ -116,7 +117,7 @@ class ClientsController extends Controller
         $data['client'] = $client;
         return view('admin.clients.destroy', $data);
     }
-    
+
     /**
      * addProperty
      *
@@ -130,7 +131,7 @@ class ClientsController extends Controller
 
     public function sendMail(Client $client) {
         $data['client'] = $client;
-        
+
         return view('admin.clients.send-notification', $data);
     }
 
@@ -140,24 +141,24 @@ class ClientsController extends Controller
         $client = Client::findOrFail($request->client_id);
 
         // send SMS
-        if ($request->has('sms')) {        
+        if ($request->has('sms')) {
             if ($client->phone) {
 
                 Helpers::sendSMSMessage($client->phone, $request->message);
 
             }
         }
-        
+
 
         // send whatsapp
-        if ($request->has('whatsapp')) {        
+        if ($request->has('whatsapp')) {
             if ($client->phone) {
 
                 Helpers::sendWhatsAppMessage($client->phone, $request->message);
 
             }
         }
-        
+
 
         // send email
         if ($request->has('email')) {
@@ -169,7 +170,52 @@ class ClientsController extends Controller
 
         session()->flash('message', 'Notification sent to client');
         return redirect()->back();
-        
+
+    }
+
+
+    /**
+     * resetPassword
+     *
+     * @param  mixed $client
+     * @return void
+     */
+    public function resetPassword(Client $client) {
+        $data['client'] = $client;
+
+        return view('admin.clients.resetpassword', $data);
+    }
+
+
+    /**
+     * resetPasswordPost
+     *
+     * @return void
+     */
+    public function resetPasswordPost() {
+        $password = '12345678';
+
+        $client = Client::findOrFail(request('client_id'));
+        $user = User::firstOrCreate(
+            ['email' =>  $client->email],
+            [
+                'name'      => $client->sname.' '.$client->onames,
+                'client_id' => $client->id,
+                'password'  => \Hash::make('12345678'),
+            ]
+        );
+
+        $user->password  = \Hash::make($password);
+        $user->save();
+
+        // assign role
+        $user->assignRole('client');
+
+        // send email
+        Mail::to($user->client->email)->send(new ClientAccountCreatedMailable($user->client, $password));
+
+        session()->flash('message', 'Password reset');
+        return redirect()->route('clients.show', $client);
     }
 
 
@@ -181,7 +227,7 @@ class ClientsController extends Controller
 
 
     //=======================CLIENTS FUNCTIONS=========================
-    
+
     /**
      * login
      *
@@ -190,7 +236,7 @@ class ClientsController extends Controller
     public function login() {
         return view('frontend.clients.login');
     }
-    
+
     /**
      * display profile page
      *
@@ -210,17 +256,17 @@ class ClientsController extends Controller
             $data['enable'] = $user->client->use_2fa;
 
             $data['client'] = $user->client->load([
-                'transactions.property.estatePropertyType.propertyType', 
-                'transactions.property.estatePropertyType.estate', 
-                'properties.estatePropertyType.propertyType', 
+                'transactions.property.estatePropertyType.propertyType',
+                'transactions.property.estatePropertyType.estate',
+                'properties.estatePropertyType.propertyType',
                 'properties.estatePropertyType.estate'
             ]);
         }
-        
+
 
         return view('frontend.clients.profile', $data);
     }
-    
+
     /**
      * display profile page
      *
@@ -240,13 +286,13 @@ class ClientsController extends Controller
             $data['enable'] = $user->client->use_2fa;
 
             $data['client'] = $user->client->load([
-                'transactions.property.estatePropertyType.propertyType', 
-                'transactions.property.estatePropertyType.estate', 
-                'properties.estatePropertyType.propertyType', 
+                'transactions.property.estatePropertyType.propertyType',
+                'transactions.property.estatePropertyType.estate',
+                'properties.estatePropertyType.propertyType',
                 'properties.estatePropertyType.estate'
             ]);
         }
-        
+
 
         return view('frontend.clients.security', $data);
     }
@@ -279,7 +325,7 @@ class ClientsController extends Controller
         session()->flash('message', 'Two factor authentication '. $status);
         return redirect()->back();
     }
-    
+
     /**
      * store client Profile
      *
@@ -301,20 +347,20 @@ class ClientsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function payments() {
-        
+
         $client = auth()->user()->client;
-        
+
         $data['client'] = $client->load([
-            'transactions.property.estatePropertyType.propertyType', 
-            'transactions.property.estatePropertyType.estate', 
-            'properties.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.propertyType',
+            'transactions.property.estatePropertyType.estate',
+            'properties.estatePropertyType.propertyType',
             'properties.estatePropertyType.estate'
         ]);
-        
+
         $data['propertybalance'] = 0;
 
         if (auth()->user()->hasRole('client')) {
-    
+
             return view('frontend.clients.payments', $data);
         }
 
@@ -328,28 +374,28 @@ class ClientsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function properties() {
-        
+
         $client = auth()->user()->client;
-        
+
         $data['client'] = $client->load([
-            'transactions.property.estatePropertyType.propertyType', 
-            'transactions.property.estatePropertyType.estate', 
-            'properties.estatePropertyType.propertyType', 
+            'transactions.property.estatePropertyType.propertyType',
+            'transactions.property.estatePropertyType.estate',
+            'properties.estatePropertyType.propertyType',
             'properties.estatePropertyType.estate'
         ]);
-        
+
         $data['estates'] = Estate::all();
-        
+
         $data['propertybalance'] = 0;
 
         if (auth()->user()->hasRole('client')) {
-    
+
             return view('frontend.clients.properties', $data);
         }
 
         return view('admin.clients.show', $data);
     }
-    
+
     /**
      * Download client payment reciept for specifc transaction
      *
@@ -367,7 +413,7 @@ class ClientsController extends Controller
         return $pdfContent->download('reciept.pdf');
 
     }
-    
+
     /**
      * Mail client payment reciept for specifc transaction
      *
@@ -386,11 +432,11 @@ class ClientsController extends Controller
 
         return redirect()->route('frontend.clients.payments', $client->slug);
 
-        
+
 
         $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
         Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
-        
+
         // session()->flash('message', 'Email sent successfully.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
     }
