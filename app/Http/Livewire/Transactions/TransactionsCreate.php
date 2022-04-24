@@ -28,7 +28,7 @@ class TransactionsCreate extends Modal
         // 'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
         // 'proof_reference_number' => 'required|unique:transactions'
     ];
- 
+
     protected $messages = [
         'property_id.required' => 'Please select a property',
         'amount.required' => 'Please enter an amount',
@@ -38,7 +38,7 @@ class TransactionsCreate extends Modal
         'proof_reference_number.unique' => 'This Ref number has already been recorded',
     ];
 
-        
+
     /**
      * updated
      *
@@ -48,7 +48,7 @@ class TransactionsCreate extends Modal
     public function updated($propertyName) {
         $this->validateOnly($propertyName);
     }
-    
+
     /**
      * onSelectProperty
      *
@@ -60,10 +60,10 @@ class TransactionsCreate extends Modal
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
         })->first()->propertyPrice->price;
-        
+
         $this->propertybalance = $propertyPrice - $property->totalPaid();
     }
-     
+
     /**
      * mount
      *
@@ -74,16 +74,16 @@ class TransactionsCreate extends Modal
         $this->client_id = $client->id;
         $this->client = $client->load(['properties.estatePropertyType.propertyType', 'properties.estatePropertyType.estate']);
     }
-     
+
     /**
      * save
      *
      * @return void
      */
     public function save() {
-        
+
         $this->validate();
- 
+
         $transaction = Transaction::create([
             'client_id'              => $this->client_id,
             'property_id'            => $this->property_id,
@@ -114,7 +114,7 @@ class TransactionsCreate extends Modal
         $property = Property::where('id', $transaction->property_id)->first();
 
         if (!$property->date_of_first_payment) {
-            $property->date_of_first_payment = $transaction->date;
+            $property->date_of_first_payment = $transaction->instalment_date;
             $property->save();
         }
 

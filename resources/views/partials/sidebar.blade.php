@@ -12,6 +12,18 @@
                 <a href="{{route('dashboard')}}" class="active"><i class="material-icons-two-tone">dashboard</i>Dashboard</a>
             </li>
 
+            <li class="{{ (url()->current() == route('transactions.index') ? 'active-page' : '') || (url()->current() == route('payment-defaults.index') ? 'active-page' : '') }}">
+                <a href=""><i class="material-icons-two-tone">supervisor_account</i>Payments<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
+                <ul class="sub-menu">
+                    <li class="{{ url()->current() == route('transactions.index') ? 'active' : '' }}">
+                        <a href="{{ route('transactions.index') }}" class="item">All Payments</a>
+                    </li>
+                    <li class="{{ url()->current() == route('payment-defaults.index') ? 'active' : '' }}">
+                        <a href="{{ route('payment-defaults.index') }}" class="item">Defaults</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="{{ (url()->current() == route('clients.index') ? 'active-page' : '') || (url()->current() == route('clients.create') ? 'active-page' : '') }}">
                 <a href=""><i class="material-icons-two-tone">people</i>Clients<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
                 <ul class="sub-menu">
@@ -97,10 +109,6 @@
                         <a href="{{ route('staff.create') }}" class="item">Add Staff</a>
                     </li>
                 </ul>
-            </li>
-
-            <li class="{{ url()->current() == route('transactions.index') ? 'active-page' : '' }}">
-                <a href="{{route('transactions.index')}}" class="active"><i class="material-icons-two-tone">receipt_long</i>Transactions</a>
             </li>
 
             <li class="sidebar-title">

@@ -134,7 +134,7 @@ class Property extends Model
 
         // ensure that due date is within current month if monthly payment day is greater than or equal to day of current month
         if ($day >= Carbon::today()->day) {
-            $dueDate = $dueDate->subMonth();
+            // $dueDate = $dueDate->subMonth();
         }
 
         return $dueDate;

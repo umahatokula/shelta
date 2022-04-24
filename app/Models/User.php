@@ -75,7 +75,7 @@ class User extends Authenticatable
      * @return void
      */
     public function staff() {
-        return $this->belongsTo(Staff::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id')->withDefault();
     }
 
     /**
@@ -84,7 +84,7 @@ class User extends Authenticatable
      * @return void
      */
     public function client() {
-        return $this->belongsTo(Client::class, 'client_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id')->withDefault();
     }
 
     /**

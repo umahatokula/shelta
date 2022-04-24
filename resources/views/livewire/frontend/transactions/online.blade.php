@@ -9,16 +9,16 @@
                 <div class="col-lg-12">
                     <div class="contact-wrap">
                         <div id="form-messages"></div>
-                        
+
                         <form id="onlinePaymentForm">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 mb-30">
                                         <input value="{{ $client->name }}" class="from-control" type="text" name="name" placeholder="Name" id="payingName" readonly="">
-                                    </div> 
+                                    </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 mb-30">
                                         <input value="{{ $client->email }}" class="from-control" type="email" name="email" placeholder="E-Mail" id="payingEmail" readonly>
-                                    </div>   
+                                    </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 mb-30">
                                         <select class="from-control" wire:change="onSelectProperty($event.target.value)" id="payingPropertyId">
 
@@ -41,16 +41,16 @@
                                         <input class="from-control" name="amount" type="number" max="{{ $propertybalance }}" {{ $propertybalance == 0 ? 'disabled' : '' }} id="payingAmount">
                                         <small>Max: {{ $propertybalance }}</small>
                                     </div>
-                            
+
                                 </div>
-                                <div class="btn-part">                                            
+                                <div class="btn-part">
                                     <div class="form-group mb-0">
-                                        <input class="readon submit" type="submit" value="Submit Now" id="onlinePaymentBtn">
+                                        <input class="readon submit" type="submit" value="Pay Now" id="onlinePaymentBtn">
                                     </div>
-                                </div> 
+                                </div>
                             </fieldset>
                         </form>
-                        
+
                     </div>
                 </div>
             </div>
@@ -80,6 +80,12 @@
             var clientId = @json($client->id);
             var email = document.getElementById('payingEmail').value;
             var amount = document.getElementById('payingAmount').value;
+            if (!amount) {
+                Livewire.emit('showToastr', ['type' => 'error', 'message' => 'The amount field is required'])
+                alert('The amount field is required')
+                console.log('The amount field is required')
+                return
+            }
             var property_id = document.getElementById('payingPropertyId').value;
 
             let handler = PaystackPop.setup({

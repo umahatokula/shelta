@@ -13,6 +13,8 @@ class PaymentDefault extends Model
 
     protected $fillable = ['client_id', 'property_id', 'default_amount', 'paid_amount', 'missed_date'];
 
+    protected $dates = ['missed_date'];
+
     // public function getDefaultAmountAttribute() {
     //     return $this->attributes['default_amount'] / 100;
     // }

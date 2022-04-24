@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\OPTGenerated;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\SendOTPNotification;
+use App\Listeners\CompletePaymentNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,13 +25,14 @@ class EventServiceProvider extends ServiceProvider
             SendOTPNotification::class
         ],
         'App\Events\PaymentMade' => [
-            'App\Listeners\SendReceiptNotification'
+            'App\Listeners\SendReceiptNotification',
+            CompletePaymentNotification::class,
         ],
         'App\Events\ClientPropertiesUpdated' => [
-            'App\Listeners\SendPropertyAssignedNotification'
+            'App\Listeners\SendPropertyAssignedNotification',
         ],
         'App\Events\ClientAccountCreated' => [
-            'App\Listeners\ClientAccountCreated'
+            'App\Listeners\ClientAccountCreated',
         ],
     ];
 

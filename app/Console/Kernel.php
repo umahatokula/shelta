@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Carbon\Carbon;
 use App\Models\Property;
+use App\Services\Services;
 use App\Models\PaymentDefault;
 use App\Cron\SendMonthlyPaymentReminders;
 use Illuminate\Console\Scheduling\Schedule;
@@ -36,22 +37,7 @@ class Kernel extends ConsoleKernel
         // get payment defaulters
         $schedule->call(function () {
 
-            $pastDueProperties = Property::where(function($query) {
-
-                $nextPaymentDueDate = Carbon::parse($query->first()->nextPaymentDueDate());
-
-                return $query->whereDay('next_due_date', '=', Carbon::yesterday());
-            })
-            ->whereNotIn('id', function ($query) {
-                $query
-                    ->select('transactions.property_id') // get all previous day's transactions
-                    ->from('transactions')
-                    ->whereMonth('transactions.instalment_date', '=', Carbon::yesterday());
-            })
-            ->get()
-            ->filter(function($property) {
-                return $property->getPropertyPrice() > $property->totalPaid();
-            });
+            $pastDueProperties = Services::getPaymentDefaulters();
 
             $inserts = [];
             foreach ($pastDueProperties as $property) {

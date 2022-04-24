@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use App\Models\Property;
+use App\Services\Services;
 use App\Models\Transaction;
 use App\Models\PaymentDefault;
 use App\Mail\PaymentMadeMailable;
@@ -141,6 +142,9 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
 
     // payment-defaults
     Route::get('payment-defaults/{unique_number}/{client_id}/pay', [PaymentDetaultController::class, 'showPaymentForm'])->name('payment-defaults.pay');
+    Route::get('payment-defaults', [PaymentDetaultController::class, 'index'])->name('payment-defaults.index');
+    Route::get('payment-defaults/pdf/{date_from}/{date_to}', [PaymentDetaultController::class, 'pdf'])->name('payment-defaults.pdf');
+    Route::get('payment-defaults/csv/{date_from}/{date_to}', [PaymentDetaultController::class, 'csv'])->name('payment-defaults.csv');
 });
 
 // ======================================================================
@@ -238,4 +242,24 @@ Route::get('/mailable', function () {
     return new App\Mail\PaymentMadeMailable($transaction);
 });
 
-Route::get('/test', 'App\Cron\SendMonthlyPaymentReminders');
+Route::get('/test', function() {
+    // $date = Carbon::parse('2022/05/28')->format('Y/m/d');
+    // // dd($date);
+
+    // $defaults = \DB::select("SELECT *
+    // FROM properties
+    // WHERE properties.id IN (
+    //     SELECT transactions.property_id
+    //     FROM transactions
+    //     WHERE MONTH(transactions.instalment_date) = MONTH('2022/05/28')
+    // )");
+
+    // dd($defaults);
+
+
+
+    $pastDueProperties = Services::getPaymentDefaulters();
+
+    dd($pastDueProperties);
+
+});

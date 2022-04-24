@@ -383,7 +383,7 @@
                                                                     <tr>
                                                                         <td>Next Payment:</td>
                                                                         <td>
-                                                                            @if($property->totalPaid() >= $property->estatePropertyType->priceOfPaymentPlan($property->payment_plan_id) ) Payent completed
+                                                                            @if($property->totalPaid() >= $property->estatePropertyType->priceOfPaymentPlan($property->payment_plan_id) ) Payment completed
 
                                                                             @else
                                                                                 @if ($property->lastPayment())
