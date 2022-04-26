@@ -94,12 +94,42 @@ class Property extends Model
     }
 
     /**
-     * client
+     * get transaction total
      *
      * @return void
      */
     public function transactionTotal() {
         return $this->hasMany(Transaction::class)->isApproved()->sum('amount');
+    }
+
+    /**
+     * Get reconstructed last instalment date. This ensures due date is not greater than 28. This is because Feb has 28 days in non-leap years so we use this minimum number of days as our payment cycle.
+     *
+     * @return void
+     */
+    public function reconstructLastInstalmentDate() {
+
+        $day = 28;
+        if ($this->date_of_first_payment->day < 28) {
+            $day = $this->date_of_first_payment->day;
+        }
+
+        // extract month and year from last instalment date. Then reconstruct NEW last instalment date
+        $lastInstalmentDate = $this->lastInstalmentPayment()->instalment_date;
+        $month = $lastInstalmentDate->month;
+        $year = $lastInstalmentDate->year;
+        $adjustedLastInstalmentDate = Carbon::parse($month.'/'.$day.'/'.$year);
+
+        return $adjustedLastInstalmentDate;
+    }
+
+    /**
+     * Get date difference in months. This is in case last instament was made more than a month ago, we want to add up the number of months bwt the last instalment and the current month
+     *
+     * @return int
+     */
+    public function diffBwtTodayAndInstalmentDateInMonths() : int {
+        return Carbon::today('Africa/Lagos')->diffInMonths($this->reconstructLastInstalmentDate());
     }
 
 
@@ -114,30 +144,24 @@ class Property extends Model
             return;
         }
 
-        // $nextDueDate = Carbon::today()->addMonth();
-        $nextDueDate = Carbon::parse($this->lastInstalmentPayment()->instalment_date)->addMonth();
+        // get reconstructed date
+        $adjustedLastInstalmentDate = $this->reconstructLastInstalmentDate();
+        // dd($adjustedLastInstalmentDate);
+
+        // Get date difference in months
+        if ($adjustedLastInstalmentDate->format('m') == Carbon::today()->format('m')) {
+            $nextDueDate = $adjustedLastInstalmentDate->addMonth();
+        } else {
+            $nextDueDate = $adjustedLastInstalmentDate->addMonth($this->diffBwtTodayAndInstalmentDateInMonths());
+        }
+        // dd($nextDueDate);
 
         if ($nextDueDate ->isPast()) {
             $nextDueDate = Carbon::today();
         }
+        // dd($nextDueDate);
 
-        // ensure due date is not greater than 28. This is because Feb has 28 days in leap years so we use this minimum number of days as our payment cycle.
-        $day = 28;
-        if ($this->date_of_first_payment->day < 28) {
-            $day = $this->date_of_first_payment->day;
-        }
-
-        $month = $nextDueDate->month;
-        $year = $nextDueDate->year;
-
-        $dueDate = Carbon::parse($month.'/'.$day.'/'.$year);
-
-        // ensure that due date is within current month if monthly payment day is greater than or equal to day of current month
-        if ($day >= Carbon::today()->day) {
-            // $dueDate = $dueDate->subMonth();
-        }
-
-        return $dueDate;
+        return $nextDueDate;
     }
 
     /**

@@ -56,7 +56,7 @@
                                     <th class="text-start">Client (&#8358;)</th>
                                     <th class="text-start">Property</th>
                                     <th class="text-end">Amount</th>
-                                    <th class="text-start">Date</th>
+                                    <th class="text-start">Default Date</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -64,7 +64,11 @@
                                 @forelse ($defaults as $default)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="text-start">{{ $default->client->name }}</td>
+                                        <td class="text-start">
+                                            <a href="@if ($default->property->client->id) {{ route('clients.show', $default->client) }} @endif" title="Client">
+                                                {{ $default->property->client->id ? $default->property->client->name : '[NO NAME]' }}
+                                            </a>
+                                        </td>
                                         <td class="text-start">{{ $default->property->unique_number }}</td>
                                         <td class="text-end">{{ number_format($default->default_amount, 2) }}</td>
                                         <td class="text-start">{{ $default->missed_date->toFormattedDateString() }}</td>

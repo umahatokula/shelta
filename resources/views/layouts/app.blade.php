@@ -35,19 +35,25 @@
     @endphp
 
     <div class="app sidebar-colored align-content-stretch d-flex flex-wrap">
-    
-        {{-- sidebar start --}}
-        @include('partials.sidebar')
-        {{-- sidebar end --}}
+
+        @auth
+            {{-- sidebar start --}}
+            @include('partials.sidebar')
+            {{-- sidebar end --}}
+        @endauth
 
         <div class="app-container">
-            {{-- searchbar start --}}
-            @include('partials.searchbar')
-            {{-- searchbar end --}}
+            @auth
+                {{-- searchbar start --}}
+                @include('partials.searchbar')
+                {{-- searchbar end --}}
+            @endauth
 
-            {{-- header start --}}
-            @include('partials.header')
-            {{-- header end --}}
+            @auth
+                {{-- header start --}}
+                @include('partials.header')
+                {{-- header end --}}
+            @endauth
 
             {{-- page content start --}}
             <div class="app-content">
@@ -55,7 +61,7 @@
                     <div class="container-fluid">
 
                         @yield('content')
-                        
+
                     </div>
                 </div>
             </div>

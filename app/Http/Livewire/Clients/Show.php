@@ -23,8 +23,11 @@ class Show extends Component
     public $payingName, $payingEmail, $payingAmount;
     public $propertybalance = 0;
 
-    protected $listeners = ['onlinePaymentSuccessful'];
-    
+    protected $listeners = [
+        'onlinePaymentSuccessful',
+        'validateInput',
+    ];
+
     /**
      * onSelectProperty
      *
@@ -36,10 +39,36 @@ class Show extends Component
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
         })->first()->propertyPrice->price;
-        
+
         $this->propertybalance = $propertyPrice - $property->totalPaid();
     }
-    
+
+    /**
+     * validate Input for online payment
+     *
+     * @param  mixed $data
+     * @return void
+     */
+    public function validateInput(Array $data) {
+        // dd($data);
+
+        if (empty($data['client_id']) || empty($data['property_id']) || empty($data['amount'])) {
+
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Client, Property and Amount are ALL required']);
+
+        }
+
+        $property = Property::find($data['property_id']);
+        if (!$property) {
+
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Property not found']);
+
+        }
+
+        // everything checks out. Validation is successful
+        $this->dispatchBrowserEvent('onSuccessfulValidation');
+    }
+
     /**
      * onlinePaymentSuccessful
      *
@@ -48,9 +77,16 @@ class Show extends Component
      */
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
- 
+
+        // check for existence of property before procedding
+        $property = Property::find($data['property_id']);
+        if (!$property) {
+            session()->flash('error', 'Property '.$data['property_id'].' not found');
+            return redirect()->back();
+        }
+
         $transaction = null;
-        DB::transaction(function () use($data, &$transaction) {
+        DB::transaction(function () use($data, &$transaction, &$property) {
             if ($data['status'] === 'success') {
                 $transaction = Transaction::create([
                     'client_id'          => $data['client_id'],
@@ -59,20 +95,24 @@ class Show extends Component
                     'type'               => 'online',
                     'transaction_number' => $data['reference'],
                     'date'               => Carbon::now(),
+                    'instalment_date'    => $property->nextPaymentDueDate(),
                     'recorded_by'        => auth()->id(),
                     'status'             => 1,
                     'is_approved'        => 1,
                 ]);
 
+                // set new date for next payment
+                $property = $transaction->property;
+                $property->next_due_date = $property->nextPaymentDueDate();
+                $property->save();
+
                 // set date of first transaction
-                $property = Property::where('id', $transaction->property_id)->first();
-        
                 if (!$property->date_of_first_payment) {
-                    $property->date_of_first_payment = $transaction->date;
+                    $property->date_of_first_payment = $transaction->instalment_date;
                     $property->save();
                 }
             }
-    
+
             OnlinePayment::create([
                 'client_id'      => $data['client_id'],
                 'transaction_id' => $transaction ? $transaction->id : null,
@@ -97,9 +137,9 @@ class Show extends Component
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
 
         redirect()->route('clients.show', $this->client->slug);
-        
+
     }
-    
+
     /**
      * mount
      *
@@ -117,7 +157,7 @@ class Show extends Component
         ]);
 
     }
-    
+
     /**
      * downloadReciept
      *
@@ -131,14 +171,14 @@ class Show extends Component
         $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data)->output();
-        
+
         return response()->streamDownload(
             fn () => print($pdfContent),
             "filename.pdf"
         );
 
     }
-    
+
     /**
      * Send transsaction receipt
      *
@@ -150,7 +190,7 @@ class Show extends Component
 
         $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
         Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
-        
+
         // session()->flash('message', 'Email sent successfully.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Email sent successfully.']);
     }

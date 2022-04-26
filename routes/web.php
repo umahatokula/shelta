@@ -13,6 +13,7 @@ use App\Models\EstatePropertyTypePrice;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SignupController;
 use App\Http\Livewire\Clients\AddProperty;
 use App\Mail\ClientAccountCreatedMailable;
 use App\Http\Controllers\ClientsController;
@@ -187,6 +188,21 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 
 
 });
+
+
+//=======================================================================
+//
+//                          PUBLIC ROUTES
+//
+//=======================================================================
+
+Route::get('signup', [SignupController::class, 'signup'])->name('signUp');
+
+
+
+
+
+
 
 Route::get('/resetpasswords', function () {
     dd('sdsdsds');

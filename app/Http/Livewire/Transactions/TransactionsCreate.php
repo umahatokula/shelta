@@ -100,7 +100,7 @@ class TransactionsCreate extends Modal
 
         // set new date for next payment
         $property = $transaction->property;
-        $property->next_due_date = $transaction->property->nextPaymentDueDate();
+        $property->next_due_date = $property->nextPaymentDueDate();
         $property->save();
 
         if ($this->proof) {
@@ -111,8 +111,6 @@ class TransactionsCreate extends Modal
         }
 
         // set date of first transaction
-        $property = Property::where('id', $transaction->property_id)->first();
-
         if (!$property->date_of_first_payment) {
             $property->date_of_first_payment = $transaction->instalment_date;
             $property->save();
