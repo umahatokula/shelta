@@ -96,4 +96,29 @@ class Helpers {
         //
         // return 1;
     }
+
+
+    /**
+     * get suffix of a number
+     * @param  int $int position
+     * @return string      the suffix eg st, nd, rd, th
+     */
+    public static function getSuffix($number) {
+
+        $last_digit = substr($number, -1, 1);
+        $suffix = '';
+
+        if ($number == 11 || $number == 12 || $number == 13) {
+            return "th";
+        } elseif ($last_digit == 1) {
+            return "st";
+        } elseif ($last_digit == 2 ) {
+            return "nd";
+        } elseif ($last_digit == 3 ) {
+            return "rd";
+        } else {
+            return "th";
+        }
+
+    }
 }

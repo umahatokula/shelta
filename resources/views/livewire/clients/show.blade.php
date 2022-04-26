@@ -350,6 +350,10 @@
                                                                         <td>House number:</td>
                                                                         <td>{{ $property->unique_number }}</td>
                                                                     </tr>
+                                                                    <tr>
+                                                                        <td>First Payment:</td>
+                                                                        <td>{{ $property->date_of_first_payment ? $property->date_of_first_payment->toFormattedDateString() : null }}</td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -368,7 +372,11 @@
                                                                         <td>Monthly Payment Date:</td>
                                                                         <td>
                                                                             @if ($property->lastPayment())
-                                                                            <strong>{{ $property->date_of_first_payment ? $property->date_of_first_payment->format('d') : null }}</strong> monthly
+                                                                            <strong>
+                                                                                @if ($property->date_of_first_payment)
+                                                                                {{ ltrim($property->date_of_first_payment->format('d'), '0').$property->propertyPaymentDateSuffix($property->date_of_first_payment->format('d')) }}
+                                                                                @endif
+                                                                            </strong> monthly
                                                                             @endif
                                                                         </td>
                                                                     </tr>

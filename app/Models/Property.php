@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Client;
+use App\Helpers\Helpers;
 use App\Models\PaymentPlan;
 use App\Models\Transaction;
 use App\Models\PaymentDefault;
@@ -110,15 +111,39 @@ class Property extends Model
     public function reconstructLastInstalmentDate() {
 
         $day = 28;
-        if ($this->date_of_first_payment->day < 28) {
-            $day = $this->date_of_first_payment->day;
+        if ($this->date_of_first_payment) {
+
+            if ($this->date_of_first_payment->day < 28) {
+                $day = $this->date_of_first_payment->day;
+            }
+
+        } else {
+            $day = Carbon::today()->day;
         }
 
-        // extract month and year from last instalment date. Then reconstruct NEW last instalment date
-        $lastInstalmentDate = $this->lastInstalmentPayment()->instalment_date;
-        $month = $lastInstalmentDate->month;
-        $year = $lastInstalmentDate->year;
-        $adjustedLastInstalmentDate = Carbon::parse($month.'/'.$day.'/'.$year);
+
+        // extract month and year from last instalment date. Then reconstruct NEW last instalment date. If there's no instalment date, use date of first instalment, else use date client profile was created
+        if ($this->lastInstalmentPayment()->instalment_date) {
+
+            $lastInstalmentDate = $this->lastInstalmentPayment()->instalment_date;
+
+        } elseif ($this->date_of_first_payment) {
+
+            $lastInstalmentDate = $this->date_of_first_payment;
+
+        } else {
+
+            $lastInstalmentDate = $this->client->created_at;
+
+        }
+
+
+        if ($lastInstalmentDate) {
+            $month = $lastInstalmentDate->month;
+            $year = $lastInstalmentDate->year;
+
+            $adjustedLastInstalmentDate = Carbon::parse($month.'/'.$day.'/'.$year);
+        }
 
         return $adjustedLastInstalmentDate;
     }
@@ -129,7 +154,21 @@ class Property extends Model
      * @return int
      */
     public function diffBwtTodayAndInstalmentDateInMonths() : int {
-        return Carbon::today('Africa/Lagos')->diffInMonths($this->reconstructLastInstalmentDate());
+
+        // return $this->reconstructLastInstalmentDate()->diffInMonths(Carbon::today('Africa/Lagos'));
+        $reconstructedDate = $this->reconstructLastInstalmentDate();
+        $today = Carbon::today();
+
+        $reconstructedDate_month = $reconstructedDate->format('m');
+        $today_month = $today->format('m');
+
+        $reconstructedDate_year = $reconstructedDate->format('Y');
+        $today_year = $today->format('Y');
+
+        $diff = (abs($reconstructedDate_year - $today_year) * 12 ) + abs($reconstructedDate_month - $today_month);
+
+        return $diff;
+
     }
 
 
@@ -149,15 +188,19 @@ class Property extends Model
         // dd($adjustedLastInstalmentDate);
 
         // Get date difference in months
+        $diffInMonths = $this->diffBwtTodayAndInstalmentDateInMonths();
+        // dd($diffInMonths, $adjustedLastInstalmentDate);
+
         if ($adjustedLastInstalmentDate->format('m') == Carbon::today()->format('m')) {
             $nextDueDate = $adjustedLastInstalmentDate->addMonth();
         } else {
-            $nextDueDate = $adjustedLastInstalmentDate->addMonth($this->diffBwtTodayAndInstalmentDateInMonths());
+            $nextDueDate = $adjustedLastInstalmentDate->addMonth($diffInMonths);
         }
+        // $nextDueDate = $adjustedLastInstalmentDate->addMonth();
         // dd($nextDueDate);
 
         if ($nextDueDate ->isPast()) {
-            $nextDueDate = Carbon::today();
+            // $nextDueDate = $nextDueDate->addMonth();
         }
         // dd($nextDueDate);
 
@@ -305,5 +348,9 @@ class Property extends Model
      */
     public function getClientPaymentDefaultsBalance() {
         return $this->getClientPaymentDefaultsTotal() - $this->getClientPaymentDefaultsCreditTotal();
+    }
+
+    public function propertyPaymentDateSuffix($day) {
+        return Helpers::getSuffix($day);
     }
 }
