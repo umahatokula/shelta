@@ -155,7 +155,6 @@ class Property extends Model
      */
     public function diffBwtTodayAndInstalmentDateInMonths() : int {
 
-        // return $this->reconstructLastInstalmentDate()->diffInMonths(Carbon::today('Africa/Lagos'));
         $reconstructedDate = $this->reconstructLastInstalmentDate();
         $today = Carbon::today();
 
@@ -165,7 +164,23 @@ class Property extends Model
         $reconstructedDate_year = $reconstructedDate->format('Y');
         $today_year = $today->format('Y');
 
-        $diff = (abs($reconstructedDate_year - $today_year) * 12 ) + abs($reconstructedDate_month - $today_month);
+        // if (abs($reconstructedDate_month - $today_month) > 12) {
+
+        //     $diff = (abs($reconstructedDate_year - $today_year) * 12 ) + abs($reconstructedDate_month - $today_month);
+
+        // } else {
+
+        //     $diff = abs($reconstructedDate_month - $today_month);
+
+        // }
+
+
+        $absDiff = abs($reconstructedDate_month - $today_month);
+        $years = \intdiv($absDiff, 12);
+        $months = $absDiff % 12;
+
+        $diff = ($years * 12) + $months;
+        // dd($diff);
 
         return $diff;
 

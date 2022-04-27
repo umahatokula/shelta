@@ -19,8 +19,8 @@ class Online extends Component
     public $propertybalance = 0;
 
     protected $listeners = [
-        'frontendOnlinePaymentSuccessful',
-        'emptyAmountField',
+        'onlinePaymentSuccessful',
+        'validateInput',
     ];
 
     /**
@@ -39,12 +39,40 @@ class Online extends Component
     }
 
     /**
-     * frontendOnlinePaymentSuccessful
+     * validate Input for online payment
      *
      * @param  mixed $data
      * @return void
      */
-    public function frontendOnlinePaymentSuccessful(Array $data) {
+    public function validateInput(Array $data) {
+        // dd($data);
+
+        if (empty($data['client_id']) || empty($data['property_id']) || empty($data['amount'])) {
+
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Client, Property and Amount are ALL required']);
+            return;
+
+        }
+
+        $property = Property::find($data['property_id']);
+        if (!$property) {
+
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Property not found']);
+            return;
+
+        }
+
+        // everything checks out. Validation is successful
+        $this->dispatchBrowserEvent('onSuccessfulValidation');
+    }
+
+    /**
+     * onlinePaymentSuccessful
+     *
+     * @param  mixed $data
+     * @return void
+     */
+    public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
 
         $transaction = null;
@@ -110,11 +138,6 @@ class Online extends Component
             'properties.estatePropertyType.propertyType',
             'properties.estatePropertyType.estate'
         ]);
-    }
-
-    public function emptyAmountField() {
-
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'The amount field is required']);
     }
 
     public function render()

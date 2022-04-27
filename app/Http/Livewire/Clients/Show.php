@@ -55,6 +55,7 @@ class Show extends Component
         if (empty($data['client_id']) || empty($data['property_id']) || empty($data['amount'])) {
 
             $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Client, Property and Amount are ALL required']);
+            return;
 
         }
 
@@ -62,6 +63,7 @@ class Show extends Component
         if (!$property) {
 
             $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Property not found']);
+            return;
 
         }
 

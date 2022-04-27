@@ -71,25 +71,44 @@
 
         const onlinePaymentBtn = document.getElementById('onlinePaymentBtn');
 
-        onlinePaymentBtn.addEventListener("click", payWithPaystack, false);
+        onlinePaymentBtn.addEventListener("click", validateInput, false);
 
-        function payWithPaystack(e) {
+        // perform validation
+        function validateInput(e) {
 
             e.preventDefault();
 
             var clientId = @json($client->id);
             var email = document.getElementById('payingEmail').value;
             var amount = document.getElementById('payingAmount').value;
-            if (!amount) {
-                Livewire.emit('showToastr', ['type' => 'error', 'message' => 'The amount field is required'])
-                alert('The amount field is required')
-                console.log('The amount field is required')
-                return
+            var property_id = document.getElementById('payingPropertyId').value;
+
+            const data = {
+                client_id: @json($client->id),
+                property_id,
+                amount,
             }
+
+            Livewire.emit('validateInput', data)
+
+        }
+
+        // on successful validation
+        window.addEventListener('onSuccessfulValidation', event => {
+            console.log('success')
+            payWithPaystack()
+        })
+
+        // load paystack plugin
+        function payWithPaystack() {
+
+            var clientId = @json($client->id);
+            var email = document.getElementById('payingEmail').value;
+            var amount = document.getElementById('payingAmount').value;
             var property_id = document.getElementById('payingPropertyId').value;
 
             let handler = PaystackPop.setup({
-                    key: '{{env("PAYSTACK_PK")}}', // Replace with your public key
+                    key: '{{env("PAYSTACK_PK")}}', // public key
                     email: email,
                     amount: amount * 100,
                 onClose: function(){
@@ -108,7 +127,7 @@
                         status: response.status,
                     }
 
-                    Livewire.emit('frontendOnlinePaymentSuccessful', data)
+                    Livewire.emit('onlinePaymentSuccessful', data)
                 }
             });
 

@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Real Estate App') }}</title>
-        
+
         <!-- responsive tag -->
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,7 +39,10 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/style.css') }}"> <!-- This stylesheet dynamically changed from style.less -->
         <!-- responsive css -->
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/responsive.css') }}">
-    
+
+        <!-- Toastr -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
         @livewireStyles
 
         <style>
@@ -48,7 +51,7 @@
                 line-break: 30px;
             }
         </style>
-        
+
     </head>
 
     <body class="defult-home">
@@ -58,13 +61,13 @@
             $logoLight = $settings ? $settings->getFirstMediaUrl('logoLight') : '';
             $logoDark = $settings ? $settings->getFirstMediaUrl('logoDark') : '';
         @endphp
-        
+
         <div class="offwrap"></div>
-     
+
 		<!-- Main content Start -->
         <div class="main-content">
 
-            
+
             <!--Full width header Start-->
             <div class="full-width-header">
                 <!--Header Start-->
@@ -75,8 +78,8 @@
             <div style="min-height: calc(100vh - 160px)">
                 @yield('content')
             </div>
-            
-        </div> 
+
+        </div>
         <!-- Main content End -->
 
         <!-- Footer Start -->
@@ -108,8 +111,8 @@
             </div>
         </div>
         <!-- Search Modal End -->
-    
-        
+
+
         <!-- modernizr js -->
         <script src="{{ asset('frontend/assets/js/modernizr-2.8.3.min.js') }}"></script>
         <!-- jquery latest version -->
@@ -131,7 +134,7 @@
          <!-- waypoints.min js -->
         <script src="{{ asset('frontend/assets/js/waypoints.min.js') }}"></script>
         <!-- counterup.min js -->
-        <script src="{{ asset('frontend/assets/js/jquery.counterup.min.js') }}"></script> 
+        <script src="{{ asset('frontend/assets/js/jquery.counterup.min.js') }}"></script>
         <!-- magnific popup js -->
         <script src="{{ asset('frontend/assets/js/jquery.magnific-popup.min.js') }}"></script>
         <!-- Nivo slider js -->
@@ -141,27 +144,54 @@
         <!-- main js -->
         <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
 
+        {{-- Toastr --}}
+        <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <script>
             $(document).ready(function () {
-    
+
                 $('body').on('click', '[data-toggle="modal"]', function () {
                     url = $(this).data("remote")
                     console.log(url)
                     $($(this).data("target") + ' .modal-body').load(url);
                 });
-    
+
                 $('#confirmationModal').on('show.bs.modal', function (e) {
                     $(this).find('.confirm').attr('href', $(e.relatedTarget).data('href'));
                 });
-    
+
             });
-    
+
+            window.addEventListener('showToastr', event => {
+                toastr[event.detail.type](event.detail.message)
+            })
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "3000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
         </script>
-    
+
         @livewire('modal')
-    
+
         @livewireScripts
-    
+
         @stack('scripts')
 
     </body>
@@ -179,7 +209,7 @@
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">               
+            <div class="modal-body">
                 <p>
                     loading...
                 </p>
