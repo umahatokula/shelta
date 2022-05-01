@@ -75,9 +75,17 @@ class Online extends Component
     public function onlinePaymentSuccessful(Array $data) {
         // dd($data);
 
+        // check for existence of property before procedding
+        $property = Property::find($data['property_id']);
+        if (!$property) {
+            session()->flash('error', 'Property '.$data['property_id'].' not found');
+            return redirect()->back();
+        }
+
         $transaction = null;
-        DB::transaction(function () use($data, &$transaction) {
+        DB::transaction(function () use($data, &$transaction, &$property) {
             if ($data['status'] === 'success') {
+
                 $transaction = Transaction::create([
                     'client_id'          => $data['client_id'],
                     'property_id'        => $data['property_id'],
@@ -85,16 +93,27 @@ class Online extends Component
                     'type'               => 'online',
                     'transaction_number' => $data['reference'],
                     'date'               => Carbon::now(),
+                    'instalment_date'    => $property->nextPaymentDueDate(),
                     'recorded_by'        => auth()->id(),
                     'status'             => 1,
                     'is_approved'        => 1,
                 ]);
 
-                if (Transaction::where('id', $transaction->id)->get()->count() === 1) {
-                    Property::where('id', $transaction->property_id)->update([
-                        'date_of_first_payment' => Carbon::now(),
-                   ]);
+                // set date of first transaction
+                if (!$property->date_of_first_payment) {
+                    
+                    $property->date_of_first_payment = Carbon::now();
+                    $property->save();
+
+                    // update first transaction instalment date
+                    $transaction->instalment_date = Carbon::now();
+                    $transaction->save();
                 }
+
+                // set new date for next payment
+                $property = $transaction->property;
+                $property->next_due_date = $property->nextPaymentDueDate();
+                $property->save();
             }
 
             OnlinePayment::create([

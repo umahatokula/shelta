@@ -12,19 +12,19 @@ use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends Component
 {
-    
-    public  $staff_id, 
-            $staff_password, 
-            $staff_password_confirmation, 
-            $client_id, 
-            $client_password, 
+
+    public  $staff_id,
+            $staff_password,
+            $staff_password_confirmation,
+            $client_id,
+            $client_password,
             $client_password_confirmation;
 
     public function mount() {
         $this->staffs = Staff::all();
         $this->clients = Client::all();
     }
-    
+
     /**
      * saveStaff
      *
@@ -44,19 +44,20 @@ class CreateUser extends Component
 
         $staff = Staff::findOrFail($this->staff_id);
 
-        $user = User::create([
-            'name'     => $staff->name,
-            'email'    => $staff->email,
-            'staff_id' => $this->staff_id,
-            'password' => Hash::make($this->staff_password),
-        ]);
+        $user = User::updateorCreate(
+            ['email' =>  $staff->email],
+            [
+                'name'     => $staff->name,
+                'staff_id' => $this->staff_id,
+                'password' => Hash::make($this->staff_password),
+            ]);
 
         // assign role
         $user->assignRole('staff');
 
         redirect()->route('users.index');
     }
-    
+
     /**
      * saveClient
      *

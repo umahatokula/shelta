@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Clients;
 
+use App\Models\User;
 use App\Models\Staff;
 use App\Models\State;
 use App\Models\Client;
@@ -312,6 +313,31 @@ class Edit extends Component
             ]);
 
         }
+
+        // create user account
+        $user = $client->user;
+        if($user) {
+
+            $user->name = $client->sname.' '.$client->onames;
+            $user->email = $client->email;
+
+        } else {
+
+            // $password = $event->client->generatePassword();
+            $password = '12345678';
+            $user = User::create(
+                [
+                    'name'      => $client->sname.' '.$client->onames,
+                    'client_id' => $client->id,
+                    'email'     => $client->email,
+                    'password'  => \Hash::make($password),
+                ]
+            );
+        }
+
+
+        // assign role
+        $user->assignRole('client');
 
         // session()->flash('message', 'Client successfully added.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully edited.']);

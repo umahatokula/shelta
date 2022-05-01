@@ -78,7 +78,6 @@ class Show extends Component
      * @return void
      */
     public function onlinePaymentSuccessful(Array $data) {
-        // dd($data);
 
         // check for existence of property before procedding
         $property = Property::find($data['property_id']);
@@ -103,16 +102,21 @@ class Show extends Component
                     'is_approved'        => 1,
                 ]);
 
+                // set date of first transaction
+                if (!$property->date_of_first_payment) {
+
+                    $property->date_of_first_payment = Carbon::now();
+                    $property->save();
+
+                    // update first transaction instalment date
+                    $transaction->instalment_date = Carbon::now();
+                    $transaction->save();
+                }
+
                 // set new date for next payment
                 $property = $transaction->property;
                 $property->next_due_date = $property->nextPaymentDueDate();
                 $property->save();
-
-                // set date of first transaction
-                if (!$property->date_of_first_payment) {
-                    $property->date_of_first_payment = $transaction->instalment_date;
-                    $property->save();
-                }
             }
 
             OnlinePayment::create([

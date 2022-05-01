@@ -881,7 +881,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .app-sidebar .logo {
     overflow: hidden;
-    padding: 45px 28px;
+    padding: 25px 28px;
     position: relative;
     background-color: #f5f7fa;
     -webkit-transition: opacity .2s ease-in-out;

@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                
+
                 <div class="card-body">
 
                     @if (session()->has('message'))
@@ -26,7 +26,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <span class="lead">Total: 	&#8358; {{ number_format($transactionTotal, 2) }}</span> 
+                                <span class="lead">Total: 	&#8358; {{ number_format($transactionTotal, 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                                         <td class="text-left">{{ $transaction->transaction_number }}</td>
                                         <td class="text-end">{{ number_format($transaction->amount, 2) }}</td>
                                         <td class="text-left">
-                                            <a href="">
+                                            <a href="@if ($transaction->client->id) {{ route('clients.show', $transaction->client) }} @endif">
                                                 {{ $transaction->client->name }}
                                             </a>
                                         </td>
@@ -99,7 +99,7 @@
                                         </td>
 
                                         <td class="text-center">
-    
+
                                             <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.show', $transaction) }}" href="#" class="text-warning p-0" data-original-title="" title="View Details" >
                                                 <span class="material-icons-outlined">
                                                     visibility
@@ -111,16 +111,16 @@
                                                 file_download
                                                 </span>
                                             </a>
-                
+
                                             @if (!$transaction->onlinePayment)
                                             <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
                                                 data-original-title="" title="Proof of Payment" target="_blank">
                                                 <span class="material-icons-outlined">
                                                     picture_as_pdf
                                                     </span>
-                                            </a>    
+                                            </a>
                                             @endif
-                                            
+
                                             <a wire:click.prevent="mailReciept({{$transaction->client->id}}, {{$transaction->id}})" href="#" class="text-success p-0"
                                                 data-original-title="" title="Email Reciept">
                                                 <span class="material-icons-outlined">
