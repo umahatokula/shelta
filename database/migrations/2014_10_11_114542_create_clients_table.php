@@ -38,6 +38,7 @@ class CreateClientsTable extends Migration
             $table->string('employer_phone')->nullable();
             $table->string('payment_plan_id')->nullable();
             $table->foreignId('agent_id')->nullable()->comment('This should be the ID of the staff acting as agent');
+            
             $table->integer('lc_country_id')->unsigned()->nullable();
             $table->tinyInteger('lc_region_id')->unsigned()->nullable();
             $table->foreignId('lga_id')->nullable();
