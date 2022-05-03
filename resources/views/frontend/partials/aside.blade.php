@@ -2,13 +2,15 @@
 <div class="menu-area menu-sticky">
     <div class="container custom">
         <div class="row-table">
-            <div class="col-cell header-logo">                                  
+            <div class="col-cell header-logo">
                 <div class="logo-area">
                     <a href="{{ url('/') }}">
-                        <img src="{{ asset('assets/images/logo_richboss.png') }}" alt="{{ env('APP_NAME') }}">  
+                        <img src="{{ asset('assets/images/logo_richboss.png') }}" alt="{{ env('APP_NAME') }}">
                     </a>
                 </div>
             </div>
+            
+            @auth
             <div class="col-cell">
                 <div class="rs-menu-area">
                     <div class="main-menu">
@@ -24,7 +26,7 @@
                                     <a href="#">My Account</a>
                                     <ul class="sub-menu">
                                         <li><a href="{{ route('frontend.clients.profile') }}">My Profile</a></li>
-                                        <li>                
+                                        <li>
                                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 Logout
                                             </a>
@@ -63,6 +65,8 @@
                     </ul>
                 </div>
             </div>
+            @endauth
+
         </div>
     </div>
 </div>

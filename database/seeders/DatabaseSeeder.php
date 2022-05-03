@@ -36,5 +36,8 @@ class DatabaseSeeder extends Seeder
             GenderTableSeeder::class,
             BankSeeder::class,
         ]);
+        
+        $this->call(\Lwwcas\LaravelCountries\Database\Seeders\LcDatabaseSeeder::class);
+
     }
 }
