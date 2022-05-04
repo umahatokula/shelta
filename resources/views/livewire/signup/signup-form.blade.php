@@ -20,7 +20,7 @@
                             <div x-show="$wire.pageOne" x-transition.duration.100ms class="box-body">
 
                                 <fieldset>
-                                    <legend>Vio data</legend>
+                                    <legend>Bio data</legend>
                                     <div>
                                         <div class="form-group row mb-3 mb-md-5">
                                             <label class="col-form-label col-md-2" id="sname">Surname Name <span class="text-danger">*</span></label>
