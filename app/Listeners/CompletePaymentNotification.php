@@ -33,7 +33,7 @@ class CompletePaymentNotification
     {
         $paymentIsComplete = false;
         $property = $event->transaction->property;
-        // dd ($property , \intval($property->totalPaid()), \intval($property->getPropertyPrice()));
+
         if (\intval($property->totalPaid()) >= \intval($property->getPropertyPrice())) {
             $paymentIsComplete = true;
         }
