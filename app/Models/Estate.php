@@ -34,7 +34,7 @@ class Estate extends Model
     {
         return 'slug';
     }
-    
+
     /**
      * properties
      *
@@ -69,7 +69,7 @@ class Estate extends Model
         return $this->hasManyThrough(Property::class, EstatePropertyType::class);
     }
 
-    
+
     /**
      * Get the payment plan ID and property price ID of an estate
      *
@@ -88,5 +88,17 @@ class Estate extends Model
         });
 
         return $ans;
+    }
+
+    /**
+     * getUnallocatedPropertiesInAnEstate
+     *
+     * @param  mixed $estateId
+     * @return void
+     */
+    public function getUnallocatedPropertiesInAnEstate() {
+        return $this->properties()->where(function($q) {
+            $q->whereNull('client_id');
+        })->get();
     }
 }

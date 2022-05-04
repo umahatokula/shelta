@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\RolesTableSeeder;
 use Database\Seeders\GenderTableSeeder;
 use Database\Seeders\EstatesTableSeeder;
+use Database\Seeders\MaritalStatusSeeder;
 use Database\Seeders\PaymentPlansTableSeeder;
 use Database\Seeders\PropertyGroupsTableSeeder;
 
@@ -35,9 +36,8 @@ class DatabaseSeeder extends Seeder
             // PaymentPlansTableSeeder::class,
             GenderTableSeeder::class,
             BankSeeder::class,
+            MaritalStatusSeeder::class,
         ]);
-        
-        $this->call(\Lwwcas\LaravelCountries\Database\Seeders\LcDatabaseSeeder::class);
 
     }
 }

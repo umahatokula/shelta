@@ -16,11 +16,14 @@ use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use PragmaRX\Countries\Package\Countries;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Client extends Model
+class Client extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, Notifiable;
+    use HasFactory, HasSlug, Notifiable, InteractsWithMedia;
 
     protected $fillable = ['name', 'phone', 'email', 'address'];
 
@@ -51,6 +54,14 @@ class Client extends Model
         return 'slug';
     }
 
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+              ->width(150)
+              ->height(150)
+              ->sharpen(10);
+    }
+
     /**
      * getTotalPaymentDefaultOwed
      *
@@ -59,7 +70,7 @@ class Client extends Model
     public function getTotalPaymentDefaultOwedAttribute() {
         return $this->paymentDefaults()->sum('default_amount');
     }
-    
+
     /**
      * get Total Payment Default Paid
      *
@@ -78,7 +89,7 @@ class Client extends Model
     {
         $sname = isset($this->attributes['sname']) ? $this->attributes['sname'] : '';
         $onames = isset($this->attributes['onames']) ? $this->attributes['onames'] : '';
-        
+
         return $sname .' '.$onames;
     }
 
@@ -115,7 +126,7 @@ class Client extends Model
 
         return $phone;
     }
-    
+
     /**
      * transactions
      *
@@ -124,7 +135,7 @@ class Client extends Model
     public function user() {
         return $this->hasOne(User::class);
     }
-    
+
     /**
      * transactions
      *
@@ -133,7 +144,7 @@ class Client extends Model
     public function transactions() {
         return $this->hasMany(Transaction::class)->orderBy('created_at', 'DESC');
     }
-    
+
     /**
      * properties
      *
@@ -142,7 +153,7 @@ class Client extends Model
     public function properties() {
         return $this->hasMany(Property::class);
     }
-    
+
     /**
      * properties
      *
@@ -151,7 +162,7 @@ class Client extends Model
     public function state() {
         return $this->belongsTo(State::class);
     }
-    
+
     /**
      * properties
      *
@@ -160,7 +171,7 @@ class Client extends Model
     public function nokState() {
         return $this->belongsTo(State::class, 'nok_state_id', 'id');
     }
-    
+
     /**
      * properties
      *
@@ -169,7 +180,7 @@ class Client extends Model
     public function employerState() {
         return $this->belongsTo(State::class, 'employer_state_id', 'id');
     }
-    
+
     /**
      * properties
      *
@@ -178,7 +189,7 @@ class Client extends Model
     public function employerCountry() {
         return $this->belongsTo(Countries::class, 'employer_country_id', 'id');
     }
-    
+
     /**
      * properties
      *
@@ -187,7 +198,7 @@ class Client extends Model
     public function paymentPlan() {
         return $this->belongsTo(PaymentPlan::class);
     }
-    
+
     /**
      * properties
      *
@@ -196,7 +207,7 @@ class Client extends Model
     public function onlinePayment() {
         return $this->hasMany(OnlinePayment::class);
     }
-    
+
     /**
      * properties
      *
@@ -205,7 +216,7 @@ class Client extends Model
     public function paymentDefaults() {
         return $this->hasMany(PaymentDefault::class);
     }
-    
+
     /**
      * properties
      *
@@ -218,7 +229,7 @@ class Client extends Model
     public function generatePassword() {
         return bin2hex(openssl_random_pseudo_bytes(4));
     }
-    
+
     /**
      * Get all the payment defaults on this client
      *
@@ -227,7 +238,7 @@ class Client extends Model
     public function getClientPaymentDefaults() {
         return PaymentDefault::where('client_id', $this->id)->get();
     }
-    
+
     /**
      * Get the total payment defaults on this client
      *
@@ -236,13 +247,13 @@ class Client extends Model
     public function getClientPaymentDefaultsTotal() {
         return PaymentDefault::where('client_id', $this->id)->sum('default_amount');
     }
-    
+
     public static function boot() {
 
         parent::boot();
-        
-        self::deleting(function($client) { 
-             $client->user()->delete(); 
+
+        self::deleting(function($client) {
+             $client->user()->delete();
         });
 
     }

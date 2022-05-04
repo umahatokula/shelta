@@ -152,7 +152,8 @@ class Edit extends Component
         $this->genders = Gender::all();
         $this->states = State::all();
         $this->estates = Estate::all();
-        $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
+        $this->countries = countries();
+        // dd($this->countries);
 
     }
 

@@ -46,6 +46,7 @@ class LoginController extends Controller
      * @return response()
      */
     public function login(Request $request) {
+        
         $validated = $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -58,19 +59,19 @@ class LoginController extends Controller
                 auth()->user()->generateCode();
 
                 return redirect()->route('2fa.index');
-                
+
             }
-            
+
             // return redirect()->route('home');
             return redirect()->intended('home');
-            
+
         }
 
         session()->flash('error', 'You have entered invalid credentials');
         return redirect()->route('login');
     }
 
-    
+
 
     public function logout(Request $request) {
 

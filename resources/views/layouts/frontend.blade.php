@@ -43,7 +43,8 @@
         <!-- Toastr -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-        @livewireStyles
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <!-- The "defer" attribute is important to make sure Alpine waits for Livewire to load first. -->
 
         <style>
             td {
@@ -52,6 +53,7 @@
             }
         </style>
 
+        @livewireStyles
     </head>
 
     <body class="defult-home">
