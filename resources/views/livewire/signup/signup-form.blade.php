@@ -17,7 +17,7 @@
                             <input type="hidden" name="amount" id="amount" value="10000">
 
                             {{-- PAGE ONE --}}
-                            <div x-show="$wire.pageOne" x-transition.duration.200ms class="box-body">
+                            <div x-show="$wire.pageOne" x-transition.duration.100ms class="box-body">
 
                                 <fieldset>
                                     <legend>Vio data</legend>
@@ -153,7 +153,7 @@
                             </div>
 
                             {{-- PAGE TWO --}}
-                            <div x-show="$wire.pageTwo" x-transition.duration.200ms class="box-body">
+                            <div x-show="$wire.pageTwo" x-transition.duration.100ms class="box-body">
 
                                 <fieldset>
                                     <legend>Next-of-kin</legend>
@@ -228,7 +228,7 @@
                             </div>
 
                             {{-- PAGE THREE --}}
-                            <div x-show="$wire.pageThree" x-transition.duration.200ms class="box-body">
+                            <div x-show="$wire.pageThree" x-transition.duration.100ms class="box-body">
 
                                 <fieldset>
                                     <legend>Property Details</legend>
