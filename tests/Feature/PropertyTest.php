@@ -4,23 +4,39 @@ namespace Tests\Feature;
 
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PropertyTest {
 
-    use RefreshDatabase;
+    use DatabaseTransactions, DatabaseMigrations;
 
 
     public function test_a_user_can_be_created_and_unlocks_beginner_badge()
     {
+
+        Event::fake();
+
         // run seeders
         $this->seed();
 
-        $property = Property::factory()->create();
+        $user = User::factory()->create(); // generate user
 
-        $this->assertCount(1, Property::all());
+        $transaction = Transaction::factory()
+            ->count(1)
+            ->create(); // generate enough lessons to test all levels of achievements dfddf
 
-        $dueDate = $property->nextPaymentDueDate();
+        foreach ($lessons as $lesson) {
 
-        $this->assertEquals($property->date_of_first_payment->addMonth(), $dueDate);
+            (new CompletePaymentNotification())->handle(
+                new PaymentMade($transaction)
+            );
+
+        }
+
+        $numberOfLessonsWatched = $user->watched()->count();
+        $unlockedAchievement = LessonAchievementLevel::where('lessons_to_unlock', $numberOfLessonsWatched)->first();
+
+        $this->assertEquals($unlockedAchievement, null);
     }
 }
