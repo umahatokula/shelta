@@ -12361,6 +12361,71 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.10.0"
             },
             "install-path": "../webmozart/assert"
+        },
+        {
+            "name": "zeevx/lara-termii",
+            "version": "0.1.5",
+            "version_normalized": "0.1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zeevx/lara-termii.git",
+                "reference": "2f3657283728cf5ec79db3f99227370f133c8e02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zeevx/lara-termii/zipball/2f3657283728cf5ec79db3f99227370f133c8e02",
+                "reference": "2f3657283728cf5ec79db3f99227370f133c8e02",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/support": "^8.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "time": "2021-09-03T10:58:02+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Zeevx\\LaraTermii\\LaraTermiiServiceProvider"
+                    ],
+                    "aliases": {
+                        "LaraTermii": "Zeevx\\LaraTermii\\LaraTermiiFacade"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Zeevx\\LaraTermii\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Adams",
+                    "email": "adamsohiani@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel Package for Termii - https://www.termii.com",
+            "homepage": "https://github.com/zeevx/lara-termii",
+            "keywords": [
+                "lara-termii",
+                "zeevx"
+            ],
+            "support": {
+                "issues": "https://github.com/zeevx/lara-termii/issues",
+                "source": "https://github.com/zeevx/lara-termii/tree/0.1.5"
+            },
+            "install-path": "../zeevx/lara-termii"
         }
     ],
     "dev": true,

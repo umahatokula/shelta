@@ -259,23 +259,18 @@ Route::get('/mailable', function () {
 });
 
 Route::get('/test', function() {
-    // $date = Carbon::parse('2022/05/28')->format('Y/m/d');
-    // // dd($date);
 
-    // $defaults = \DB::select("SELECT *
-    // FROM properties
-    // WHERE properties.id IN (
-    //     SELECT transactions.property_id
-    //     FROM transactions
-    //     WHERE MONTH(transactions.instalment_date) = MONTH('2022/05/28')
-    // )");
+    $termii = new \Zeevx\LaraTermii\LaraTermii(env('TERMII_API_KEY'));
 
-    // dd($defaults);
+    // $termii->sendMessage(int $to, string $from, string $sms, string $channel = "generic", bool $media = false, string $media_url = null, string $media_caption = null);
 
+    $to = '2349099596262';
+    $from = 'Richboss';
+    $sms = 'Hi Umaha';
 
+    $res = $termii->sendMessage($to, $from, $sms, $channel = "generic", $media = false, $media_url = null, $media_caption = null);
+    dd(json_decode($res));
 
-    $pastDueProperties = Services::getPaymentDefaulters();
-
-    dd($pastDueProperties);
+    return json_decode($res);
 
 });

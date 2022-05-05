@@ -2,8 +2,9 @@
 
 namespace App\Helpers;
 
-use Twilio\Rest\Client as TwilioClient;
+use Zeevx\LaraTermii\LaraTermii;
 use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client as TwilioClient;
 
 class Helpers {
 
@@ -16,21 +17,13 @@ class Helpers {
      */
     public static function sendSMSMessage($to, $message) {
 
-      // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
-      //   'email' => 'umahatokula@gmail.com',
-      //   'password' => 'addiction',
-      //   'sender' => config('app.name'),
-      //   'numbers' => $to,
-      //   'message' => $message,
-      // ]);
-
-        $response = Http::post('https://www.bulksmsnigeria.com/api/v1/sms/create', [
-          'api_token' => config('services.send_bulk_sms_nigeria.api_token'),
-          'from' => config('app.name'),
-          'to' => $to,
-          'body' => $message,
-          'dnd' => 2,
-        ]);
+        // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
+        //   'email' => 'umahatokula@gmail.com',
+        //   'password' => 'addiction',
+        //   'sender' => config('app.name'),
+        //   'numbers' => $to,
+        //   'message' => $message,
+        // ]);
 
         // $response = Http::post('http://www.smslive247.com/http/index.aspx', [
         //   'cmd' => 'sendmsg',
@@ -41,26 +34,26 @@ class Helpers {
         //   'msgtype' => 0,
         // ]);
 
-        if ($response->ok()) {
+        // $response = Http::post('https://www.bulksmsnigeria.com/api/v1/sms/create', [
+        //   'api_token' => config('services.send_bulk_sms_nigeria.api_token'),
+        //   'from' => config('app.name'),
+        //   'to' => $to,
+        //   'body' => $message,
+        //   'dnd' => 2,
+        // ]);
+
+        $termii = new LaraTermii(env('TERMII_API_KEY'));
+        $to = $to;
+        $from = 'Richboss';
+        $sms = $message;
+
+        $response = $termii->sendMessage($to, $from, $sms, $channel = "generic", $media = false, $media_url = null, $media_caption = null);
+        $response = json_decode($response);
+
+        if ($response->code == 'ok' && $response->message == 'Successfully Sent') {
           return 1;
         };
 
-        // try {
-        //
-        //     $account_sid = getenv("TWILIO_SID");
-        //     $auth_token = getenv("TWILIO_TOKEN");
-        //     $twilio_number = getenv("TWILIO_FROM");
-        //
-        //     $twilioClient = new TwilioClient($account_sid, $auth_token);
-        //     $twilioClient->messages->create($to, [
-        //         'from' => $twilio_number,
-        //         'body' => $message]);
-        //
-        // } catch (Exception $e) {
-        //     \Log::info("Error: ". $e->getMessage());
-        // }
-        //
-        // return 1;
     }
 
     /**

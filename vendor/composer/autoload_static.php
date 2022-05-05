@@ -75,6 +75,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Z' => 
         array (
             'ZipStream\\' => 10,
+            'Zeevx\\LaraTermii\\' => 17,
         ),
         'W' => 
         array (
@@ -285,6 +286,10 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
+        'Zeevx\\LaraTermii\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zeevx/lara-termii/src',
         ),
         'Whoops\\' => 
         array (
@@ -899,6 +904,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\ImportsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ImportsController.php',
         'App\\Http\\Controllers\\LGAController' => __DIR__ . '/../..' . '/app/Http/Controllers/LGAController.php',
+        'App\\Http\\Controllers\\MaritalStatusController' => __DIR__ . '/../..' . '/app/Http/Controllers/MaritalStatusController.php',
         'App\\Http\\Controllers\\ParcelationController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParcelationController.php',
         'App\\Http\\Controllers\\PasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/PasswordController.php',
         'App\\Http\\Controllers\\PaymentDefaultController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentDefaultController.php',
@@ -1303,6 +1309,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Database\\Seeders\\EstatesTableSeeder' => __DIR__ . '/../..' . '/database/seeders/EstatesTableSeeder.php',
         'Database\\Seeders\\GenderTableSeeder' => __DIR__ . '/../..' . '/database/seeders/GenderTableSeeder.php',
         'Database\\Seeders\\LGAsTableSeeder' => __DIR__ . '/../..' . '/database/seeders/LGAsTableSeeder.php',
+        'Database\\Seeders\\MaritalStatusSeeder' => __DIR__ . '/../..' . '/database/seeders/MaritalStatusSeeder.php',
         'Database\\Seeders\\PaymentPlansTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PaymentPlansTableSeeder.php',
         'Database\\Seeders\\PropertiesTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PropertiesTableSeeder.php',
         'Database\\Seeders\\PropertyGroupsTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PropertyGroupsTableSeeder.php',
@@ -7989,35 +7996,8 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Te7aHoudini\\LaravelTrix\\Pipes\\TrixEditor' => __DIR__ . '/..' . '/te7a-houdini/laravel-trix/src/Pipes/TrixEditor.php',
         'Te7aHoudini\\LaravelTrix\\Traits\\HasTrixRichText' => __DIR__ . '/..' . '/te7a-houdini/laravel-trix/src/Traits/HasTrixRichText.php',
         'Tests\\CreatesApplication' => __DIR__ . '/../..' . '/tests/CreatesApplication.php',
-        'Tests\\Feature\\ApiTokenPermissionsTest' => __DIR__ . '/../..' . '/tests/Feature/ApiTokenPermissionsTest.php',
-        'Tests\\Feature\\Auth\\AuthenticationTest' => __DIR__ . '/../..' . '/tests/Feature/Auth/AuthenticationTest.php',
-        'Tests\\Feature\\Auth\\EmailVerificationTest' => __DIR__ . '/../..' . '/tests/Feature/Auth/EmailVerificationTest.php',
-        'Tests\\Feature\\Auth\\PasswordConfirmationTest' => __DIR__ . '/../..' . '/tests/Feature/Auth/PasswordConfirmationTest.php',
-        'Tests\\Feature\\Auth\\PasswordResetTest' => __DIR__ . '/../..' . '/tests/Feature/Auth/PasswordResetTest.php',
-        'Tests\\Feature\\Auth\\RegistrationTest' => __DIR__ . '/../..' . '/tests/Feature/Auth/RegistrationTest.php',
-        'Tests\\Feature\\AuthenticationTest' => __DIR__ . '/../..' . '/tests/Feature/AuthenticationTest.php',
-        'Tests\\Feature\\BrowserSessionsTest' => __DIR__ . '/../..' . '/tests/Feature/BrowserSessionsTest.php',
-        'Tests\\Feature\\CreateApiTokenTest' => __DIR__ . '/../..' . '/tests/Feature/CreateApiTokenTest.php',
-        'Tests\\Feature\\CreateTeamTest' => __DIR__ . '/../..' . '/tests/Feature/CreateTeamTest.php',
-        'Tests\\Feature\\DeleteAccountTest' => __DIR__ . '/../..' . '/tests/Feature/DeleteAccountTest.php',
-        'Tests\\Feature\\DeleteApiTokenTest' => __DIR__ . '/../..' . '/tests/Feature/DeleteApiTokenTest.php',
-        'Tests\\Feature\\DeleteTeamTest' => __DIR__ . '/../..' . '/tests/Feature/DeleteTeamTest.php',
-        'Tests\\Feature\\EmailVerificationTest' => __DIR__ . '/../..' . '/tests/Feature/EmailVerificationTest.php',
-        'Tests\\Feature\\ExampleTest' => __DIR__ . '/../..' . '/tests/Feature/ExampleTest.php',
-        'Tests\\Feature\\InviteTeamMemberTest' => __DIR__ . '/../..' . '/tests/Feature/InviteTeamMemberTest.php',
-        'Tests\\Feature\\LeaveTeamTest' => __DIR__ . '/../..' . '/tests/Feature/LeaveTeamTest.php',
-        'Tests\\Feature\\PasswordConfirmationTest' => __DIR__ . '/../..' . '/tests/Feature/PasswordConfirmationTest.php',
-        'Tests\\Feature\\PasswordResetTest' => __DIR__ . '/../..' . '/tests/Feature/PasswordResetTest.php',
-        'Tests\\Feature\\ProfileInformationTest' => __DIR__ . '/../..' . '/tests/Feature/ProfileInformationTest.php',
         'Tests\\Feature\\PropertyTest' => __DIR__ . '/../..' . '/tests/Feature/PropertyTest.php',
-        'Tests\\Feature\\RegistrationTest' => __DIR__ . '/../..' . '/tests/Feature/RegistrationTest.php',
-        'Tests\\Feature\\RemoveTeamMemberTest' => __DIR__ . '/../..' . '/tests/Feature/RemoveTeamMemberTest.php',
-        'Tests\\Feature\\TwoFactorAuthenticationSettingsTest' => __DIR__ . '/../..' . '/tests/Feature/TwoFactorAuthenticationSettingsTest.php',
-        'Tests\\Feature\\UpdatePasswordTest' => __DIR__ . '/../..' . '/tests/Feature/UpdatePasswordTest.php',
-        'Tests\\Feature\\UpdateTeamMemberRoleTest' => __DIR__ . '/../..' . '/tests/Feature/UpdateTeamMemberRoleTest.php',
-        'Tests\\Feature\\UpdateTeamNameTest' => __DIR__ . '/../..' . '/tests/Feature/UpdateTeamNameTest.php',
         'Tests\\TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
-        'Tests\\Unit\\ExampleTest' => __DIR__ . '/../..' . '/tests/Unit/ExampleTest.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
         'TheSeer\\Tokenizer\\NamespaceUriException' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUriException.php',
@@ -10377,6 +10357,9 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Whoops\\Util\\Misc' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/Misc.php',
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
+        'Zeevx\\LaraTermii\\LaraTermii' => __DIR__ . '/..' . '/zeevx/lara-termii/src/LaraTermii.php',
+        'Zeevx\\LaraTermii\\LaraTermiiFacade' => __DIR__ . '/..' . '/zeevx/lara-termii/src/LaraTermiiFacade.php',
+        'Zeevx\\LaraTermii\\LaraTermiiServiceProvider' => __DIR__ . '/..' . '/zeevx/lara-termii/src/LaraTermiiServiceProvider.php',
         'ZipStream\\Bigint' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Bigint.php',
         'ZipStream\\DeflateStream' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/DeflateStream.php',
         'ZipStream\\Exception' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Exception.php',
