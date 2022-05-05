@@ -20,7 +20,7 @@ class PropertyTest {
         // run seeders
         $this->seed();
 
-        $user = User::factory()->create(); // generate user
+        $user = User::factory()->create(); // generate a user
 
         $transaction = Transaction::factory()
             ->count(1)
