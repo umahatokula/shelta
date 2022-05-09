@@ -83,7 +83,7 @@ class SignupForm extends Component
         'relationship_with_nok' => 'required',
         'nok_address' => 'required',
 
-        'number_of_plots' => 'required',
+//        'number_of_plots' => 'required',
         'referrer' => 'required',
         'estate_id' => 'required',
         'propertyType_id' => 'required',
@@ -140,15 +140,14 @@ class SignupForm extends Component
 
         if ($properties->isEmpty()) {
 
+            $this->addError('email', 'No available property for the selected estate and property type');
             $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'No available property for the selected estate and property type']);
             return;
 
         }
 
-        $this->property = $properties->first();
-
-        // everything checks out. Validation is successful
-        $this->dispatchBrowserEvent('onSuccessfulValidation');
+        // redirect to preview page
+        $this->signUpPreview();
     }
 
     /**
@@ -224,100 +223,6 @@ class SignupForm extends Component
     }
 
     /**
-     * onlinePaymentSuccessful
-     *
-     * @param  mixed $data
-     * @return void
-     */
-    public function onlinePaymentSuccessful(Array $data) {
-
-        // create client profile
-        $this->createClientProfile();
-
-        // record transaction
-        $this->recordTransaction($data);
-
-        // add plots/properties to clients
-        $this->updateClientProperties();
-
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
-
-        redirect()->route('signUp');
-
-    }
-
-    public function updateClientProperties() {
-
-        Property::where('client_id', $this->client->id)->update(['client_id' => null]); // update clients existing properties
-
-        Property::where('id', $this->property->id)->update([
-            'client_id'               => $this->client->id,
-            'payment_plan_id'         => $this->payment_plan_id,
-        ]);
-
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
-
-        ClientPropertiesUpdated::dispatch($this->client, collect($this->property)->toArray());
-
-    }
-
-    public function recordTransaction($data) {
-
-        if (!$this->property) {
-            return ;
-        }
-
-        DB::transaction(function () use($data) {
-
-            if ($data['status'] === 'success') {
-
-                $transaction = Transaction::create([
-                    'client_id'          => $this->client->id,
-                    'property_id'        => $this->property->id,
-                    'amount'             => $data['amount'],
-                    'type'               => 'online',
-                    'transaction_number' => $data['reference'],
-                    'date'               => Carbon::now(),
-                    'instalment_date'    => $this->property->nextPaymentDueDate(),
-                    'recorded_by'        => auth()->id(),
-                    'status'             => 1,
-                    'is_approved'        => 1,
-                ]);
-
-                // set date of first transaction
-                if (!$this->property->date_of_first_payment) {
-
-                    $this->property->date_of_first_payment = Carbon::now();
-                    $this->property->save();
-
-                    // update first transaction instalment date
-                    $transaction->instalment_date = Carbon::now();
-                    $transaction->save();
-                }
-
-                // set new date for next payment
-                $this->property = $transaction->property;
-                $this->property->next_due_date = $this->property->nextPaymentDueDate();
-                $this->property->save();
-
-                // dispatch event
-                PaymentMade::dispatch($transaction);
-
-            }
-
-            OnlinePayment::create([
-                'client_id'      => $this->client->id,
-                'transaction_id' => $transaction ? $transaction->id : null,
-                'message'        => $data['message'],
-                'reference'      => $data['reference'],
-                'status'         => $data['status'],
-                'amount'         => $data['amount'],
-            ]);
-
-        });
-    }
-
-    /**
      * create cient Profile
      *
      * @return void
@@ -357,6 +262,15 @@ class SignupForm extends Component
         session()->flash('message', 'Property Type successfully added.');
 
         redirect()->route('property-types.index');
+    }
+
+    public function signUpPreview() {
+
+        // create client profile
+        $this->createClientProfile();
+
+        // redirect to preview page
+        redirect()->route('signUpPreview', [$this->client, $this->estate_id, $this->propertyType_id, $this->payment_plan_id]);
     }
 
     public function render()

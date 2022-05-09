@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use App\Models\Property;
+use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -22,17 +24,31 @@ class PropertyTest {
 
         $user = User::factory()->create(); // generate a user
 
-        $transaction = Transaction::factory()
-            ->count(1)
-            ->create(); // generate enough lessons to test all levels of achievements dfddf
+        $property = Property::create([
+            'estate_property_type_id' => rand(1, 6),
+            'client_id' => rand(1, 100),
+            'unique_number' => rand(1000, 9999),
+        ]);
 
-        foreach ($lessons as $lesson) {
+        $transaction = Transaction::create([
+            'client_id'          => $user->id,
+            'property_id'        => $property->id,
+            'amount'             => 15000,
+            'type'               => 'online',
+            'transaction_number' => time(),
+            'date'               => Carbon::now(),
+            'instalment_date'    => Carbon::now()->addDays(30),
+            'recorded_by'        => 1,
+            'status'             => 1,
+            'is_approved'        => 1,
+        ]);
 
-            (new CompletePaymentNotification())->handle(
-                new PaymentMade($transaction)
-            );
+        dd($transaction);
 
-        }
+        (new CompletePaymentNotification())->handle(
+            new PaymentMade($transaction)
+        );
+
 
         $numberOfLessonsWatched = $user->watched()->count();
         $unlockedAchievement = LessonAchievementLevel::where('lessons_to_unlock', $numberOfLessonsWatched)->first();

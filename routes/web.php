@@ -197,6 +197,7 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 //=======================================================================
 
 Route::get('signup', [SignupController::class, 'signup'])->name('signUp');
+Route::get('signup-preview/{client}/{estate}/{propertyType}/{paymentPlan}', [SignupController::class, 'preview'])->name('signUpPreview');
 
 
 

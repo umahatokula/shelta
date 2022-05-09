@@ -9,6 +9,16 @@
                     <div class="contact-wrap">
                         <div id="form-messages"></div>
 
+                        @if (count($errors) > 0)
+                            <div class="alert alert-danger alert-important">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <form x-data wire:submit.prevent="save">
                             <div class="box-header with-border">
                                 <h4 class="box-title">&nbsp</h4>
@@ -145,8 +155,13 @@
                                         </div>
 
                                     </div>
-                                    <div class="d-grid grid-2">
-                                        <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Next">
+
+                                    <div class="form-group row mb-3 mb-md-5">
+                                        <div class="col-md-3">
+                                            <div class="d-grid grid-2">
+                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Next">
+                                            </div>
+                                        </div>
                                     </div>
                                 </fieldset>
 
@@ -219,9 +234,18 @@
                                         </div>
                                     </div>
 
-                                    <div class="d-grid grid-2">
-                                        <input x-on:click="$wire.setPageOne()" type="button" class="readon submit mb-2" value="Previous">
-                                        <input x-on:click="$wire.setPageThree()" type="button" class="readon submit mb-2" value="Next">
+
+                                    <div class="form-group row mb-3 mb-md-5">
+                                        <div class="col-md-3">
+                                            <div class="d-grid grid-2">
+                                                <input x-on:click="$wire.setPageOne()" type="button" class="readon submit mb-2" value="Previous">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-grid grid-2">
+                                                <input x-on:click="$wire.setPageThree()" type="button" class="readon submit mb-2" value="Next">
+                                            </div>
+                                        </div>
                                     </div>
                                 </fieldset>
 
@@ -233,13 +257,13 @@
                                 <fieldset>
                                     <legend>Property Details</legend>
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="number_of_plots">How Many Plots Are You Buying? <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="number_of_plots" class="from-control" type="text">
-                                            @error('number_of_plots') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
+{{--                                        <label class="col-form-label col-md-2" id="number_of_plots">How Many Plots Are You Buying? <span class="text-danger">*</span></label>--}}
+{{--                                        <div class="col-md-10">--}}
+{{--                                            <input wire:model.lazy="number_of_plots" class="from-control" type="text">--}}
+{{--                                            @error('number_of_plots') <span class="text-danger">{{ $message }}</span> @enderror--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
                                     <div class="form-group row mb-3 mb-md-5">
                                         <label class="col-form-label col-md-2" id="estate_id">Estate <span class="text-danger">*</span></label>
@@ -301,15 +325,16 @@
                                     </div>
 
                                     <div class="form-group row mb-3 mb-md-5">
-                                        <div class="alert alert-info" role="alert">
-                                            <strong>Important</strong> <br>
-                                            You will rediercted to  the payment page. Your details will only be saved if payment is successful.
+                                        <div class="col-md-3">
+                                            <div class="d-grid grid-2">
+                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Previous">
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="d-grid grid-2">
-                                        <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Previous">
-                                        <input wire:click="" type="submit" class="readon submit mb-2" value="Make payment" id="onlinePaymentBtn">
+                                        <div class="col-md-3">
+                                            <div class="d-grid grid-2">
+                                                <input type="button" class="readon submit mb-2" value="Preview" id="signUpPreviewBtn">
+                                            </div>
+                                        </div>
                                     </div>
                                 </fieldset>
 
@@ -336,9 +361,9 @@
 
     <script>
 
-        const onlinePaymentBtn = document.getElementById('onlinePaymentBtn');
+        const signUpPreviewBtn = document.getElementById('signUpPreviewBtn');
 
-        onlinePaymentBtn.addEventListener("click", validateInput, false);
+        signUpPreviewBtn.addEventListener("click", validateInput, false);
 
         // perform validation
         function validateInput(e) {
@@ -355,43 +380,6 @@
 
             Livewire.emit('validateInput', data)
 
-        }
-
-        // on successful validation
-        window.addEventListener('onSuccessfulValidation', event => {
-            payWithPaystack()
-        })
-
-        // load paystack plugin
-        function payWithPaystack() {
-
-            var email = document.getElementById('email').value;
-            var amount = document.getElementById('amount').value;
-
-            let handler = PaystackPop.setup({
-                    key: '{{env("PAYSTACK_PK")}}', // public key
-                    email: email,
-                    amount: amount * 100,
-                onClose: function(){
-                    // alert('Window closed.');
-                },
-                callback: function(response){
-                    // let message = 'Payment complete! Reference: ' + response.reference;
-
-                    const data = {
-                        reference: response.reference,
-                        email,
-                        amount,
-                        message: response.message,
-                        reference: response.reference,
-                        status: response.status,
-                    }
-
-                    Livewire.emit('onlinePaymentSuccessful', data)
-                }
-            });
-
-            handler.openIframe();
         }
 
     </script>

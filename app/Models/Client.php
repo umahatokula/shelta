@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Gender;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\State;
@@ -159,8 +160,26 @@ class Client extends Model implements HasMedia
      *
      * @return void
      */
+    public function gender() {
+        return $this->belongsTo(Gender::class)->withDefault();
+    }
+
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function lga() {
+        return $this->belongsTo(LGA::class)->withDefault();
+    }
+
+    /**
+     * properties
+     *
+     * @return void
+     */
     public function state() {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(State::class)->withDefault();
     }
 
     /**
@@ -169,7 +188,7 @@ class Client extends Model implements HasMedia
      * @return void
      */
     public function nokState() {
-        return $this->belongsTo(State::class, 'nok_state_id', 'id');
+        return $this->belongsTo(State::class, 'nok_state_id', 'id')->withDefault();
     }
 
     /**
@@ -178,7 +197,7 @@ class Client extends Model implements HasMedia
      * @return void
      */
     public function employerState() {
-        return $this->belongsTo(State::class, 'employer_state_id', 'id');
+        return $this->belongsTo(State::class, 'employer_state_id', 'id')->withDefault();
     }
 
     /**
@@ -187,7 +206,7 @@ class Client extends Model implements HasMedia
      * @return void
      */
     public function employerCountry() {
-        return $this->belongsTo(Countries::class, 'employer_country_id', 'id');
+        return $this->belongsTo(Countries::class, 'employer_country_id', 'id')->withDefault();
     }
 
     /**
@@ -196,7 +215,7 @@ class Client extends Model implements HasMedia
      * @return void
      */
     public function paymentPlan() {
-        return $this->belongsTo(PaymentPlan::class);
+        return $this->belongsTo(PaymentPlan::class)->withhDefault();
     }
 
     /**

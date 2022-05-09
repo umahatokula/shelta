@@ -16,11 +16,11 @@
                     <div class="example-container">
                         <div class="example-content">
                             <form wire:submit.prevent="save">
-        
+
                                 <div class="box-body">
                                     <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Client's Details</h4>
                                     <hr class="my-15">
-        
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
@@ -29,7 +29,7 @@
                                                 @error('sname') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="onames">Other Names <span
@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
@@ -56,9 +56,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="gender">Gender <span
@@ -72,7 +72,7 @@
                                                 @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="dob">Date of birth</label>
@@ -81,9 +81,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="city">City</label>
@@ -91,7 +91,7 @@
                                                 @error('city') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="state_id">State </label>
@@ -105,9 +105,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-12 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="address">Address</label>
@@ -116,10 +116,10 @@
                                             </div>
                                         </div>
                                     </div>
-        
-        
+
+
                                     {{-- NEXT OF KIN  --}}
-        
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <h4 class="box-title text-info mb-0 mt-20"><i class="ti-home me-15"></i> Next-of-Kin Information
@@ -127,9 +127,9 @@
                                         </div>
                                     </div>
                                     <hr class="my-15">
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="nok_name">Next of kin Name</label>
@@ -137,7 +137,7 @@
                                                 @error('nok_name') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="relationship_with_nok">Relationship with Next of kin </label>
@@ -146,9 +146,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="nok_city">Next of kin City</label>
@@ -156,7 +156,7 @@
                                                 @error('nok_city') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="nok_state_id">Next of kin State </label>
@@ -170,9 +170,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-12 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="nok_address">Next of kin Address</label>
@@ -180,12 +180,12 @@
                                                 @error('nok_address') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
-        
+
+
                                     {{-- EMPLOYERS INFO  --}}
-        
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <h4 class="box-title text-info mb-0 mt-20"><i class="ti-home me-15"></i> Employer's Information
@@ -193,9 +193,9 @@
                                         </div>
                                     </div>
                                     <hr class="my-15">
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="employer_name">Employer Name</label>
@@ -203,7 +203,7 @@
                                                 @error('employer_name') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="employer_phone">Employer Phone</label>
@@ -212,9 +212,9 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="employer_city">Employer City</label>
@@ -222,7 +222,7 @@
                                                 @error('employer_city') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="employer_state_id">Employer State</label>
@@ -236,22 +236,22 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="row">
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group ">
                                                 <label class="" id="employer_country_id">Employer Country</label>
-                                                <select wire:model.lazy="employer_country_id" class="form-control select2">
+                                                <select wire:model.lazy="employer_country_id" class="form-control select2" id="employer_country_id">
                                                     <option value="">Select one</option>
                                                     @foreach ($countries as $code =>  $country)
-                                                        <option value="{{ $code }}">{{ $country }}</option>
+                                                        <option value="{{ $code }}">{{ $country['name'] }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('employer_country_id') <span class="error">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-        
+
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
                                                 <label class="" id="employer_address">Employer Address</label>
@@ -260,11 +260,11 @@
                                             </div>
                                         </div>
                                     </div>
-        
-        
-        
+
+
+
                                     {{-- CLIENTS PROPERTIES  --}}
-        
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <h4 class="box-title text-info mb-0 mt-20"><i class="ti-home me-15"></i> Client's
@@ -277,9 +277,9 @@
                                         </div>
                                     </div>
                                     <hr class="my-15">
-        
+
                                     @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
-        
+
                                     <div class="row" style="margin-bottom: 25px">
                                         <div class="col-md-3 mb-5">
                                             <div class="form-group">
@@ -316,7 +316,7 @@
                                                         <option value="{{ $property['id'] }}">{{ $property['unique_number'] }}</option>
                                                         @endforeach
                                                     @endisset
-                                                    
+
                                                 </select>
                                                 @error('price') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
@@ -329,9 +329,9 @@
                                                     <option value="">Please select one</option>
                                                     @isset($paymentPlans[$key])
                                                         @forelse ($paymentPlans[$key] as $paymentPlan)
-                                                            <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>                                                
+                                                            <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>
                                                         @empty
-                                                            <option value="">No options</option>                                                
+                                                            <option value="">No options</option>
                                                         @endforelse
                                                     @endisset
                                                 </select>
@@ -345,7 +345,7 @@
                                         </div>
                                     </div>
                                     @endforeach
-        
+
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">

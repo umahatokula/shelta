@@ -55,7 +55,7 @@ return [
     */
 
     // 'asset_url' => null,
-    'asset_url' => 'http://localhost/richboss-realty/public',
+    'asset_url' => 'http://localhost/shelta/public',
 
     /*
     |--------------------------------------------------------------------------

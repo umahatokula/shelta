@@ -16,7 +16,7 @@ use App\Models\PropertyType;
 use App\Models\EstatePropertyType;
 use App\Events\ClientAccountCreated;
 use Illuminate\Support\Facades\Hash;
-use PragmaRX\Countries\Package\Countries;
+// use PragmaRX\Countries\Package\Countries;
 
 class Create extends Component
 {
@@ -97,7 +97,8 @@ class Create extends Component
         $this->genders = Gender::all();
         $this->states = State::all();
         $this->estates = Estate::all();
-        $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
+        // $this->countries = Countries::all()->pluck('name.common', 'adm0_a3')->toArray();
+        $this->countries = countries();
         $this->allPropertyTypes = PropertyType::all()->toArray();  // get all property types once on mount of component to reduce DB calls
         $this->allProperties    = Property::all();                 // get all properties once on mount of component to reduce DB calls
 

@@ -108,7 +108,7 @@ class Property extends Model
      *
      * @return void
      */
-    public function reconstructLastInstalmentDate() {
+    public function reconstructLastInstalmentDate() : Carbon {
 
         $day = 28;
         if ($this->date_of_first_payment) {
@@ -153,34 +153,17 @@ class Property extends Model
      *
      * @return int
      */
-    public function diffBwtTodayAndInstalmentDateInMonths() : int {
+    public function diffBwtTodayAndInstalmentDateInMonths(Carbon $date1, Carbon $date2) : int {
 
-        $reconstructedDate = $this->reconstructLastInstalmentDate();
-        $today = Carbon::today();
+        $date1_month = $date1->format('m');
+        $date2_month = $date2->format('m');
 
-        $reconstructedDate_month = $reconstructedDate->format('m');
-        $today_month = $today->format('m');
-
-        $reconstructedDate_year = $reconstructedDate->format('Y');
-        $today_year = $today->format('Y');
-
-        // if (abs($reconstructedDate_month - $today_month) > 12) {
-
-        //     $diff = (abs($reconstructedDate_year - $today_year) * 12 ) + abs($reconstructedDate_month - $today_month);
-
-        // } else {
-
-        //     $diff = abs($reconstructedDate_month - $today_month);
-
-        // }
-
-
-        $absDiff = abs($reconstructedDate_month - $today_month);
+        $absDiff = abs($date1_month - $date2_month);
         $years = \intdiv($absDiff, 12);
         $months = $absDiff % 12;
 
         $diff = ($years * 12) + $months;
-        // dd($diff);
+//        dd($diff);
 
         return $diff;
 
@@ -200,24 +183,16 @@ class Property extends Model
 
         // get reconstructed date
         $adjustedLastInstalmentDate = $this->reconstructLastInstalmentDate();
-        // dd($adjustedLastInstalmentDate);
+        $today = Carbon::today();
 
         // Get date difference in months
-        $diffInMonths = $this->diffBwtTodayAndInstalmentDateInMonths();
-        // dd($diffInMonths, $adjustedLastInstalmentDate);
+        $diffInMonths = $this->diffBwtTodayAndInstalmentDateInMonths($adjustedLastInstalmentDate, $today);
 
-        if ($adjustedLastInstalmentDate->format('m') == Carbon::today()->format('m')) {
+        if (($adjustedLastInstalmentDate->format('m')) >= (Carbon::today()->format('m'))) {
             $nextDueDate = $adjustedLastInstalmentDate->addMonth();
         } else {
             $nextDueDate = $adjustedLastInstalmentDate->addMonth($diffInMonths);
         }
-        // $nextDueDate = $adjustedLastInstalmentDate->addMonth();
-        // dd($nextDueDate);
-
-        if ($nextDueDate ->isPast()) {
-            // $nextDueDate = $nextDueDate->addMonth();
-        }
-        // dd($nextDueDate);
 
         return $nextDueDate;
     }
@@ -227,7 +202,7 @@ class Property extends Model
      *
      * @return void
      */
-    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_to_due_date) {
+    public function getDueDateBasedOnNumberOfDaysBeforeActualPaymentisDue($number_of_days_to_due_date) : Carbon {
 
         $nextDueDate = Carbon::today()->addDays($number_of_days_to_due_date);
 
@@ -314,7 +289,7 @@ class Property extends Model
      *
      * @return void
      */
-    public function getMonthlyPaymentAmount() {
+    public function getMonthlyPaymentAmount() : float {
 
         $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
 
@@ -322,7 +297,7 @@ class Property extends Model
         $price = $paymentPlanAndPrice->propertyPrice->price;
 
         if ($paymentPlanNumberOfMonths == 0) {
-            return 0;
+            return $price;
         }
 
         return $price / $paymentPlanNumberOfMonths;

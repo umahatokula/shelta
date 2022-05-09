@@ -6,6 +6,45 @@
             </div>
         </div>
     </div>
+
+
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card widget widget-stats">
+                <div class="card-body">
+                    <div class="widget-stats-container d-flex">
+                        <div class="widget-stats-icon widget-stats-icon-primary">
+                            <i class="material-icons-outlined">maps_home_work</i>
+                        </div>
+                        <div class="widget-stats-content flex-fill">
+                            <span class="widget-stats-title">Total Properties</span>
+                            <span class="widget-stats-amount">{{ $propertyCount }}</span>
+                            <span class="widget-stats-info">{{ $subscribed->count() }} subscribed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card widget widget-stats">
+                <div class="card-body">
+                    <div class="widget-stats-container d-flex">
+                        <div class="widget-stats-icon widget-stats-icon-warning">
+                            <i class="material-icons-outlined">person</i>
+                        </div>
+                        <div class="widget-stats-content flex-fill">
+                            <span class="widget-stats-title">Total Clients</span>
+                            <span class="widget-stats-amount">{{ $clients->count() }}</span>
+                            <span class="widget-stats-info">{{ $clients->count() }} active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <livewire:s-m-s.balance />
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="row">
@@ -65,7 +104,7 @@
                                                         )
                                                     </small>
                                                 </td>
-                                            </tr>    
+                                            </tr>
                                         @empty
                                             <tr>
                                                 <td colspan="2">No due payments</td>
@@ -81,49 +120,28 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>Payments Defaulters</h4>
-                            <form wire:submit.prevent="getPaymentDefaultersList">
-                                <div class="row">
-                                    <div class="col-12 col-md-3 mb-2">
-                                        <select wire:model="defaulters_estate" class="form-control">
-                                            <option value="">Estate</option>
-                                            @foreach ($estates as $estate)
-                                                <option value="{{ $estate->id }}">{{ $estate->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-12 col-md-3 mb-2">
-                                        <input wire:model.defer="defaulters_start_date" type="date" class="form-control">
-                                    </div>
-                                    <div class="col-12 col-md-3 mb-2">
-                                        <input wire:model.defer="defaulters_end_date" type="date" class="form-control">
-                                    </div>
-                                    <div class="col-12 col-md-3 mb-2">
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-nowrap">
                                     <thead>
                                         <th>Client</th>
-                                        <th class="text-end">Default balance</th>
-                                        <td>Last Default Date</td>
+                                        <th>Property</th>
+                                        <th class="text-end">Default AAmt</th>
+                                        <td>Default Date</td>
                                     </thead>
                                     <tbody>
                                         @forelse($defaulters as $defaulter)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('clients.show', $defaulter['slug']) }}">{{ $defaulter['name'] }}</a>
+                                                <a href="{{ route('clients.show', $defaulter->client) }}">{{ $defaulter->client->name }}</a>
                                             </td>
+                                            <td>{{ $defaulter->property->unique_number }}</td>
                                             <td class="text-end">
-                                               {{ number_format($defaulter['total_payment_default_owed'] - $defaulter['total_payment_default_paid']) }}
+                                               {{ number_format($defaulter->default_amount, 2) }}
                                             </td>
                                             <td>
-                                                {{ Carbon\Carbon::parse($defaulter['missed_date'])->toFormattedDateString() }}
+                                                {{ $defaulter->missed_date->toFormattedDateString() }}
                                             </td>
                                         </tr>
                                         @empty

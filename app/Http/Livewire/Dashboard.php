@@ -18,6 +18,7 @@ class Dashboard extends Component
     public $properties = [];
     public $dueIn = 0;
     public $estates, $clients;
+    public $propertyCount;
 
     // Payment defaults
     public $defaulters, $defaulters_start_date, $defaulters_end_date, $defaulters_estate = 1;
@@ -31,6 +32,9 @@ class Dashboard extends Component
 
         $this->estates = Estate::all();
         $this->clients = Client::all();
+        $this->properties = Property::all();
+        $this->propertyCount = $this->properties->count();
+        $this->subscribed = $this->properties->whereNotNull('client_id');
 
         // get due payments
         $this->fetchPropertiesDueForPayment();
@@ -38,7 +42,8 @@ class Dashboard extends Component
         // get defaulters
         $this->defaulters_start_date = Carbon::today()->startOfMonth();
         $this->defaulters_end_date = Carbon::today()->endOfMonth();
-        $this->getPaymentDefaultersList();
+
+        $this->defaulters = PaymentDefault::orderByDesc('created_at')->get()->take(5);
 
         $this->propertyTypes = PropertyType::with('properties.transactions')->get()->each(function($propertyType) {
 
@@ -49,7 +54,7 @@ class Dashboard extends Component
         });
 
     }
-    
+
     /**
      * fetchPropertiesDueForPayment
      *
@@ -58,7 +63,7 @@ class Dashboard extends Component
     public function fetchPropertiesDueForPayment() {
         $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
     }
-    
+
     /**
      * get list of payment defaulters
      *
@@ -79,7 +84,7 @@ class Dashboard extends Component
             });
 
             $defaults = $this->defaults->groupBy('client_id');
-            
+
         } else {
             $defaults = $defaultersQuery->groupBy('client_id')->get();
         }
@@ -94,7 +99,7 @@ class Dashboard extends Component
             // dd($this->defaulters->total_payment_default_owed);
         }
         // dd($this->defaulters);
-        
+
     }
 
     public function render()
