@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\EstatePropertyType;
 
 class EstatePropertyTypeController extends Controller
-{    
+{
     /**
      * showClients
      *
@@ -22,12 +22,13 @@ class EstatePropertyTypeController extends Controller
      * @return void
      */
     public function showClients(Estate $estate, PropertyType $propertyType) {
+
         $data['estate'] = $estate;
         $data['propertyType'] = $propertyType;
 
         return view('admin.estate-propert-type.show-clients', $data);
     }
-    
+
     /**
      * sendNotification
      *
@@ -67,7 +68,7 @@ class EstatePropertyTypeController extends Controller
         ->get();
 
 
-        // get the amuont paid and unpaid for this property type in this estate for evrey client that owns this proprety type in the estate
+        // get the amount paid and unpaid for this property type in this estate for every client that owns this property type in the estate
         $clients = $properties->map(function($property) use($propertyType) {
             return $property->client->load('transactions');
         })->each(function($client) use($estatePropertyType, $propertyType) {
@@ -84,7 +85,7 @@ class EstatePropertyTypeController extends Controller
             });
 
         });
-        
+
 
         // send email
         if ($request->has('email')) {
@@ -96,17 +97,17 @@ class EstatePropertyTypeController extends Controller
         foreach ($clients as $client ) {
 
             // send SMS
-            if ($request->has('sms')) {        
+            if ($request->has('sms')) {
                 if ($client->phone) {
 
                     Helpers::sendSMSMessage($client->phone, $request->message);
 
                 }
             }
-            
+
 
             // send whatsapp
-            if ($request->has('whatsapp')) {        
+            if ($request->has('whatsapp')) {
                 if ($client->phone) {
 
                     Helpers::sendWhatsAppMessage($client->phone, $request->message);

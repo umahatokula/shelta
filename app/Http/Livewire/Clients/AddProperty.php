@@ -24,8 +24,8 @@ class AddProperty extends Component
     public $estatePropertyType;
 
     public $allPropertyTypes;
-    public $allProperties; 
-    public $allPaymentPlans;   
+    public $allProperties;
+    public $allPaymentPlans;
 
     public $clientProperties = [];
     public $clientSubscribedProperties = [ // properties already subscribed to by client
@@ -42,15 +42,15 @@ class AddProperty extends Component
         'clientProperties.*.property_type_id' => 'required',
         'clientProperties.*.property_id' => 'required',
         'clientProperties.*.payment_plan_id' => 'required',
-    ];    
-    
+    ];
+
     /**
      * mount
      *
      * @return void
      */
     public function mount(Client $client) {
-        
+
         $this->client           = $client;
         $this->allPaymentPlans  = PaymentPlan::all();
         $this->estates          = Estate::all();
@@ -61,7 +61,7 @@ class AddProperty extends Component
 
             $property_type_id = null;
             $estate_id = null;
-            
+
             if($property->estatePropertyType) {
                 $property_type_id = $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->id : null;
                 $estate_id = $property->estatePropertyType->estate ? $property->estatePropertyType->estate->id : null;
@@ -84,7 +84,7 @@ class AddProperty extends Component
         })->toArray();
 
     }
-    
+
     /**
      * getPropertyTypes
      *
@@ -104,7 +104,7 @@ class AddProperty extends Component
 
         $this->getPaymentPlans($key, $estateId, $this->propertyType_id);
     }
-    
+
     /**
      * getPropertyTypes
      *
@@ -114,14 +114,14 @@ class AddProperty extends Component
     public function onSelectPropertyType($propertyTypeId, $key) {
 
         $this->propertyType_id = $propertyTypeId;
-        
+
         $this->properties[$key] = $this->getUnallocatedAndClientAllocatedProperties($this->clientProperties[$key]['estate_id'], $this->clientProperties[$key]['property_type_id']);
 
         // get payment plans that have been attached to this Estate-ProertyType Relationship
-        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id);        
-        
+        $this->getPaymentPlans($key, $this->estate_id, $this->propertyType_id);
+
     }
-    
+
     /**
      * Get Payment Plans for the selected estate and property type
      *
@@ -140,18 +140,18 @@ class AddProperty extends Component
             'estate_id' => $estate_id,
             'property_type_id' => $propertyType_id,
         ])->first();
-        
+
         $estatePropertyTypePrices = $estatePropertyType ? $estatePropertyType->estatePropertyTypePrices : collect([]);
 
         $estatePropertyTypeIDs = $estatePropertyTypePrices->map(function($estatePropertyTypePrice) {
             return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);
         });
-        
+
         foreach (Arr::flatten($estatePropertyTypeIDs) as $paymentPlan) {
             $this->paymentPlans[$key][] = $paymentPlan->toArray();
         }
     }
-    
+
     /**
      * addProperty
      *
@@ -164,12 +164,12 @@ class AddProperty extends Component
             'property_id' => null,
             'payment_plan_id' => null,
         ];
-        
+
         // add empty property types array
         $this->propertyTypes[] = [];
         $this->paymentPlans[] = [];
     }
-    
+
     /**
      * removeProperty
      *
@@ -179,12 +179,12 @@ class AddProperty extends Component
     public function removeProperty($key) {
         array_splice($this->clientSubscribedProperties, $key, 1);
         array_key_exists($key, $this->clientProperties) ? array_splice($this->clientProperties, $key, 1) : null;
-        
+
         // remove property types from array
         array_splice($this->propertyTypes, $key, 1);
         array_splice($this->properties, $key, 1);
     }
-    
+
     /**
      * Merge properties not allocaated to anyone and properties allocated to client.
      *
@@ -198,12 +198,16 @@ class AddProperty extends Component
 
         $this->estatePropertyType = EstatePropertyType::where(['estate_id' => $estate_id, 'property_type_id' => $property_type_id])->first();
 
+        if (!$this->estatePropertyType) {
+            return ;
+        }
+
         $unallocated = $this->allProperties->where('client_id', null); // get unallocated properties
         $allocatedToClient = $this->allProperties->where('client_id', $this->client->id); // get properties allocated to client
 
         return $unallocated->merge($allocatedToClient)->where('estate_property_type_id', $this->estatePropertyType->id)->toArray();
     }
-     
+
     /**
      * save
      *

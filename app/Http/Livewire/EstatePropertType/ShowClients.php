@@ -53,37 +53,24 @@ class ShowClients extends Component
         ->get();
 
 
-        // get the amuont paid and unpaid for this property type in this estate for evrey client that owns this proprety type in the estate
-        $this->clients = $properties->map(function($property) {
-            return $property->client->load('transactions');
-        })->each(function($client) {
+        $this->clients = $properties->map(function($property) use($propertyType) {
 
-            $client->unpaid = $this->estatePropertyType->price;
+            $client =  $property->client->load('transactions');
+            $client->unpaid = $this->estatePropertyType->price - $property->totalPaid();
+            $client->paid = $property->totalPaid();
 
-            $client->transactions->each(function($transaction) use($client) {
-
-                // ensure tnx is approved and matches proprty type
-                if (($transaction->property->estatePropertyType->propertyType->id == $this->propertyType->id) && $transaction->is_approved) {
-
-                    $client->paid = $client->paid + $transaction->amount;
-                    // $client->unpaid = $client->unpaid - $transaction->amount;
-
-                }
-            });
-
+            return $client;
         });
 
-        // dd($this->propertyType->id, $this->clients);
-
     }
-    
+
     /**
      * sendMail
      *
      * @return void
      */
     public function sendMail() {
-    
+
         // $this->validate();
 
         Mail::to($this->company_email)
@@ -97,7 +84,7 @@ class ShowClients extends Component
         session()->flash('message', 'Email sent successfully.');
         redirect()->back();
     }
-    
+
     public function render()
     {
         return view('livewire.estate-propert-type.show-clients');
