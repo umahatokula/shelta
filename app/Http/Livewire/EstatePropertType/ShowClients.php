@@ -17,7 +17,7 @@ class ShowClients extends Component
     public Estate $estate;
     public PropertyType $propertyType;
     public $estatePropertyType;
-    public $clients;
+    public $data;
     public $subject;
     public $content;
     public $message;
@@ -53,13 +53,16 @@ class ShowClients extends Component
         ->get();
 
 
-        $this->clients = $properties->map(function($property) use($propertyType) {
+        $this->data = $properties->map(function($property) use($propertyType) {
 
             $client =  $property->client->load('transactions');
             $client->unpaid = $this->estatePropertyType->price - $property->totalPaid();
             $client->paid = $property->totalPaid();
 
-            return $client;
+            return [
+                'client' => $client,
+                'property' => $property
+            ];
         });
 
     }

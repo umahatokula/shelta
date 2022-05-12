@@ -23,18 +23,18 @@
                                     </div>
                                 @endif
                             </div>
-                    
+
                             <div class="row">
-                                
+
                                 <div class="col-lg-12">
                                     <div class="box p-15">
                                         <div x-data="{show: false}" class="row">
                                             <div class="col-md-8 mb-5">
                                                 <h4 class="box-title">
-                                                    {{ $propertyType->name }} 
-                                                    
+                                                    {{ $propertyType->name }}
+
                                                     <span class="font-weight-bold font-italic" style="font-size: 1rem">in</span>
-                            
+
                                                     <span class="text-warning">{{ $estate->name }}</span>
                                                 </h4>
                                             </div>
@@ -44,38 +44,50 @@
                                         </div>
                                     </div>
                                 </div>
-                    
+
                                 <div class="col-lg-12">
                                     <div class="box p-15">
-                    
+
                                         <h4>Client List</h4>
-                    
-                                        @if ($clients->isNotEmpty())
-                                            
+
+                                        @if ($data->isNotEmpty())
+
                                         <div class="table-responsive-md">
                                             <table class="table table-centered table-nowrap mb-0">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th class="text-left">Name</th>
+                                                        <th class="text-left">Email</th>
+                                                        <th class="text-left">Property</th>
                                                         <th class="text-end">Paid (&#x20A6;)</th>
                                                         {{-- <th class="text-end">Unpaid (&#x20A6;)</th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($clients as $client)
+                                                    @foreach ($data as $datum)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td class="text-left">
-                                                            @if(!is_null($client))
-                                                                <a href="{{ route('clients.show', $client->slug) }}">{{ $client->name }}</a>                                                                
+                                                            @if(!is_null($datum['client']))
+                                                                <a href="{{ route('clients.show', $datum['client']->slug) }}">{{ $datum['client']->name }}</a>
                                                             @endif
                                                         </td>
-                                                        <td class="text-end">{{ number_format($client->paid) }}</td>
+                                                        <td class="text-left">
+                                                            @isset($datum['client'])
+                                                                {{ $datum['client']->email }}
+                                                            @endisset
+                                                        </td>
+                                                        <td class="text-left">
+                                                            @isset($datum['property'])
+                                                                {{ $datum['property']->unique_number }}
+                                                            @endisset
+                                                        </td>
+                                                        <td class="text-end">{{ number_format($datum['client']->paid) }}</td>
                                                         {{-- <td class="text-end">{{ number_format($client->unpaid) }}</td> --}}
                                                     </tr>
                                                     @endforeach
-                                                    
+
                                                 </tbody>
                                           </table>
                                         </div>
@@ -84,11 +96,11 @@
                                             No data
                                         </p>
                                         @endif
-                    
-                                        
+
+
                                     </div>
-                                </div>            
-                    
+                                </div>
+
                             </div>
                         </div>
                     </div>
