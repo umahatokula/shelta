@@ -7,7 +7,6 @@ use App\Models\Property;
 use App\Models\PaymentPlan;
 use App\Models\PropertyType;
 use App\Models\PropertyPrice;
-use App\Models\PropertyTypePrice;
 use App\Models\EstatePropertyTypePrice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +36,7 @@ class EstatePropertyType extends Model
     public function estate() {
         return $this->belongsTo(Estate::class)->withDefault();
     }
-    
+
     /**
      * properties
      *
@@ -46,7 +45,7 @@ class EstatePropertyType extends Model
     public function properties() {
         return $this->hasMany(Property::class);
     }
-    
+
     /**
      * estatePropertyTypePrices
      *
@@ -55,8 +54,8 @@ class EstatePropertyType extends Model
     public function estatePropertyTypePrices() {
       return $this->hasMany(EstatePropertyTypePrice::class);
     }
-    
-    
+
+
     /**
      * Get the price of a payment plan
      *
@@ -72,9 +71,9 @@ class EstatePropertyType extends Model
       if (!$estatePropertyTypePrice) {
         return 0;
       }
-      
+
       return $estatePropertyTypePrice->propertyPrice ? $estatePropertyTypePrice->propertyPrice->price : 0;
-      
+
     }
 
     public static function boot() {
@@ -87,5 +86,35 @@ class EstatePropertyType extends Model
              });
         });
 
+    }
+
+    public function getEstatePropertyTypeClient() {
+
+        // get all properties of this property type in this estate
+        $properties = Property::whereIn('estate_property_type_id', function ($query) {
+            $query->select('id')
+                ->from('estate_property_type')
+                ->where('estate_property_type.estate_id', '=', $this->estate_id)
+                ->where('estate_property_type.property_type_id', '=', $this->property_type_id)
+                ->get()
+                ->toArray();
+        })
+            ->whereNotNull('client_id')
+            ->get();
+
+
+        return $properties->map(function($property) {
+
+            $client =  $property->client->load('transactions');
+            $client->unpaid = $property->getPropertyPrice() - $property->totalPaid();
+            $client->paid = $property->totalPaid();
+
+            return [
+                'client' => $client,
+                'property' => $property,
+                'estate' => $this->estate,
+                'propertyType' => $this->propertyType,
+            ];
+        });
     }
 }

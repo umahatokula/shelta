@@ -103,6 +103,7 @@ Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(functio
     Route::resource('property-types', PropertyTypesController::class);
 
     // estate property-type
+    Route::get('estate-property-type/{estate}/{propertyType}/csv', [EstatePropertyTypeController::class, 'csv'])->name('estate-property-type.csv');
     Route::get('estate-property-type/{estate}/{propertyType}/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotification'])->name('estate-property-type.clients.send-notification');
     Route::post('estate-property-type/clients/send-notification', [EstatePropertyTypeController::class, 'sendNotificationStore'])->name('estate-property-type.clients.send-notification.store');
     Route::get('estate-property-type/{estate}/{propertyType}/clients', [EstatePropertyTypeController::class, 'showClients'])->name('estate-property-type.clients');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EstatePropertyTypeClients;
+use Maatwebsite\Excel\Facades\Excel;
 use Mail;
 use App\Models\Estate;
 use App\Models\Setting;
@@ -119,5 +121,17 @@ class EstatePropertyTypeController extends Controller
 
         session()->flash('message', 'Email sent successfully.');
         return redirect()->back();
+    }
+
+    public function csv(Estate $estate, PropertyType $propertyType) {
+
+        $estatePropertyType = EstatePropertyType::where([
+            'estate_id' => $estate->id,
+            'property_type_id' => $propertyType->id,
+        ])->first();
+
+        $clients = $estatePropertyType->getEstatePropertyTypeClient();
+
+        return Excel::download(new EstatePropertyTypeClients($clients->toArray()), 'CLIENTS-'.$estate->name.'-'.$propertyType->name.'.xlsx');
     }
 }

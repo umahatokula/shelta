@@ -16,24 +16,24 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
-                            
+
                             {{ $propertyType->name }}
 
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="flexslider2">
                                         <ul class="slides">
-    
+
                                             @foreach($propertyType->getMedia('propertyTypephotos') as $photo)
                                             <li data-thumb="{{ $photo->getUrl('thumb') }}">
                                                 <img src="{{ $photo->getUrl() }}" alt="slide" />
                                             </li>
                                             @endforeach
-    
+
                                         </ul>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-lg-8 col-12">
                                     <div class="table-responsive">
                                        <table class="table table-hover">
@@ -46,12 +46,12 @@
                                                         {{-- <th class="text-right">Total til date (&#x20A6;)</th> --}}
                                                     </tr>
                                                 </thead>
-    
+
                                                 @forelse ($estates as $estate)
                                                     <tr>
                                                         <td>
                                                             {{ $estate->name }}
-                                                            <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a></small>
+                                                            <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a>&nbsp;[<a href="{{ route('estate-property-type.csv', [$estate, $propertyType]) }}">CSV</a>]</small>
                                                         </td>
                                                         <td class="text-center">{{ $estate->number_of_units }}</td>
                                                         <td class="text-right">
@@ -68,20 +68,20 @@
                                                         <td colspan="3" class="text-center">Property type not assigned to estate</td>
                                                     </tr>
                                                 @endforelse
-    
+
                                                 {{-- <tfoot>
                                                     <tr>
                                                         <td><b>Total:</b></td>
                                                         <td colspan="4" class="text-right"><b>&#x20A6; {{ number_format($propertyTypeTotal) }}</b></td>
                                                     </tr>
                                                 </tfoot> --}}
-                                                
+
                                             </tbody>
-                                        </table>  
+                                        </table>
                                     </div>
-                                    
+
                                 </div>
-    
+
                             </div>
                         </div>
                     </div>
