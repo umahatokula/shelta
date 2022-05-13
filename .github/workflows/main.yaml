@@ -32,7 +32,8 @@ on:
     branches:
       - staging
 
-# Authenticate to the the server via ssh
+
+# Authenticate to the the server via sshh
 # and run our deployment script
 jobs:
   deploy:
@@ -47,3 +48,4 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: "cd /var/www/html && ./.scripts/deploy.sh"
+          server-dir: /staging.shelta.tech/
