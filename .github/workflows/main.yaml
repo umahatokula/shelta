@@ -1,20 +1,49 @@
+#on:
+#  push:
+#    branches:
+#      - staging
+#name: 🚀 Deploying to staging
+#jobs:
+#  web-deploy:
+#    name: 🎉 Deploy
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: 🚚 Get latest code
+#      uses: actions/checkout@v2.1.0
+#
+#    - name: 📂 Sync files
+#      uses: SamKirkland/FTP-Deploy-Action@4.1.0
+#      with:
+#        server: ftp.shelta.tech
+#        username: ${{ secrets.FTP_USERNAME }}
+#        password: ${{ secrets.FTP_PASSWORD }}
+#        server-dir: /staging.shelta.tech/
+
+
+name: Deploy
+
+# Trigger the workflow on push and
+# pull request events on the production branch
 on:
   push:
     branches:
       - staging
-name: 🚀 Deploying to staging
+  pull_request:
+    branches:
+      - staging
+
+# Authenticate to the the server via ssh
+# and run our deployment script
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v2
-
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.1.0
-      with:
-        server: ftp.shelta.tech
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /staging.shelta.tech/
+      - uses: actions/checkout@v2
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: "cd /var/www/html && ./.scripts/deploy.sh"
