@@ -82,7 +82,7 @@ class Property extends Model
      * @return void
      */
     public function lastInstalmentPayment() {
-        return Transaction::where(['client_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->latest('instalment_date')->first();
+        return Transaction::where(['client_id' => $this->client->id, 'property_id' => $this->id])->isApproved()->latest('id')->first();
     }
 
     /**

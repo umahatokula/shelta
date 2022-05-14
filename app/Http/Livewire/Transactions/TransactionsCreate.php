@@ -98,8 +98,19 @@ class TransactionsCreate extends Modal
             'is_approved'            => 0,
         ]);
 
-        // set new date for next payment
+        // set date of first transaction
         $property = $transaction->property;
+        if (!$property->date_of_first_payment) {
+
+            // approve trxn if this is first payment because it means payment was already confirmed that's why this client is even on the system in the first place
+            $transaction->status = 1;
+            $transaction->is_approved = 1;
+            $transaction->save();
+
+            $property->date_of_first_payment = $transaction->instalment_date;
+        }
+
+        // set new date for next payment
         $property->next_due_date = $property->nextPaymentDueDate();
         $property->save();
 
@@ -108,12 +119,6 @@ class TransactionsCreate extends Modal
             ->addMedia($this->proof->getRealPath())
             ->usingName($this->proof->getClientOriginalName())
             ->toMediaCollection('proofOfPayment', 'public');
-        }
-
-        // set date of first transaction
-        if (!$property->date_of_first_payment) {
-            $property->date_of_first_payment = $transaction->instalment_date;
-            $property->save();
         }
 
         // log this transaction

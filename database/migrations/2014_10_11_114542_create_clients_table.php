@@ -38,16 +38,6 @@ class CreateClientsTable extends Migration
             $table->string('employer_phone')->nullable();
             $table->string('payment_plan_id')->nullable();
             $table->foreignId('agent_id')->nullable()->comment('This should be the ID of the staff acting as agent');
-
-            $table->string('country_code')->nullable();
-            $table->string('place_of_birth')->nullable();
-            $table->foreignId('lga_id')->nullable();
-            $table->foreignId('marital_status_id')->nullable();
-            $table->foreignId('nok_gender_id')->nullable();
-            $table->string('referrer')->nullable();
-            $table->string('nok_phone')->nullable();
-            $table->string('nok_dob')->nullable();
-            $table->string('nok_email')->nullable();
             $table->timestamps();
         });
     }

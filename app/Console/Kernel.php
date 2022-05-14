@@ -10,6 +10,8 @@ use App\Cron\SendMonthlyPaymentReminders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+define('DEFAULT_PENALTY_PERCENTAGE', 0);
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -42,7 +44,7 @@ class Kernel extends ConsoleKernel
             $inserts = [];
             foreach ($pastDueProperties as $property) {
 
-                $defaultAmount = $property->getMonthlyPaymentAmount() * 0;
+                $defaultAmount = $property->getMonthlyPaymentAmount() * DEFAULT_PENALTY_PERCENTAGE;
 
                 // if ($defaultAmount > 0) {
                     $inserts[] = [

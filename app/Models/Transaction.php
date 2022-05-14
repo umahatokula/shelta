@@ -54,7 +54,7 @@ class Transaction extends Model implements HasMedia
     {
         $query->where('status', 1);
     }
-    
+
     /**
      * property
      *
@@ -63,7 +63,7 @@ class Transaction extends Model implements HasMedia
     public function property() {
         return $this->belongsTo(Property::class)->withDefault();
     }
-    
+
     /**
      * client
      *
@@ -72,7 +72,7 @@ class Transaction extends Model implements HasMedia
     public function client() {
         return $this->belongsTo(Client::class)->withDefault();
     }
-        
+
     /**
      * onlinePayment
      *
@@ -81,7 +81,7 @@ class Transaction extends Model implements HasMedia
     public function onlinePayment() {
         return $this->hasOne(OnlinePayment::class)->withDefault();
     }
-    
+
     /**
      * performed_by
      *
@@ -90,7 +90,7 @@ class Transaction extends Model implements HasMedia
     public function recordedBy() {
         return $this->belongsTo(User::class, 'recorded_by', 'id')->withDefault();
     }
-    
+
     /**
      * performed_by
      *

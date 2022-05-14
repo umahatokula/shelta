@@ -54,8 +54,8 @@ return [
     |
     */
 
-    // 'asset_url' => null,
-    'asset_url' => 'http://localhost/shelta/public',
+    'asset_url' => null,
+//    'asset_url' => 'http://localhost/shelta/public',
 
     /*
     |--------------------------------------------------------------------------

@@ -158,6 +158,7 @@ final class Versions
   'vonage/client-core' => '2.9.3@927d4594b1e3d034efcee87eed79c33f443353ef',
   'vonage/nexmo-bridge' => '0.1.0@62653b1165f4401580ca8d2b859f59c968de3711',
   'webmozart/assert' => '1.10.0@6964c76c7804814a842473e0c8fd15bab0f18e25',
+  'zeevx/lara-termii' => '0.1.5@2f3657283728cf5ec79db3f99227370f133c8e02',
   'barryvdh/laravel-debugbar' => 'v3.6.4@3c2d678269ba60e178bcd93e36f6a91c36b727f1',
   'doctrine/instantiator' => '1.4.0@d56bf6102915de5702778fe20f2de3b2fe570b5b',
   'facade/flare-client-php' => '1.9.1@b2adf1512755637d0cef4f7d1b54301325ac78ed',
@@ -203,7 +204,7 @@ final class Versions
   'sebastian/version' => '3.0.2@c6c1022351a901512170118436c764e473f6de8c',
   'symfony/debug' => 'v4.4.31@43ede438d4cb52cd589ae5dc070e9323866ba8e0',
   'theseer/tokenizer' => '1.2.1@34a41e998c2183e22995f158c581e7b5e755ab9e',
-  'laravel/laravel' => 'dev-main@05767da0d9e710d3c3309da326a7fde598609cd8',
+  'laravel/laravel' => 'dev-main@665f3c35babf5dd2738716a17d957324b35397db',
 );
 
     private function __construct()

@@ -10,7 +10,7 @@ class Services {
 
     public static function getPaymentDefaulters() {
 
-        return Property::where(function($query) {
+        return  Property::where(function($query) {
             return $query->whereDay('next_due_date', '=', Carbon::yesterday());
         })
         ->whereNotIn('properties.id', function ($query) {
