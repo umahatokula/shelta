@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\PaymentDefaultSetting;
 use Carbon\Carbon;
 use App\Models\Property;
 use App\Services\Services;
@@ -41,10 +42,13 @@ class Kernel extends ConsoleKernel
 
             $pastDueProperties = Services::getPaymentDefaulters();
 
+            // get default %
+            $default_percentage = !PaymentDefaultSetting::first() ? 0 : PaymentDefaultSetting::first()->default_percentage;
+
             $inserts = [];
             foreach ($pastDueProperties as $property) {
 
-                $defaultAmount = $property->getMonthlyPaymentAmount() * DEFAULT_PENALTY_PERCENTAGE;
+                $defaultAmount = $property->getMonthlyPaymentAmount() * $default_percentage;
 
                 // if ($defaultAmount > 0) {
                     $inserts[] = [

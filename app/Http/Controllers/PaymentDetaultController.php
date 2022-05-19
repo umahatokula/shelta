@@ -43,7 +43,7 @@ class PaymentDetaultController extends Controller
         }
 
 
-        $data['defaults'] = $defaultPaymentQuery ->paginate(100);
+        $data['defaults'] = $defaultPaymentQuery->paginate(100);
 
         $data['date_from'] = $date_from;
         $data['date_to'] = $date_to;

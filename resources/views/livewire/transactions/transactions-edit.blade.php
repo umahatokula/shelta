@@ -15,14 +15,19 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            <div class="alert alert-info">
+                                Please not that the system runs a 28 day payment cycle. Any date on or after 28th defaults to 28th. Eg, if a client's first instalment is Jan 31, the system automatically records it as Jan 28.
+                            </div>
+
                             <form wire:submit.prevent="save">
                                 <div class="box-header with-border">
                                     <h4 class="box-title">&nbsp</h4>
                                 </div>
                                 <div class="box-body">
-        
+
                                     <input type="hidden" wire:model="client_id" />
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="sname">Surname Name <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -30,7 +35,7 @@
                                             @error('sname') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="onames">Other Names <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -38,7 +43,7 @@
                                             @error('onames') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="email">Email</label>
                                         <div class="col-md-10">
@@ -46,7 +51,7 @@
                                             @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="address">Property <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -54,21 +59,21 @@
                                                 <option value="">Please select one</option>
                                                 @foreach ($client->properties as $property)
                                                     <option value="{{ $property->id }}">
-                                                        
-                                                        {{ $property->estatePropertyType ? $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name: null : null }} 
-        
+
+                                                        {{ $property->estatePropertyType ? $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name: null : null }}
+
                                                         [{{ $property->estatePropertyType ? $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name: null : null }}]
-        
+
                                                         [{{ $property->unique_number }}]
-                                                    
+
                                                     </option>
                                                 @endforeach
-                                                
+
                                             </select>
                                             @error('property_id') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="amount">Amount <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -76,15 +81,15 @@
                                             @error('amount') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
-                                    <div class="form-group row mb-5">
-                                        <label class="col-form-label col-md-2" id="date">Transaction Date <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <input type="date" wire:model="date" class="form-control" id="date">
-                                            @error('date') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-                                    
+
+{{--                                    <div class="form-group row mb-5">--}}
+{{--                                        <label class="col-form-label col-md-2" id="date">Transaction Date <span class="text-danger">*</span></label>--}}
+{{--                                        <div class="col-md-10">--}}
+{{--                                            <input type="date" wire:model="date" class="form-control" id="date">--}}
+{{--                                            @error('date') <span class="text-danger">{{ $message }}</span> @enderror--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="instalment_date">Instalment Date </label>
                                         <div class="col-md-10">
@@ -92,7 +97,7 @@
                                             @error('instalment_date') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="proof_reference_number">Proof of payment Ref.<span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -100,7 +105,7 @@
                                             @error('proof_reference_number') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-2" id="proof">Proof of payment <span class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -108,13 +113,13 @@
                                             @error('proof') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-        
+
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
                                     <input type="submit" class="btn-lg btn btn-warning me-1" value="Cancel">
                                     <input type="submit" class="btn-lg btn btn-primary" value="Save Update">
-                                </div> 
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -122,5 +127,5 @@
             </div>
         </div>
     </div>
-    
+
 </div>

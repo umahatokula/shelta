@@ -19,7 +19,7 @@
                             </div>
                         @endif
 
-                        <form x-data wire:submit.prevent="save">
+                        <form x-data wire:submit.prevent="signUpPreview">
                             <div class="box-header with-border">
                                 <h4 class="box-title">&nbsp</h4>
                             </div>
@@ -27,7 +27,7 @@
                             <input type="hidden" name="amount" id="amount" value="10000">
 
                             {{-- PAGE ONE --}}
-                            <div x-show="$wire.pageOne" x-transition.duration.100ms class="box-body">
+{{--                            <div x-show="$wire.pageOne" x-transition.duration.100ms class="box-body">--}}
 
                                 <fieldset>
                                     <legend>Bio data</legend>
@@ -156,19 +156,19 @@
 
                                     </div>
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <div class="col-md-3">
-                                            <div class="d-grid grid-2">
-                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Next">
-                                            </div>
-                                        </div>
-                                    </div>
+{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
+{{--                                        <div class="col-md-3">--}}
+{{--                                            <div class="d-grid grid-2">--}}
+{{--                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Next">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 </fieldset>
 
-                            </div>
+{{--                            </div>--}}
 
                             {{-- PAGE TWO --}}
-                            <div x-show="$wire.pageTwo" x-transition.duration.100ms class="box-body">
+{{--                            <div x-show="$wire.pageTwo" x-transition.duration.100ms class="box-body">--}}
 
                                 <fieldset>
                                     <legend>Next-of-kin</legend>
@@ -235,24 +235,24 @@
                                     </div>
 
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <div class="col-md-3">
-                                            <div class="d-grid grid-2">
-                                                <input x-on:click="$wire.setPageOne()" type="button" class="readon submit mb-2" value="Previous">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="d-grid grid-2">
-                                                <input x-on:click="$wire.setPageThree()" type="button" class="readon submit mb-2" value="Next">
-                                            </div>
-                                        </div>
-                                    </div>
+{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
+{{--                                        <div class="col-md-3">--}}
+{{--                                            <div class="d-grid grid-2">--}}
+{{--                                                <input x-on:click="$wire.setPageOne()" type="button" class="readon submit mb-2" value="Previous">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-3">--}}
+{{--                                            <div class="d-grid grid-2">--}}
+{{--                                                <input x-on:click="$wire.setPageThree()" type="button" class="readon submit mb-2" value="Next">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 </fieldset>
 
-                            </div>
+{{--                            </div>--}}
 
                             {{-- PAGE THREE --}}
-                            <div x-show="$wire.pageThree" x-transition.duration.100ms class="box-body">
+{{--                            <div x-show="$wire.pageThree" x-transition.duration.100ms class="box-body">--}}
 
                                 <fieldset>
                                     <legend>Property Details</legend>
@@ -319,26 +319,26 @@
                                     <div class="form-group row mb-3 mb-md-5">
                                         <label class="col-form-label col-md-2" id="signature">Signature (Please sign on a plain sheet, snap it and upload)</label>
                                         <div class="col-md-10">
-                                            <input wire:model.lazy="signature" class="from-control" type="file">
+                                            <input wire:model="signature" class="from-control" type="file">
                                             @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
                                     <div class="form-group row mb-3 mb-md-5">
+{{--                                        <div class="col-md-3">--}}
+{{--                                            <div class="d-grid grid-2">--}}
+{{--                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Previous">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                         <div class="col-md-3">
                                             <div class="d-grid grid-2">
-                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Previous">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="d-grid grid-2">
-                                                <input type="button" class="readon submit mb-2" value="Preview" id="signUpPreviewBtn">
+                                                <input type="submit" class="readon submit mb-2" value="Preview" id="">
                                             </div>
                                         </div>
                                     </div>
                                 </fieldset>
 
-                            </div>
+{{--                            </div>--}}
 
                         </form>
 
@@ -352,37 +352,35 @@
 
 @push('scripts')
 
-    <script src="{{ asset('assets/vendor_components/datatable/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/data-table.js') }}"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 
     {{-- Paystack --}}
     <script src="https://js.paystack.co/v1/inline.js"></script>
 
-    <script>
+{{--    <script>--}}
 
-        const signUpPreviewBtn = document.getElementById('signUpPreviewBtn');
+{{--        const signUpPreviewBtn = document.getElementById('signUpPreviewBtn');--}}
 
-        signUpPreviewBtn.addEventListener("click", validateInput, false);
+{{--        signUpPreviewBtn.addEventListener("click", validateInput, false);--}}
 
-        // perform validation
-        function validateInput(e) {
+{{--        // perform validation--}}
+{{--        function validateInput(e) {--}}
 
-            e.preventDefault();
+{{--            e.preventDefault();--}}
 
-            var email = document.getElementById('email').value;
-            var amount = document.getElementById('amount').value;
+{{--            let email = document.getElementById('email').value;--}}
+{{--            let amount = document.getElementById('amount').value;--}}
 
-            const data = {
-                email,
-                amount,
-            }
+{{--            const data = {--}}
+{{--                email,--}}
+{{--                amount,--}}
+{{--            }--}}
 
-            Livewire.emit('validateInput', data)
+{{--            Livewire.emit('validateInput', data)--}}
 
-        }
+{{--        }--}}
 
-    </script>
+{{--    </script>--}}
 
 	<script src="js/pages/advanced-form-element.js"></script>
 

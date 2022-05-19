@@ -381,10 +381,10 @@
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Last Payment:</td>
+                                                                        <td>Last Instalment:</td>
                                                                         <td>
                                                                             @if ($property->lastPayment())
-                                                                            {{ $property->lastPayment()->date ? $property->lastPayment()->date->toFormattedDateString() : null }}
+                                                                            {{ $property->lastPayment()->date ? $property->lastPayment()->instalment_date->toFormattedDateString() : null }}
                                                                             @endif
                                                                         </td>
                                                                     </tr>

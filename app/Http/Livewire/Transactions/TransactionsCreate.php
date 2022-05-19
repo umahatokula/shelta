@@ -24,7 +24,7 @@ class TransactionsCreate extends Modal
         'client_id'   => 'required',
         'property_id' => 'required',
         'amount'      => 'required',
-        'date'      => 'required',
+//        'date'      => 'required',
         // 'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
         // 'proof_reference_number' => 'required|unique:transactions'
     ];
@@ -91,8 +91,8 @@ class TransactionsCreate extends Modal
             'type'                   => 'recorded',
             'proof_reference_number' => $this->proof_reference_number,
             'transaction_number'     => substr(hash('sha256', mt_rand() . microtime()), 0, 20),
-            'date'                   => $this->date,
-            'instalment_date'        => $this->instalment_date,
+            'date'                   => Carbon::now(),
+            'instalment_date'        => $this->getFormattedInstalemtDate($this->instalment_date),
             'recorded_by'            => auth()->id(),
             'status'                 => 3,
             'is_approved'            => 0,
@@ -105,6 +105,7 @@ class TransactionsCreate extends Modal
             // approve trxn if this is first payment because it means payment was already confirmed that's why this client is even on the system in the first place
             $transaction->status = 1;
             $transaction->is_approved = 1;
+            $transaction->is_first_instalment = 1;
             $transaction->save();
 
             $property->date_of_first_payment = $transaction->instalment_date;
@@ -132,6 +133,26 @@ class TransactionsCreate extends Modal
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment recorded.']);
 
         redirect()->route('clients.show', $this->client->slug);
+    }
+
+    /**
+     * @param $date
+     * @return Carbon
+     */
+    public function getFormattedInstalemtDate($date) {
+
+        $parsedDate = Carbon::parse($date);
+
+        $parsedDateDay = $parsedDate->format('d');
+        $parsedDateMonth = $parsedDate->format('m');
+        $parsedDateYear = $parsedDate->format('Y');
+
+        $day = 28;
+        if ($parsedDateDay < $day) {
+            $day = $parsedDateDay;
+        }
+
+        return Carbon::parse($parsedDateMonth.'/'.$day.'/'.$parsedDateYear);
     }
 
     public function render()

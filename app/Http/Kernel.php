@@ -43,6 +43,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+//            \App\Http\Middleware\CheckIp::class,
         ],
     ];
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         '2fa' => \App\Http\Middleware\TwoFactorAuth::class,
         'password_changed' => \App\Http\Middleware\EnsurePasswordChanged::class,
+        'check_ip' => \App\Http\Middleware\CheckIp::class,
     ];
 }

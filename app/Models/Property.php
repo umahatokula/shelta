@@ -287,11 +287,15 @@ class Property extends Model
     /**
      * Get Monthly Payment Amount
      *
-     * @return void
+     * @return float
      */
     public function getMonthlyPaymentAmount() : float {
 
         $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
+        
+        if (!$paymentPlanAndPrice) {
+            return 0.00;
+        }
 
         $paymentPlanNumberOfMonths = $paymentPlanAndPrice->paymentPlan->number_of_months;
         $price = $paymentPlanAndPrice->propertyPrice->price;

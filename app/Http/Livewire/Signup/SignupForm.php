@@ -75,7 +75,7 @@ class SignupForm extends Component
         'place_of_birth'    => 'required',
         'state_id'          => 'required',
         'lga_id'            => 'required',
-        // 'profile_picture'   => 'required|image|max:1024',
+        'profile_picture'   => 'required|image|max:1024',
 
         'nok_name' => 'required',
         'nok_dob' => 'required',
@@ -88,7 +88,7 @@ class SignupForm extends Component
         'estate_id' => 'required',
         'propertyType_id' => 'required',
         'payment_plan_id' => 'required',
-        // 'signature' => 'required|image|max:1024',
+        'signature' => 'required|image|max:1024',
     ];
 
     protected $listeners = [
@@ -259,12 +259,27 @@ class SignupForm extends Component
 
         }
 
-        session()->flash('message', 'Property Type successfully added.');
+//        session()->flash('message', 'Client saved.');
 
-        redirect()->route('property-types.index');
+//        redirect()->route('property-types.index');
     }
 
+    /**
+     * @return void
+     */
     public function signUpPreview() {
+
+        $this->validate();
+
+        $properties = $this->getProperty();
+
+        if ($properties->isEmpty()) {
+
+            $this->addError('email', 'No available property for the selected estate and property type');
+            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'No available property for the selected estate and property type']);
+            return;
+
+        }
 
         // create client profile
         $this->createClientProfile();

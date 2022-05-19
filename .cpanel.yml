@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/sheltate/public_html
+    - export DEPLOYPATH=/home/sheltate/staging.shelta.tech
     - /bin/cp -R * $DEPLOYPATH
