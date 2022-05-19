@@ -17,5 +17,5 @@ jobs:
         server: ftp.shelta.tech
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /stagings.shelta.tech/
+        server-dir: /staging.shelta.tech/
 
