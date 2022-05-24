@@ -43,14 +43,13 @@ class Helpers {
         // ]);
 
         $termii = new LaraTermii(env('TERMII_API_KEY'));
-        $to = $to;
         $from = 'Richboss';
         $sms = $message;
 
         $response = $termii->sendMessage($to, $from, $sms, $channel = "generic", $media = false, $media_url = null, $media_caption = null);
         $response = json_decode($response);
 
-        if ($response->code == 'ok' && $response->message == 'Successfully Sent') {
+        if ($response->message == 'Successfully Sent') {
           return 1;
         };
 

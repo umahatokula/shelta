@@ -29,7 +29,6 @@ class CreateTransactionsTable extends Migration
             $table->integer('status')->nullable()->default(3)->comment('1=Approved / 2=Unapproved / 3=Unprocessed');
             $table->boolean('is_approved')->nullable()->default(0);
             $table->foreignId('processed_by')->nullable()->comment('User who made or processed/recorded this transaction');
-            $table->boolean('is_first_instalment')->nullable()->default(0);
             $table->timestamps();
         });
     }

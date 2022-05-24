@@ -35,12 +35,12 @@ class RolesTableSeeder extends Seeder
         $staff->syncPermissions([$manage_clients, $manage_estates, $manage_property_types, $record_payment, $online_payment]);
         $client->syncPermissions([$online_payment]);
 
-        
+
         // seed staff and user
         $staff = Staff::create([
             'name' => 'Umaha Tokula',
             'phone' => '08033312448',
-            'email' => 'umaha@phileotech.com.ng',
+            'email' => 'admin@shelta.tech',
             'gender_id' => 1,
         ]);
 

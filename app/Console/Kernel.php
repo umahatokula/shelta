@@ -32,7 +32,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('20:00');
+
+        $schedule->command('backup:run --only-db --only-to-disk=dropbox')->daily()->at('01:00');
 
         // send payment due reminders
         $schedule->call(new SendMonthlyPaymentReminders)->dailyAt('10:00');

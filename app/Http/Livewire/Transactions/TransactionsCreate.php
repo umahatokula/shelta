@@ -57,11 +57,17 @@ class TransactionsCreate extends Modal
      */
     public function onSelectProperty(Property $property) {
 
+        if(!$property) {
+            return ;
+        }
+
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
         })->first()->propertyPrice->price;
 
         $this->propertybalance = $propertyPrice - $property->totalPaid();
+
+        $this->instalment_date = $property->nextPaymentDueDate()->format('Y-m-d');
     }
 
     /**

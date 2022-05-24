@@ -17,7 +17,7 @@
                         <div class="example-content">
 
                             <div class="alert alert-info">
-                                Please not that the system runs a 28 day payment cycle. Any date on or after 28th defaults to 28th. Eg, if a client's first instalment is Jan 31, the system automatically records it as Jan 28.
+                                Please note that the system runs a 28 day payment cycle. Any date on or after 28th defaults to 28th. Eg, if a client's first instalment is Jan 31, the system automatically records it as Jan 28.
                             </div>
 
                             <form wire:submit.prevent="save">

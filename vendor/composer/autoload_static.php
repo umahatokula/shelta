@@ -133,6 +133,8 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
             'Spatie\\LaravelPackageTools\\' => 27,
             'Spatie\\Image\\' => 13,
             'Spatie\\ImageOptimizer\\' => 22,
+            'Spatie\\FlysystemDropbox\\' => 24,
+            'Spatie\\Dropbox\\' => 15,
             'Spatie\\DbDumper\\' => 16,
             'Spatie\\Backup\\' => 14,
             'Spatie\\Activitylog\\' => 19,
@@ -223,6 +225,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
             'GrahamCampbell\\ResultType\\' => 26,
+            'GrahamCampbell\\GuzzleFactory\\' => 29,
         ),
         'F' => 
         array (
@@ -470,6 +473,14 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Spatie\\ImageOptimizer\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/image-optimizer/src',
+        ),
+        'Spatie\\FlysystemDropbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/flysystem-dropbox/src',
+        ),
+        'Spatie\\Dropbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/dropbox-api/src',
         ),
         'Spatie\\DbDumper\\' => 
         array (
@@ -725,6 +736,10 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
         ),
+        'GrahamCampbell\\GuzzleFactory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/graham-campbell/guzzle-factory/src',
+        ),
         'Fruitcake\\Cors\\' => 
         array (
             0 => __DIR__ . '/..' . '/fruitcake/laravel-cors/src',
@@ -909,6 +924,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Http\\Controllers\\ParcelationController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParcelationController.php',
         'App\\Http\\Controllers\\PasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/PasswordController.php',
         'App\\Http\\Controllers\\PaymentDefaultController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentDefaultController.php',
+        'App\\Http\\Controllers\\PaymentDefaultSettingController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentDefaultSettingController.php',
         'App\\Http\\Controllers\\PaymentDetaultController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentDetaultController.php',
         'App\\Http\\Controllers\\PaymentPlansController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentPlansController.php',
         'App\\Http\\Controllers\\PropertiesController' => __DIR__ . '/../..' . '/app/Http/Controllers/PropertiesController.php',
@@ -981,6 +997,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Http\\Livewire\\Users\\EditUser' => __DIR__ . '/../..' . '/app/Http/Livewire/Users/EditUser.php',
         'App\\Http\\Livewire\\Users\\ListUsers' => __DIR__ . '/../..' . '/app/Http/Livewire/Users/ListUsers.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
+        'App\\Http\\Middleware\\CheckIp' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckIp.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\EnsurePasswordChanged' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsurePasswordChanged.php',
         'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => __DIR__ . '/../..' . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
@@ -993,6 +1010,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\Estate\\StoreEstateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Estate/StoreEstateRequest.php',
         'App\\Http\\Requests\\Estate\\UpdateEstateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Estate/UpdateEstateRequest.php',
+        'App\\Http\\Requests\\SignUp\\StoreSignUpRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SignUp/StoreSignUpRequest.php',
         'App\\Http\\Requests\\StoreTransactionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreTransactionRequest.php',
         'App\\Http\\Requests\\UpdateClientProfileRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateClientProfileRequest.php',
         'App\\Http\\Requests\\UpdateClientRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateClientRequest.php',
@@ -1315,6 +1333,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Database\\Seeders\\GenderTableSeeder' => __DIR__ . '/../..' . '/database/seeders/GenderTableSeeder.php',
         'Database\\Seeders\\LGAsTableSeeder' => __DIR__ . '/../..' . '/database/seeders/LGAsTableSeeder.php',
         'Database\\Seeders\\MaritalStatusSeeder' => __DIR__ . '/../..' . '/database/seeders/MaritalStatusSeeder.php',
+        'Database\\Seeders\\PaymentDefaultSettingSeeder' => __DIR__ . '/../..' . '/database/seeders/PaymentDefaultSettingSeeder.php',
         'Database\\Seeders\\PaymentPlansTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PaymentPlansTableSeeder.php',
         'Database\\Seeders\\PropertiesTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PropertiesTableSeeder.php',
         'Database\\Seeders\\PropertyGroupsTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PropertyGroupsTableSeeder.php',
@@ -2289,6 +2308,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'FontLib\\WOFF\\TableDirectoryEntry' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/WOFF/TableDirectoryEntry.php',
         'Fruitcake\\Cors\\CorsServiceProvider' => __DIR__ . '/..' . '/fruitcake/laravel-cors/src/CorsServiceProvider.php',
         'Fruitcake\\Cors\\HandleCors' => __DIR__ . '/..' . '/fruitcake/laravel-cors/src/HandleCors.php',
+        'GrahamCampbell\\GuzzleFactory\\GuzzleFactory' => __DIR__ . '/..' . '/graham-campbell/guzzle-factory/src/GuzzleFactory.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
         'GrahamCampbell\\ResultType\\Result' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Result.php',
         'GrahamCampbell\\ResultType\\Success' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Success.php',
@@ -7032,6 +7052,13 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'Spatie\\DbDumper\\Exceptions\\CannotSetParameter' => __DIR__ . '/..' . '/spatie/db-dumper/src/Exceptions/CannotSetParameter.php',
         'Spatie\\DbDumper\\Exceptions\\CannotStartDump' => __DIR__ . '/..' . '/spatie/db-dumper/src/Exceptions/CannotStartDump.php',
         'Spatie\\DbDumper\\Exceptions\\DumpFailed' => __DIR__ . '/..' . '/spatie/db-dumper/src/Exceptions/DumpFailed.php',
+        'Spatie\\Dropbox\\Client' => __DIR__ . '/..' . '/spatie/dropbox-api/src/Client.php',
+        'Spatie\\Dropbox\\Exceptions\\BadRequest' => __DIR__ . '/..' . '/spatie/dropbox-api/src/Exceptions/BadRequest.php',
+        'Spatie\\Dropbox\\InMemoryTokenProvider' => __DIR__ . '/..' . '/spatie/dropbox-api/src/InMemoryTokenProvider.php',
+        'Spatie\\Dropbox\\RefreshableTokenProvider' => __DIR__ . '/..' . '/spatie/dropbox-api/src/RefreshableTokenProvider.php',
+        'Spatie\\Dropbox\\TokenProvider' => __DIR__ . '/..' . '/spatie/dropbox-api/src/TokenProvider.php',
+        'Spatie\\Dropbox\\UploadSessionCursor' => __DIR__ . '/..' . '/spatie/dropbox-api/src/UploadSessionCursor.php',
+        'Spatie\\FlysystemDropbox\\DropboxAdapter' => __DIR__ . '/..' . '/spatie/flysystem-dropbox/src/DropboxAdapter.php',
         'Spatie\\ImageOptimizer\\DummyLogger' => __DIR__ . '/..' . '/spatie/image-optimizer/src/DummyLogger.php',
         'Spatie\\ImageOptimizer\\Image' => __DIR__ . '/..' . '/spatie/image-optimizer/src/Image.php',
         'Spatie\\ImageOptimizer\\Optimizer' => __DIR__ . '/..' . '/spatie/image-optimizer/src/Optimizer.php',

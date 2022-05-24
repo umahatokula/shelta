@@ -319,7 +319,7 @@
                                     <div class="form-group row mb-3 mb-md-5">
                                         <label class="col-form-label col-md-2" id="signature">Signature (Please sign on a plain sheet, snap it and upload)</label>
                                         <div class="col-md-10">
-                                            <input wire:model="signature" class="from-control" type="file">
+                                            <input wire:model.prevent="signature" class="from-control" type="file">
                                             @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
@@ -348,40 +348,3 @@
         </div>
     </div>
 </div>
-
-
-@push('scripts')
-
-    <script src="//unpkg.com/alpinejs" defer></script>
-
-    {{-- Paystack --}}
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-
-{{--    <script>--}}
-
-{{--        const signUpPreviewBtn = document.getElementById('signUpPreviewBtn');--}}
-
-{{--        signUpPreviewBtn.addEventListener("click", validateInput, false);--}}
-
-{{--        // perform validation--}}
-{{--        function validateInput(e) {--}}
-
-{{--            e.preventDefault();--}}
-
-{{--            let email = document.getElementById('email').value;--}}
-{{--            let amount = document.getElementById('amount').value;--}}
-
-{{--            const data = {--}}
-{{--                email,--}}
-{{--                amount,--}}
-{{--            }--}}
-
-{{--            Livewire.emit('validateInput', data)--}}
-
-{{--        }--}}
-
-{{--    </script>--}}
-
-	<script src="js/pages/advanced-form-element.js"></script>
-
-@endpush

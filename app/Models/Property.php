@@ -292,7 +292,7 @@ class Property extends Model
     public function getMonthlyPaymentAmount() : float {
 
         $paymentPlanAndPrice = $this->getPaymentPlanAndPrice();
-        
+
         if (!$paymentPlanAndPrice) {
             return 0.00;
         }
@@ -365,6 +365,6 @@ class Property extends Model
 
         $estatePropertyType = EstatePropertyType::where(['estate_id' => $estate_id, 'property_type_id' => $property_type_id])->first();
 
-        return $this->unallocated()->where('estate_property_type_id', $estatePropertyType->id)->get();
+        return !$estatePropertyType ? collect([]) : $this->unallocated()->where('estate_property_type_id', $estatePropertyType->id)->get();
     }
 }

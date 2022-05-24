@@ -10,6 +10,7 @@ use App\Models\Gender;
 use App\Models\LGA;
 use App\Models\MaritalStatus;
 use App\Models\PaymentPlan;
+use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\State;
 use Illuminate\Http\Request;
@@ -140,18 +141,33 @@ class SignupController extends Controller
         $client->nok_address           = $request->nok_address;
         $client->referrer              = $request->referrer;
         $client->save();
-        dd($client);
 
-        return view('signup.signupform', $data);
+        return redirect()->route('signUpPreview', [$client, $request->estate_id, $request->propertyType_id, $request->payment_plan_id]);
     }
 
-    public function preview(Client $client, $estate, $propertyType, $paymentPlan) {
+    public function preview(Client $client, $estateId, $propertyTypeId, $paymentPlanId) {
 
         $data['client'] = $client;
-        $data['estate'] = $estate;
-        $data['propertyType'] = $propertyType;
-        $data['paymentPlan'] = $paymentPlan;
+        $data['estate'] = Estate::find($estateId);
+        $data['propertyType'] = PropertyType::find($propertyTypeId);
+        $data['paymentPlan'] = PaymentPlan::find($paymentPlanId);
+
+        // get property
+        $properties = $this->getProperties($estateId, $propertyTypeId);
+        $data['property'] = $properties->first();
+        $data['propertyPrice'] = $data['property']->getMonthlyPaymentAmount();
+        $data['processingFee'] = 10_000;
 
         return view('signup.signuppreview', $data);
     }
+
+    /**
+     * Get Property belonging to payment plan
+     *
+     * @return void
+     */
+    public function getProperties($estateId, $propertyTypeId) {
+        return (new Property)->getUnallocatedAllocatedProperties($estateId, $propertyTypeId);
+    }
+
 }

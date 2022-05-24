@@ -75,7 +75,7 @@ class TransactionsEdit extends Component
         $this->proof_reference_number = $transaction->proof_reference_number;
         $this->transaction_number = $transaction->transaction_number;
         $this->date = $transaction->date;
-        $this->instalment_date = $transaction->instalment_date;
+        $this->instalment_date = $transaction->instalment_date->format('Y-m-d');
         $this->recorded_by = $transaction->recorded_by;
         $this->status = $transaction->status;
         $this->is_approved = $transaction->is_approved;
