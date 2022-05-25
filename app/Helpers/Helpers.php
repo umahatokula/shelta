@@ -15,7 +15,7 @@ class Helpers {
      * @param  mixed $message
      * @return void
      */
-    public static function sendSMSMessage($to, $message) {
+    public static function sendSMSMessage($to, $message, $channel = "generic") {
 
         // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
         //   'email' => 'umahatokula@gmail.com',
@@ -46,7 +46,7 @@ class Helpers {
         $from = 'Richboss';
         $sms = $message;
 
-        $response = $termii->sendMessage($to, $from, $sms, $channel = "generic", $media = false, $media_url = null, $media_caption = null);
+        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
         $response = json_decode($response);
 
         if ($response->message == 'Successfully Sent') {
@@ -62,31 +62,18 @@ class Helpers {
      * @param  mixed $message
      * @return void
      */
-    public static function sendWhatsAppMessage($to, $message) {
+    public static function sendWhatsAppMessage($to, $message, $channel = 'whatsapp') {
 
-        return 1; // remove this line eventually
+        $termii = new LaraTermii(env('TERMII_API_KEY'));
+        $from = 'Richboss';
+        $sms = $message;
 
-        // try {
-        //
-        //     $account_sid = getenv("TWILIO_SID");
-        //     $auth_token = getenv("TWILIO_TOKEN");
-        //     $from = getenv("TWILIO_WHATSAPP_FROM");
-        //
-        //     $twilio = new TwilioClient($account_sid, $auth_token);
-        //
-        //     $message = $twilio->messages
-        //         ->create("whatsapp:".$to, // to
-        //                 [
-        //                     "from" => "whatsapp:".$from,
-        //                     "body" => $message
-        //                 ]
-        //         );
-        //
-        // } catch (Exception $e) {
-        //     \Log::info("Error: ". $e->getMessage());
-        // }
-        //
-        // return 1;
+        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
+        $response = json_decode($response);
+
+        if ($response->message == 'Successfully Sent') {
+            return 1;
+        };
     }
 
 

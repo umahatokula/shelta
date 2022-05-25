@@ -264,5 +264,4 @@ Route::get('/mailable', function () {
 });
 
 Route::get('/test', function() {
-
 });

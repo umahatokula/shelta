@@ -36,7 +36,7 @@ class SendOTPNotification
         } catch (\Exception $e) {
             \Log::info($e);
         }
-    
+
         // ===========SNED SMS===============
         $message = $event->content;
         $receiverNumber = null;
@@ -46,7 +46,7 @@ class SendOTPNotification
             if ($event->user->staff) {
                 $receiverNumber = $event->user->staff->phone;
             }
-            
+
         }
 
         if ($event->user->hasRole('client')) {
@@ -59,6 +59,7 @@ class SendOTPNotification
 
         if ($receiverNumber) {
             Helpers::sendSMSMessage($receiverNumber, $message); // send sms
+            Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
         }
 
     }
