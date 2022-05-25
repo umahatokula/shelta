@@ -67,7 +67,7 @@ class TransactionsCreate extends Modal
 
         $this->propertybalance = $propertyPrice - $property->totalPaid();
 
-        $this->instalment_date = $property->nextPaymentDueDate()->format('Y-m-d');
+        $this->instalment_date = $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->format('Y-m-d') : null;
     }
 
     /**

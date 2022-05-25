@@ -354,17 +354,18 @@ class Property extends Model
         return Helpers::getSuffix($day);
     }
 
+
     /**
-     * Merge properties not allocaated to anyone and properties allocated to client.
-     *
-     * @param  mixed $estate_id
-     * @param  mixed $property_type_id
-     * @return void
+     * Get unallocated properties.
+     * @param $estate_id
+     * @param $property_type_id
+     * @return \Illuminate\Support\Collection
      */
     public function getUnallocatedAllocatedProperties($estate_id, $property_type_id) {
 
         $estatePropertyType = EstatePropertyType::where(['estate_id' => $estate_id, 'property_type_id' => $property_type_id])->first();
 
-        return !$estatePropertyType ? collect([]) : $this->unallocated()->where('estate_property_type_id', $estatePropertyType->id)->get();
+        return $estatePropertyType ? $estatePropertyType->properties()->unallocated()->get() : collect([]);
+
     }
 }

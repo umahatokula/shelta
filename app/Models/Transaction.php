@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
+use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -101,6 +102,26 @@ class Transaction extends Model implements HasMedia
     }
 
     public function getTotal() {
-        return Transaction::sum('amount');
+        return $this->sum('amount');
+    }
+
+    /**
+     * @param $date
+     * @return Carbon
+     */
+    public static function getFormattedInstalemtDate($date) {
+
+        $parsedDate = Carbon::parse($date);
+
+        $parsedDateDay = $parsedDate->format('d');
+        $parsedDateMonth = $parsedDate->format('m');
+        $parsedDateYear = $parsedDate->format('Y');
+
+        $day = 28;
+        if ($parsedDateDay < $day) {
+            $day = $parsedDateDay;
+        }
+
+        return Carbon::parse($parsedDateMonth.'/'.$day.'/'.$parsedDateYear);
     }
 }

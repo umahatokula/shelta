@@ -64,30 +64,30 @@ class SignupForm extends Component
     public $property, $client,$propertyTypes = [], $paymentPlans = [], $allPaymentPlans;
 
     protected $rules = [
-//        'sname'             => 'required|string|min:2',
-//        'onames'            => 'required|string|min:2',
-//        'gender'            => 'required',
-//        'email'             => 'required',
-//        'phone'             => 'required',
-//        'marital_status_id' => 'required',
-//        'dob'               => 'required',
-//        'country_code'      => 'required',
-//        'place_of_birth'    => 'required',
-//        'state_id'          => 'required',
-//        'lga_id'            => 'required',
-//        'profile_picture'   => 'required|image|max:1024',
-//
-//        'nok_name' => 'required',
-//        'nok_dob' => 'required',
-//        'nok_gender_id' => 'required',
-//        'relationship_with_nok' => 'required',
-//        'nok_address' => 'required',
-//
-////        'number_of_plots' => 'required',
-//        'referrer' => 'required',
-//        'estate_id' => 'required',
-//        'propertyType_id' => 'required',
-//        'payment_plan_id' => 'required',
+        'sname'             => 'required|string|min:2',
+        'onames'            => 'required|string|min:2',
+        'gender'            => 'required',
+        'email'             => 'required',
+        'phone'             => 'required',
+        'marital_status_id' => 'required',
+        'dob'               => 'required',
+        'country_code'      => 'required',
+        'place_of_birth'    => 'required',
+        'state_id'          => 'required',
+        'lga_id'            => 'required',
+        'profile_picture'   => 'required|image|max:1024',
+
+        'nok_name' => 'required',
+        'nok_dob' => 'required',
+        'nok_gender_id' => 'required',
+        'relationship_with_nok' => 'required',
+        'nok_address' => 'required',
+
+//        'number_of_plots' => 'required',
+        'referrer' => 'required',
+        'estate_id' => 'required',
+        'propertyType_id' => 'required',
+        'payment_plan_id' => 'required',
         'signature' => 'required|image|max:1024',
     ];
 
@@ -179,7 +179,7 @@ class SignupForm extends Component
 
         $this->propertyType_id = $propertyTypeId;
 
-        // get payment plans that have been attached to this Estate-ProertyType Relationship
+        // get payment plans that have been attached to this Estate-Property Type Relationship
         $this->getPaymentPlans($this->estate_id, $this->propertyType_id);
 
     }
@@ -268,8 +268,6 @@ class SignupForm extends Component
      * @return void
      */
     public function signUpPreview() {
-
-        dd($this->signature);
 
         $this->validate();
 

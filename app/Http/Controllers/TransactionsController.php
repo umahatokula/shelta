@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\Client;
 use App\Events\PaymentMade;
+use App\Models\Property;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 use Carbon\Carbon;
 
 class TransactionsController extends Controller
-{    
+{
     /**
      * index
      *
@@ -63,7 +64,7 @@ class TransactionsController extends Controller
 
         return view('admin.transactions.transactions-index', $data);
     }
-    
+
     /**
      * downloadReciept
      *
@@ -77,14 +78,14 @@ class TransactionsController extends Controller
         $data['transaction'] = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
 
         $pdfContent = PDF::loadView('pdf.reciept', $data)->output();
-        
+
         return response()->streamDownload(
             fn () => print($pdfContent),
             "filename.pdf"
         );
 
     }
-    
+
     /**
      * Send transsaction receipt
      *
@@ -96,11 +97,11 @@ class TransactionsController extends Controller
 
         $transaction = Transaction::where('id', $transactionId)->with(['property.estatePropertyType.propertyType', 'property.estatePropertyType.estate'])->first();
         Mail::to($transaction->client)->queue(new PaymentMadeMailable($transaction));
-        
+
         session()->flash('message', 'Email sent successfully.');
         return redirect()->back();
     }
-    
+
     /**
      * destroy
      *
@@ -119,11 +120,11 @@ class TransactionsController extends Controller
      *
      * @return void
      */
-    public function show(Transaction $transaction) {      
+    public function show(Transaction $transaction) {
         return view('admin.transactions.transactions-show', compact('transaction'));
     }
 
-    
+
     /**
      * index
      *
@@ -136,7 +137,7 @@ class TransactionsController extends Controller
         return view('admin.transactions.transactions-create', $data);
     }
 
-    
+
     /**
      * index
      *
@@ -156,7 +157,7 @@ class TransactionsController extends Controller
      *
      * @return void
      */
-    public function process(Transaction $transaction) {  
+    public function process(Transaction $transaction) {
         // dd($transaction);
         return view('admin.transactions.process', compact('transaction'));
     }
@@ -173,6 +174,13 @@ class TransactionsController extends Controller
         // dispatch event
         if ($request->status == 1) {
             PaymentMade::dispatch($transaction);
+        }
+
+        // set date of first transaction
+        $property = $transaction->property;
+        if (!$property->date_of_first_payment) {
+            $property->date_of_first_payment = $transaction->date;
+            $property->save();
         }
 
         return redirect()->back();

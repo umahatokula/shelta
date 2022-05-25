@@ -16,7 +16,7 @@ class Record extends Component
 {
     use WithFileUploads;
 
-    public $client_id, $property_id, $amount, $date, $proof, $proof_reference_number;
+    public $client_id, $property_id, $amount, $instalment_date, $proof, $proof_reference_number;
     public $propertybalance = 0;
     public Client $client;
 
@@ -24,21 +24,21 @@ class Record extends Component
         'client_id'   => 'required',
         'property_id' => 'required',
         'amount'      => 'required',
-        'date'      => 'required',
+        'instalment_date'      => 'required',
         // 'proof'      => 'required|max:1024|mimes:jpg,png,pdf,jpeg', // 1MB Max',
         // 'proof_reference_number' => 'required|unique:transactions'
     ];
- 
+
     protected $messages = [
         'property_id.required' => 'Please select a property',
         'amount.required' => 'Please enter an amount',
-        'date.required' => 'Please select a payment date',
+        'instalment_date.required' => 'Please select a payment date',
         'proof.required' => 'Please upload a proof of payment',
         'proof_reference_number.required' => 'The Proof of Payment Ref number os required',
         'proof_reference_number.unique' => 'This Ref number has already been recorded',
     ];
 
-        
+
     /**
      * updated
      *
@@ -48,7 +48,7 @@ class Record extends Component
     public function updated($propertyName) {
         $this->validateOnly($propertyName);
     }
-    
+
     /**
      * onSelectProperty
      *
@@ -60,10 +60,12 @@ class Record extends Component
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
         })->first()->propertyPrice->price;
-        
+
         $this->propertybalance = $propertyPrice - $property->totalPaid();
+
+        $this->instalment_date = $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->format('Y-m-d') : null;
     }
-     
+
     /**
      * mount
      *
@@ -74,16 +76,16 @@ class Record extends Component
         $this->client_id = $client->id;
         $this->client = $client->load(['properties.estatePropertyType.propertyType', 'properties.estatePropertyType.estate']);
     }
-     
+
     /**
      * save
      *
      * @return void
      */
     public function save() {
-        
+
         $this->validate();
- 
+
         $transaction = Transaction::create([
             'client_id'              => $this->client_id,
             'property_id'            => $this->property_id,
@@ -91,7 +93,8 @@ class Record extends Component
             'type'                   => 'recorded',
             'proof_reference_number' => $this->proof_reference_number,
             'transaction_number'     => substr(hash('sha256', mt_rand() . microtime()), 0, 20),
-            'date'                   => $this->date,
+            'date'                   => Carbon::now(),
+            'instalment_date'        => Transaction::getFormattedInstalemtDate($this->instalment_date),
             'recorded_by'            => auth()->id(),
             'status'                 => 3,
             'is_approved'            => 0,
@@ -104,13 +107,12 @@ class Record extends Component
             ->toMediaCollection('proofOfPayment', 'public');
         }
 
-        
+
         // set date of first transaction
         $property = Property::where('id', $transaction->property_id)->first();
 
         if (!$property->date_of_first_payment) {
-            $property->date_of_first_payment = $transaction->date;
-            $property->save();
+            $transaction->is_first_instalment = true;
         }
 
         // log this transaction
@@ -125,6 +127,7 @@ class Record extends Component
 
         redirect()->route('frontend.clients.payments');
     }
+
     public function render()
     {
         return view('livewire.frontend.transactions.record');

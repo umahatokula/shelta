@@ -101,12 +101,13 @@ class Online extends Component
 
                 // set date of first transaction
                 if (!$property->date_of_first_payment) {
-                    
+
                     $property->date_of_first_payment = Carbon::now();
                     $property->save();
 
                     // update first transaction instalment date
                     $transaction->instalment_date = Carbon::now();
+                    $transaction->is_first_instalment = true;
                     $transaction->save();
                 }
 
