@@ -47,6 +47,7 @@ final class Versions
   'egulias/email-validator' => '2.1.25@0dbf5d78455d4d6a41d186da50adc1122ec066f4',
   'ezyang/htmlpurifier' => 'v4.13.0@08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
   'fruitcake/laravel-cors' => 'v2.0.4@a8ccedc7ca95189ead0e407c43b530dc17791d6a',
+  'graham-campbell/guzzle-factory' => 'v5.0.3@f93cfbffd422920f5d9915ec7d682f030ddffda6',
   'graham-campbell/result-type' => 'v1.0.3@296c015dc30ec4322168c5ad3ee5cc11dae827ac',
   'guzzlehttp/guzzle' => '7.4.0@868b3571a039f0ebc11ac8f344f4080babe2cb94',
   'guzzlehttp/promises' => '1.5.0@136a635e2b4a49b9d79e9c8fee267ffb257fdba0',
@@ -70,7 +71,7 @@ final class Versions
   'lcobucci/jwt' => '4.0.4@55564265fddf810504110bd68ca311932324b0e9',
   'league/commonmark' => '2.0.2@2df87709f44b0dd733df86aef0830dce9b1f0f13',
   'league/config' => 'v1.1.1@a9d39eeeb6cc49d10a6e6c36f22c4c1f4a767f3e',
-  'league/flysystem' => '1.1.5@18634df356bfd4119fe3d6156bdb990c414c14ea',
+  'league/flysystem' => '1.1.9@094defdb4a7001845300334e7c1ee2335925ef99',
   'league/glide' => '1.7.0@ae5e26700573cb678919d28e425a8b87bc71c546',
   'league/mime-type-detection' => '1.8.0@b38b25d7b372e9fddb00335400467b223349fd7e',
   'league/oauth1-client' => 'v1.10.0@88dd16b0cff68eb9167bfc849707d2c40ad91ddc',
@@ -111,6 +112,8 @@ final class Versions
   'rinvex/countries' => 'v8.1.1@154e639d13d2bf40267aebb753b53918e6b718c3',
   'sabberworm/php-css-parser' => '8.4.0@e41d2140031d533348b2192a83f02d8dd8a71d30',
   'spatie/db-dumper' => '2.21.1@05e5955fb882008a8947c5a45146d86cfafa10d1',
+  'spatie/dropbox-api' => '1.20.1@f7563632fa6e4970b895805169688be273fcbf19',
+  'spatie/flysystem-dropbox' => '1.2.3@8b6b072f217343b875316ca6a4203dd59f04207a',
   'spatie/image' => '1.10.5@63a963d0200fb26f2564bf7201fc7272d9b22933',
   'spatie/image-optimizer' => '1.5.0@1b3585c3da2cc8872141fce40fbd17e07e6655d1',
   'spatie/laravel-activitylog' => '3.17.0@bdc44862aaca39ecbd824133b80dbd7c8017ed7f',
@@ -204,7 +207,7 @@ final class Versions
   'sebastian/version' => '3.0.2@c6c1022351a901512170118436c764e473f6de8c',
   'symfony/debug' => 'v4.4.31@43ede438d4cb52cd589ae5dc070e9323866ba8e0',
   'theseer/tokenizer' => '1.2.1@34a41e998c2183e22995f158c581e7b5e755ab9e',
-  'laravel/laravel' => 'dev-main@f0718345444da5224e7ef31388426ac86053a8d2',
+  'laravel/laravel' => 'dev-main@2c48036ea6688ef63c97176263866708523998d4',
 );
 
     private function __construct()

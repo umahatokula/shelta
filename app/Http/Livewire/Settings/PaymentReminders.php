@@ -9,6 +9,7 @@ use App\Models\PaymentReminderSetting;
 class PaymentReminders extends Component
 {
     public $reminders = [];
+    public $defaulterGroups = [];
     public $addedReminders = [];
     public $default_percentage = 0;
 
@@ -26,6 +27,7 @@ class PaymentReminders extends Component
     public function mount() {
 
         $this->reminders = $this->addedReminders = PaymentReminderSetting::all()->toArray();
+        $this->defaulterGroups = $this->addedDefaulterGroups = PaymentReminderSetting::all()->toArray();
 
         $this->default_percentage = PaymentDefaultSetting::first() ? PaymentDefaultSetting::first()->default_percentage : 0;
     }

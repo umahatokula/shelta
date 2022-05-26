@@ -102,7 +102,7 @@ class User extends Authenticatable
         ]);
 
         $user = auth()->user();
-        $message = $code;
+        $message = 'Hi '. $user->name .'! Kindly use the OTP '. $code .' to complete your login on shelta.tech';
 
         // dispatch event
         OPTGenerated::dispatch($message, $user);

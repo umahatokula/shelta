@@ -125,7 +125,7 @@
                         <a href="{{ route('users.index') }}" class="item">Users</a>
                     </li>
                     <li class="{{ url()->current() == route('settings.index') ? 'active' : '' }}">
-                        <a href="{{ route('settings.payment-reminders') }}" class="item">Payment Reminders</a>
+                        <a href="{{ route('settings.payment-reminders') }}" class="item">Payment Settings</a>
                     </li>
                     <li class="{{ url()->current() == route('settings.index') ? 'active' : '' }}">
                         <a href="{{ route('imports.clients') }}" class="item">Imports</a>
