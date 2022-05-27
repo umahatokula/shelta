@@ -24,23 +24,23 @@ class SendMonthlyPaymentReminders {
     public function __invoke () {
 
         $paymentReminderDates = PaymentReminderSetting::all();
-    
+
         foreach ($paymentReminderDates as $paymentReminderDate) {
-          
+
             $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
-    
+
             foreach ($properties as $property) {
-    
+
                 // ===========SNED SMS===============
                 $receiverNumber = $property->client ? $property->client->phone : null;
                 $message = $paymentReminderDate->message;
-    
+
                 if ($receiverNumber) {
                     Helpers::sendSMSMessage($receiverNumber, $message); // send sms
                     Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
                 }
-    
-                // ================SEND NOTIFICATION (Email & WhatsApp)===================
+
+                // ================SEND NOTIFICATION (Email)===================
                 Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
             }
         }
