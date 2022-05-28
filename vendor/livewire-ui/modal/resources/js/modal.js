@@ -4,7 +4,7 @@ window.LivewireUIModal = () => {
         showActiveComponent: true,
         activeComponent: false,
         componentHistory: [],
-        modalWidth: 'sm:max-w-2xl',
+        modalWidth: null ,
         getActiveComponentModalAttribute(key) {
             if (this.$wire.get('components')[this.activeComponent] !== undefined) {
                 return this.$wire.get('components')[this.activeComponent]['modalAttributes'][key];
@@ -25,15 +25,26 @@ window.LivewireUIModal = () => {
 
             this.closeModal(true);
         },
-        closeModal(force = false, skipPreviousModals = 0) {
+        closeModal(force = false, skipPreviousModals = 0, destroySkipped = false) {
+            if(this.show === false) {
+                return;
+            }
 
             if (this.getActiveComponentModalAttribute('dispatchCloseEvent') === true) {
                 const componentName = this.$wire.get('components')[this.activeComponent].name;
                 Livewire.emit('modalClosed', componentName);
             }
 
+            if (this.getActiveComponentModalAttribute('destroyOnClose') === true) {
+                Livewire.emit('destroyComponent', this.activeComponent);
+            }
+
             if (skipPreviousModals > 0) {
                 for (var i = 0; i < skipPreviousModals; i++) {
+                    if (destroySkipped) {
+                        const id = this.componentHistory[this.componentHistory.length - 1];
+                        Livewire.emit('destroyComponent', id);
+                    }
                     this.componentHistory.pop();
                 }
             }
@@ -44,14 +55,14 @@ window.LivewireUIModal = () => {
                 if (id) {
                     this.setActiveModalComponent(id, true);
                 } else {
-                    this.show = false;
+                    this.setShowPropertyTo(false);
                 }
             } else {
-                this.show = false;
+                this.setShowPropertyTo(false);
             }
         },
         setActiveModalComponent(id, skip = false) {
-            this.show = true;
+            this.setShowPropertyTo(true);
 
             if (this.activeComponent === id) {
                 return;
@@ -66,7 +77,7 @@ window.LivewireUIModal = () => {
             if (this.activeComponent === false) {
                 this.activeComponent = id
                 this.showActiveComponent = true;
-                this.modalWidth = 'sm:max-w-' + this.getActiveComponentModalAttribute('maxWidth');
+                this.modalWidth = this.getActiveComponentModalAttribute('maxWidthClass');
             } else {
                 this.showActiveComponent = false;
 
@@ -75,12 +86,12 @@ window.LivewireUIModal = () => {
                 setTimeout(() => {
                     this.activeComponent = id;
                     this.showActiveComponent = true;
-                    this.modalWidth = 'sm:max-w-' + this.getActiveComponentModalAttribute('maxWidth');
+                    this.modalWidth = this.getActiveComponentModalAttribute('maxWidthClass');
                 }, 300);
             }
 
             this.$nextTick(() => {
-                let focusable = this.$refs[id].querySelector('[autofocus]');
+                let focusable = this.$refs[id]?.querySelector('[autofocus]');
                 if (focusable) {
                     setTimeout(() => {
                         focusable.focus();
@@ -112,22 +123,25 @@ window.LivewireUIModal = () => {
         prevFocusableIndex() {
             return Math.max(0, this.focusables().indexOf(document.activeElement)) - 1
         },
+        setShowPropertyTo(show) {
+            this.show = show;
+
+            if (show) {
+                document.body.classList.add('overflow-y-hidden');
+            } else {
+                document.body.classList.remove('overflow-y-hidden');
+
+                setTimeout(() => {
+                    this.activeComponent = false;
+                    this.$wire.resetState();
+                }, 300);
+            }
+        },
         init() {
-            this.$watch('show', value => {
-                if (value) {
-                    document.body.classList.add('overflow-y-hidden');
-                } else {
-                    document.body.classList.remove('overflow-y-hidden');
+            this.modalWidth = this.getActiveComponentModalAttribute('maxWidthClass');
 
-                    setTimeout(() => {
-                        this.activeComponent = false;
-                        this.$wire.resetState();
-                    }, 300);
-                }
-            });
-
-            Livewire.on('closeModal', (force = false, skipPreviousModals = 0) => {
-                this.closeModal(force, skipPreviousModals);
+            Livewire.on('closeModal', (force = false, skipPreviousModals = 0, destroySkipped = false) => {
+                this.closeModal(force, skipPreviousModals, destroySkipped);
             });
 
             Livewire.on('activeModalComponentChanged', (id) => {

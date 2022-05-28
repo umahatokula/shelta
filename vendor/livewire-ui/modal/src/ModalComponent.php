@@ -2,6 +2,7 @@
 
 namespace LivewireUI\Modal;
 
+use InvalidArgumentException;
 use Livewire\Component;
 use LivewireUI\Modal\Contracts\ModalComponent as Contract;
 
@@ -11,16 +12,39 @@ abstract class ModalComponent extends Component implements Contract
 
     public int $skipModals = 0;
 
-    public function skipPreviousModals($count = 1): self
+    public bool $destroySkipped = false;
+
+    protected static array $maxWidths = [
+        'sm'  => 'sm:max-w-sm',
+        'md'  => 'sm:max-w-md',
+        'lg'  => 'sm:max-w-md md:max-w-lg',
+        'xl'  => 'sm:max-w-md md:max-w-xl',
+        '2xl' => 'sm:max-w-md md:max-w-xl lg:max-w-2xl',
+        '3xl' => 'sm:max-w-md md:max-w-xl lg:max-w-3xl',
+        '4xl' => 'sm:max-w-md md:max-w-xl lg:max-w-3xl xl:max-w-4xl',
+        '5xl' => 'sm:max-w-md md:max-w-xl lg:max-w-3xl xl:max-w-5xl',
+        '6xl' => 'sm:max-w-md md:max-w-xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl',
+        '7xl' => 'sm:max-w-md md:max-w-xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-7xl',
+    ];
+
+    public function destroySkippedModals(): self
     {
-        $this->skipPreviousModal($count);
+        $this->destroySkipped = true;
 
         return $this;
     }
 
-    public function skipPreviousModal($count = 1): self
+    public function skipPreviousModals($count = 1, $destroy = false): self
+    {
+        $this->skipPreviousModal($count, $destroy);
+
+        return $this;
+    }
+
+    public function skipPreviousModal($count = 1, $destroy = false): self
     {
         $this->skipModals = $count;
+        $this->destroySkipped = $destroy;
 
         return $this;
     }
@@ -34,13 +58,13 @@ abstract class ModalComponent extends Component implements Contract
 
     public function closeModal(): void
     {
-        $this->emit('closeModal', $this->forceClose, $this->skipModals);
+        $this->emit('closeModal', $this->forceClose, $this->skipModals, $this->destroySkipped);
     }
 
     public function closeModalWithEvents(array $events): void
     {
-        $this->closeModal();
         $this->emitModalEvents($events);
+        $this->closeModal();
     }
 
     public static function modalMaxWidth(): string
@@ -48,6 +72,18 @@ abstract class ModalComponent extends Component implements Contract
         return config('livewire-ui-modal.component_defaults.modal_max_width', '2xl');
     }
 
+    public static function modalMaxWidthClass(): string
+    {
+        if (!array_key_exists(static::modalMaxWidth(), static::$maxWidths)) {
+            throw new InvalidArgumentException(
+                sprintf('Modal max width [%s] is invalid. The width must be one of the following [%s].',
+                    static::modalMaxWidth(), implode(', ', array_keys(static::$maxWidths))),
+            );
+        }
+
+        return static::$maxWidths[static::modalMaxWidth()];
+    }
+    
     public static function closeModalOnClickAway(): bool
     {
         return config('livewire-ui-modal.component_defaults.close_modal_on_click_away', true);
@@ -66,6 +102,11 @@ abstract class ModalComponent extends Component implements Contract
     public static function dispatchCloseEvent(): bool
     {
         return config('livewire-ui-modal.component_defaults.dispatch_close_event', false);
+    }
+
+    public static function destroyOnClose(): bool
+    {
+        return config('livewire-ui-modal.component_defaults.destroy_on_close', false);
     }
 
     private function emitModalEvents(array $events): void

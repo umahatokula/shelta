@@ -271,9 +271,9 @@ trait InteractsWithMedia
     /*
      * Determine if there is media in the given collection.
      */
-    public function hasMedia(string $collectionName = 'default'): bool
+    public function hasMedia(string $collectionName = 'default', array $filters = []): bool
     {
-        return count($this->getMedia($collectionName)) ? true : false;
+        return count($this->getMedia($collectionName, $filters)) ? true : false;
     }
 
     /**
@@ -559,7 +559,7 @@ trait InteractsWithMedia
     public function loadMedia(string $collectionName): Collection
     {
         $collection = $this->exists
-            ? $this->media
+            ? $this->loadMissing('media')->media
             : collect($this->unAttachedMediaLibraryItems)->pluck('media');
 
         $collection = new MediaCollections\Models\Collections\MediaCollection($collection);

@@ -34,7 +34,7 @@
 
               <template #content>
                 <!-- Authentication -->
-                <breeze-dropdown-link :href="route('logout')" method="post">
+                <breeze-dropdown-link @click="logout" as="button">
                   Log Out
                 </breeze-dropdown-link>
               </template>
@@ -77,6 +77,12 @@ export default {
   data() {
     return {
       showingNavigationDropdown: false,
+    }
+  },
+
+  methods: {
+    logout() {
+      Inertia.post(route("logout"));
     }
   },
 }

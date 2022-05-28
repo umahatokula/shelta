@@ -2,26 +2,64 @@
 
 namespace Migrator\Http\Livewire\Migration;
 
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Migrator\Service\MigratorParser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class Single
+ * @package Migrator\Http\Livewire\Migration
+ */
 class Single extends Component
 {
+    /**
+     * @var string Migration file Path
+     */
+    public $migrationPath;
 
+    /**
+     * @var string Migration file
+     */
     public $migrationFile;
+
+    /**
+     * @var string Migration name
+     */
     public $migrationName;
+
+    /**
+     * @var string Migration connection name
+     */
     public $migrationConnectionName;
+
+    /**
+     * @var string Migration creation date difference from today in a human-readable format
+     */
     public $migrationCreatedAt;
+
+    /**
+     * @var int Migration batch count.
+     */
     public $batch;
+
+    /**
+     * @var array Migration file sctructured content
+     */
     public $structure;
 
-    public function mount($migration)
+    /**
+     * Component mount.
+     * @param SplFileInfo $migration
+     */
+    public function mount(SplFileInfo $migration)
     {
+        $this->migrationPath = $migration->getPathname();
         $this->migrationFile = $migration->getFilename();
-        $migratorParser = new MigratorParser($this->migrationFile);
+        $migratorParser = new MigratorParser($migration);
         $this->migrationName = $migratorParser->getName();
         $this->migrationConnectionName = $migratorParser->getConnectionName();
         $this->migrationCreatedAt = $migratorParser->getDate();
@@ -31,6 +69,9 @@ class Single extends Component
         $this->structure = $migratorParser->getStructure();
     }
 
+    /**
+     * Run migration command.
+     */
     public function migrate()
     {
         try {
@@ -53,6 +94,9 @@ class Single extends Component
         $this->emit('migrationUpdated');
     }
 
+    /**
+     * Refresh migrations.
+     */
     public function refresh()
     {
         \Artisan::call('migrate:refresh', [
@@ -67,6 +111,9 @@ class Single extends Component
         $this->emit('migrationUpdated');
     }
 
+    /**
+     * Roll back all database migrations.
+     */
     public function removeTable()
     {
         \Artisan::call('migrate:reset', [
@@ -82,17 +129,21 @@ class Single extends Component
         $this->emit('migrationUpdated');
     }
 
+    /**
+     * Delete a migration.
+     */
     public function deleteMigration()
     {
         $this->removeTable();
 
-        $path = database_path('migrations'.DIRECTORY_SEPARATOR.$this->migrationFile);
-
-        File::delete($path);
+        File::delete($this->migrationPath);
 
         $this->emit('migrationUpdated');
     }
 
+    /**
+     * Roll back a specific migration.
+     */
     public function rollback()
     {
         $migrationTable = config('database.migrations');
@@ -100,11 +151,9 @@ class Single extends Component
             ->where('migration', str_replace('.php', '', $this->migrationFile))
             ->update(['batch' => \DB::table($migrationTable)->max('batch')]);
 
-        $path = 'database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$this->migrationFile;
-
         try {
             \Artisan::call('migrate:rollback', [
-                '--path' => $path,
+                '--path' => $this->getPath(),
             ]);
 
             $message = 'Migration was rolled back.';
@@ -122,14 +171,24 @@ class Single extends Component
         $this->emit('migrationUpdated');
     }
 
+    /**
+     * Render the page.
+     *
+     * @return View
+     */
     public function render()
     {
         return view('migrator::livewire.migration.single');
     }
 
+    /**
+     * Get the migration path.
+     *
+     * @return string
+     */
     private function getPath()
     {
-        return 'database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$this->migrationFile;
+        return str_replace(base_path(), '', $this->migrationPath);
     }
 
 }

@@ -1,6 +1,7 @@
 <tr x-data="{ DeleteModal: false, RollbackModal: false, StructureModal: false }">
     @php
-        $exists = DB::table(config('database.migrations'))->where('migration', str_replace('.php', '', $migrationFile))->exists();
+        $migrationData = DB::table(config('database.migrations'))->where('migration', str_replace('.php', '', $migrationFile));
+        $exists = $migrationData->exists();
         $maxBatch = DB::table(config('database.migrations'))->max('batch');
     @endphp
     <td class="px-6 py-4 whitespace-nowrap">
@@ -16,11 +17,11 @@
    <td class="px-6 py-4 whitespace-nowrap">
         @if($exists)
             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-              Yes
+              {{ $migrationData->first()->batch }}
             </span>
         @else
             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-              No
+              Absent
             </span>
         @endif
     </td>
@@ -35,9 +36,14 @@
         @else
             <a class="text-indigo-600 hover:text-indigo-800 cursor-pointer" wire:click.prevent="migrate">Migrate</a>
         @endif
+
         <a @click="DeleteModal = true" class="text-red-600 hover:text-red-800 cursor-pointer">Delete</a>
 
-        <a class="text-green-600 hover:text-green-800 cursor-pointer" @click="RollbackModal = true" style="@if(!$exists) pointer-events: none; cursor: default; @endif">Rollback</a>
+        @if($exists)
+            <a class="text-green-600 hover:text-green-800 cursor-pointer" @click="RollbackModal = true">Rollback</a>
+        @else
+            <a class="text-green-600 hover:text-green-800 cursor-pointer" style="pointer-events: none; cursor: default;text-decoration: line-through;">Rollback</a>
+        @endif
     </td>
 
     <td style="display: none" x-show="DeleteModal" x-transition.scale>
@@ -63,7 +69,7 @@
                                 </h3>
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">
-                                        Are You sure to delete '{{ $migrationName }}' migration
+                                        Are you sure to delete '{{ $migrationName }}' migration
                                     </p>
                                 </div>
                             </div>
@@ -108,7 +114,7 @@
                                 </h3>
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">
-                                        Are You sure to rollback '{{ $migrationName }}' migration
+                                        Are you sure to rollback '{{ $migrationName }}' migration
                                     </p>
                                     @if($batch != $maxBatch)
                                         <div class="mt-2">

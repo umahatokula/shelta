@@ -21,7 +21,7 @@ return [
     |
     | Livewire UI will inject the required Javascript in your blade template.
     | If you want to bundle the required Javascript you can set this to false
-    | and add `require('vendor/livewire-ui/modal/resources/js/modal');`
+    | and add `require('vendor/wire-elements/modal/resources/js/modal');`
     | to your script bundler like webpack.
     |
     */
@@ -48,5 +48,7 @@ return [
         'close_modal_on_escape_is_forceful' => true,
 
         'dispatch_close_event' => false,
+        
+        'destroy_on_close' => false,
     ],
 ];

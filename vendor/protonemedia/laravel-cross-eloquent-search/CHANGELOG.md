@@ -2,6 +2,28 @@
 
 All notable changes to `laravel-cross-eloquent-search` will be documented in this file
 
+## 2.7.1 - 2022-02-10
+
+- Add Conditionable trait to Searcher (thanks @Daanra!)
+
+## 2.7.0 - 2022-02-04
+
+- Support for Laravel 9
+
+## 2.6.1 - 2021-12-22
+
+- Bugfix for excluding models when searching for relations without a search term (fixes #37).
+
+## 2.6.0 - 2021-12-22
+
+- Added `includeModelType` method (thanks @mrkalmdn!)
+
+## 2.5.0 - 2021-12-19
+
+- Support for PHP 8.1
+- Dropped support for PHP 7.4
+- Dropped support for Laravel 6 and 7
+
 ## 2.4.0 - 2021-10-06
 
 - Added support for searching through (nested) relationships

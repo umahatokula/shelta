@@ -228,14 +228,23 @@ class Media extends Model implements Responsable, Htmlable
         return $generatedConversions[$conversionName] ?? false;
     }
 
-
     public function toResponse($request)
+    {
+        return $this->buildResponse($request, 'attachment');
+    }
+
+    public function toInlineResponse($request)
+    {
+        return $this->buildResponse($request, 'inline');
+    }
+
+    private function buildResponse($request, string $contentDispositionType)
     {
         $downloadHeaders = [
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Content-Type' => $this->mime_type,
             'Content-Length' => $this->size,
-            'Content-Disposition' => 'attachment; filename="' . $this->file_name . '"',
+            'Content-Disposition' => $contentDispositionType . '; filename="' . $this->file_name . '"',
             'Pragma' => 'public',
         ];
 
@@ -279,7 +288,7 @@ class Media extends Model implements Responsable, Htmlable
     {
         $newMedia = $this->copy($model, $collectionName, $diskName, $fileName);
 
-        $this->delete();
+        $this->forceDelete();
 
         return $newMedia;
     }
@@ -300,11 +309,9 @@ class Media extends Model implements Responsable, Htmlable
             ->usingName($this->name)
             ->setOrder($this->order_column)
             ->withCustomProperties($this->custom_properties);
-
         if ($fileName !== '') {
             $fileAdder->usingFileName($fileName);
         }
-
         $newMedia = $fileAdder
             ->toMediaCollection($collectionName, $diskName);
 

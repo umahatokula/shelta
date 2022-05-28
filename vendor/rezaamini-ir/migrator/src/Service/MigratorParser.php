@@ -6,16 +6,42 @@ namespace Migrator\Service;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class MigratorParser.
+ * This class takes a migration file as input and parses its content.
+ * @package Migrator\Service
+ */
 class MigratorParser
 {
+    /**
+     * @var string Migration Name
+     */
     public $name;
 
-    public function __construct($name)
+    /**
+     * @var SplFileInfo Migration File
+     */
+    public $migration;
+
+    /**
+     * MigratorParser constructor.
+     * @param $migration
+     */
+    public function __construct($migration)
     {
-        $this->name = $name;
+        $this->name = $migration->getFilename();
+        $this->migration = $migration;
     }
 
+    /**
+     * Get a human-readable name from the migration name.
+     * i.e. If the migration name is '2014_10_12_000000_create_users_table'
+     * it will return 'Create users table'.
+     *
+     * @return string
+     */
     public function getName()
     {
         $name = $this->name;
@@ -27,6 +53,11 @@ class MigratorParser
         return $name;
     }
 
+    /**
+     * Get the migration creation date difference from today in a human-readable format.
+     *
+     * @return string
+     */
     public function getDate()
     {
         $date = $this->name;
@@ -38,45 +69,35 @@ class MigratorParser
         return Carbon::createFromFormat('Y m d His ', $date)->ago();
     }
 
+    /**
+     * Get the migration connection name.
+     *
+     * @return string
+     */
     public function getConnectionName()
     {
-        $file = database_path('migrations'.DIRECTORY_SEPARATOR.$this->name);
+        $file = $this->migration->getPathname();
+        $migrationObject = (function () use ($file) {
+            return $this->resolvePath($file);
+        })->call(app('migrator'));
 
-        $contents = file_get_contents($file);
-
-        $searchForOne = '$connection';
-        $searchForTwo = 'Schema::connection';
-
-        $patternOne = preg_quote($searchForOne, '/');
-        $patternOne = "/^.*$patternOne.*\$/m";
-
-        $patternTwo = preg_quote($searchForTwo, '/');
-        $patternTwo = "/^.*$patternTwo.*\$/m";
-
-        if (preg_match($patternOne, $contents, $matches)){
-            $match = trim(implode("\n", $matches));
-            $match = str_replace('"', "'", $match);
-
-            return substr($match, stripos($match, "'") + 1, (strripos($match, "'") - stripos($match, "'")) - 1);
-        }
-
-        if(preg_match($patternTwo, $contents, $matches)){
-            $match = trim(implode("\n", $matches));
-            preg_match('/Schema::connection\(["|\'](.*)["|\']\)/', $match, $m);
-
-            return $m[1] ?? '';
-        }
-
-        return \Config::get('database.default');
+        return $migrationObject->getConnection() ?: config('database.default');
     }
 
+    /**
+     * Get structure content of migration.
+     *
+     * @return array
+     */
     public function getStructure()
     {
-        $file = database_path('migrations'.DIRECTORY_SEPARATOR.$this->name);
+        $contents = $this->migration->getContents();
 
-        $contents = file_get_contents($file);
+        preg_match('/Schema::.+(?:\n+)?function\s?\(.*?\$(\w+)/mi', $contents, $m);
 
-        $searchForOne = '$table->';
+        $tableName = $m[1] ?? 'table';
+
+        $searchForOne = '$'.$tableName.'->';
 
         $patternOne = preg_quote($searchForOne, '/');
 
