@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-//        \App\Models\Client::factory(300)->create();
+        \App\Models\Client::factory(300)->create();
         // \App\Models\Property::factory(200)->create();
         // \App\Models\EstatePropertyType::factory(6)->create();
         // \App\Models\Staff::factory(10)->create();
@@ -31,11 +31,11 @@ class DatabaseSeeder extends Seeder
             // EstatePropertyTypeTableSeeder::class,
             // PropertiesTableSeeder::class,
             RolesTableSeeder::class,
-            StatesTableSeeder::class,
-            LGAsTableSeeder::class,
+//            StatesTableSeeder::class,
+//            LGAsTableSeeder::class,
             // PaymentPlansTableSeeder::class,
             GenderTableSeeder::class,
-            BankSeeder::class,
+//            BankSeeder::class,
             MaritalStatusSeeder::class,
         ]);
 

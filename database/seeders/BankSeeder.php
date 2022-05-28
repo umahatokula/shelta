@@ -17,7 +17,7 @@ class BankSeeder extends Seeder
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Bank::truncate();   
+        Bank::truncate();
 
         \DB::statement("INSERT INTO `banks` (`name`,`code`) VALUES
         ('Access Bank','044'),

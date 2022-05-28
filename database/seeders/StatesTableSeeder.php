@@ -18,7 +18,7 @@ class StatesTableSeeder extends Seeder
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        State::truncate();   
+        State::truncate();
 
         \DB::statement("INSERT INTO `states` (`id`, `country_id`, `name`) VALUES
         (1, 47, 'Abia'),
