@@ -39,8 +39,13 @@
                                                 </h4>
                                             </div>
                                             <div class="col-md-4 mb-5 d-flex justify-content-end">
+                                                @can('send client notification')
                                                 <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('estate-property-type.clients.send-notification', [$estate, $propertyType]) }}" href="#" class="btn btn-warning  float-right mx-3">Send notification</a>
+                                                @endcan
+
+                                                @can('view clients')
                                                 <a href="{{ route('estate-property-type.csv', [$estate, $propertyType]) }}" class="btn btn-success  float-right mx-3">CSV</a>
+                                                    @endcan
                                             </div>
                                         </div>
                                     </div>

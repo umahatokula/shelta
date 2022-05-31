@@ -15,13 +15,17 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
+                            @can('create property price')
                             <a href="{{ route('property-prices.create') }}" class="btn-lg btn btn-primary">Add Property Price</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('view property price')
 
                             <div>
                                 @if (session()->has('message'))
@@ -49,18 +53,23 @@
                                             <td class="text-left">{{ number_format($price->price, 2) }}</td>
                                             <td class="text-center">{{ $price->is_active }}</td>
                                             <td>
+                                                @can('edit property price')
                                                 <a href="{{ route('property-prices.edit', $price) }}" class="text-warning p-0" data-original-title="Edit"
                                                     title="">
                                                     <span class="material-icons-outlined">
                                                         edit
                                                         </span>
                                                 </a> &nbsp
+                                                @endcan
+
+                                                @can('delete property price')
                                                 <a wire:click="destroy({{ $price->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
                                                     data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
                                                         </span>
                                                 </a>
+                                                    @endcan
                                             </td>
                                         </tr>
                                         @endforeach
@@ -69,6 +78,8 @@
                                 </table>
 
                             </div>
+
+                            @endcan
                         </div>
                     </div>
                 </div>

@@ -14,6 +14,8 @@
                 </div>
                 <div class="card-body">
 
+                    @can('edit estate')
+
                     @if(count($errors) > 0 )
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                       <ul class="p-0 m-0" style="list-style: none;">
@@ -116,6 +118,8 @@
                             <input type="submit" class=" btn btn-primary" value="Save">
                         </div>
                     </form>
+
+                    @endcan
 
                 </div>
             </div>

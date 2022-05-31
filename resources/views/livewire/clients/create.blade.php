@@ -15,6 +15,7 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+                            @can('create client')
                             <form wire:submit.prevent="save">
 
                                 <div class="box-body">
@@ -353,6 +354,7 @@
                                     <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                 </div>
                             </form>
+                            @endcan
                         </div>
                     </div>
                 </div>

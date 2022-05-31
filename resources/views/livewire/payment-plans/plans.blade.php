@@ -15,13 +15,17 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
+                            @can('create payment plan')
                             <a href="{{ route('payment-plans.create') }}" class="btn-lg btn btn-primary">Add Payment Plan</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('view payment plans')
 
                             <div>
                                 @if (session()->has('message'))
@@ -30,9 +34,9 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="table-responsive-sm">
-    
+
                                 <table class="table mb-0">
                                     <thead>
                                         <tr>
@@ -49,26 +53,33 @@
                                             <td class="text-left">{{ $plan->name }}</td>
                                             <td class="text-center">{{ $plan->number_of_months }}</td>
                                             <td>
+                                                @can('edit payment plan')
                                                 <a href="{{ route('payment-plans.edit', $plan) }}" class="text-warning p-0" data-original-title="Edit"
                                                     title="">
                                                     <span class="material-icons-outlined">
                                                         edit
                                                         </span>
                                                 </a> &nbsp
+                                                @endcan
+
+                                                @can('delete payment plan')
                                                 <a wire:click="destroy({{ $plan->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
                                                     data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
                                                         </span>
                                                 </a>
+                                                    @endcan
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
-    
+
                             </div>
+
+                            @endcan
                         </div>
                     </div>
                 </div>

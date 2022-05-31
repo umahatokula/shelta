@@ -1,5 +1,5 @@
 <div>
-        
+
     <div class="row">
         <div class="col">
             <div class="page-description">
@@ -17,7 +17,8 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
-                            
+
+                            @can('view clients')
                             <div class="row">
                                 <div class="col-12 d-flex justify-content-end">
                                     <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary btn-lg" >Edit Profile</a>
@@ -34,6 +35,8 @@
                                     </div>
                                 </div>
                             </div>
+                            @endcan
+
                         </div>
                     </div>
                 </div>
@@ -62,6 +65,7 @@
                             </div>
                             <hr class="my-15">
 
+                            @can('assign property')
                             <form wire:submit.prevent="save">
                                 @foreach ($clientSubscribedProperties as $key => $clientSubscribedProperty)
                                 <div class="row" style="margin-bottom: 25px">
@@ -100,7 +104,7 @@
                                                     <option value="{{ $property['id'] }}">{{ $property['unique_number'] }}</option>
                                                     @endforeach
                                                 @endisset
-                                                
+
                                             </select>
                                             @error('price') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
@@ -114,12 +118,12 @@
 
                                                 @isset($paymentPlans[$key])
                                                     @forelse ($paymentPlans[$key] as $paymentPlan)
-                                                        <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>                                                
+                                                        <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>
                                                     @empty
-                                                        <option value="">No options</option>                                                
+                                                        <option value="">No options</option>
                                                     @endforelse
                                                 @endisset
-                                                
+
                                             </select>
                                         </div>
                                     </div>
@@ -137,6 +141,8 @@
                                     <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                 </div>
                             </form>
+                            @endcan
+
                         </div>
                     </div>
                 </div>

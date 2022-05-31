@@ -31,15 +31,16 @@ class RolesTableSeeder extends Seeder
         // clients
         $create_client = Permission::create(['name' => 'create client']);
         $edit_client = Permission::create(['name' => 'edit client']);
-        $view_client = Permission::create(['name' => 'view client']);
+        $view_client = Permission::create(['name' => 'view clients']);
         $delete_client = Permission::create(['name' => 'delete client']);
+        $reset_password = Permission::create(['name' => 'reset password']);
         $send_client_notification = Permission::create(['name' => 'send client notification']);
 
 
         // staff
         $create_staff = Permission::create(['name' => 'create staff']);
         $edit_staff = Permission::create(['name' => 'edit staff']);
-        $view_staff = Permission::create(['name' => 'view staff']);
+        $view_staff = Permission::create(['name' => 'view staffs']);
         $delete_staff = Permission::create(['name' => 'delete staff']);
 
 
@@ -107,7 +108,7 @@ class RolesTableSeeder extends Seeder
 
         //=====================ATTACH ROLES====================================
         $ceo->syncPermissions([
-            $create_client, $edit_client, $view_client, $delete_client, $send_client_notification,
+            $create_client, $edit_client, $view_client, $delete_client, $reset_password, $send_client_notification,
             $create_staff, $edit_staff, $view_staff, $delete_staff,
             $create_property_price, $edit_property_price, $view_property_prices, $delete_property_price,
             $create_payment_plan, $edit_payment_plan, $view_payment_plans, $delete_payment_plan,
@@ -120,7 +121,7 @@ class RolesTableSeeder extends Seeder
         ]);
 
         $general_manager->syncPermissions([
-            $create_client, $edit_client, $view_client, $delete_client,
+            $create_client, $edit_client, $view_client, $delete_client, $reset_password, $send_client_notification,
             $create_staff, $edit_staff, $view_staff, $delete_staff,
             $create_property_price, $edit_property_price, $view_property_prices, $delete_property_price,
             $create_payment_plan, $edit_payment_plan, $view_payment_plans, $delete_payment_plan,
@@ -152,9 +153,8 @@ class RolesTableSeeder extends Seeder
         ]);
 
         $legal->syncPermissions([
-            $create_staff,
-            $edit_staff, $view_staff,
-            $delete_staff,
+            $view_client, $send_client_notification,
+            $create_staff, $edit_staff, $view_staff, $delete_staff,
             $edit_property,
             $view_property,
             $set_company_profile,
@@ -163,7 +163,7 @@ class RolesTableSeeder extends Seeder
         ]);
 
         $customer_care->syncPermissions([
-            $send_client_notification
+            $view_client, $send_client_notification,
         ]);
 
 

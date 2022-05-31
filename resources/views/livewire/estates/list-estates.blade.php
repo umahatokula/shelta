@@ -14,13 +14,17 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
+                            @can('create estate')
                             <a href="{{ route('estates.create') }}" class="btn-lg btn btn-primary">Add Estate</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('view estates')
 
                             <div>
                                 @if (session()->has('message'))
@@ -29,7 +33,7 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="table-responsive-sm">
                                 <table class="table mb-0">
                                     <thead>
@@ -51,32 +55,41 @@
                                                 <ul class="list-unstyled">
                                                     @foreach ($estate->propertyTypes as $propertyType)
                                                         <li><a href="{{ route('property-types.show', $propertyType) }}">{{ ucfirst(strtolower($propertyType->name)) }}</a></li>
-                                                    @endforeach     
-                                                </ul>   
+                                                    @endforeach
+                                                </ul>
                                             </td>
                                             <td class="text-center">
+
+                                                @can('edit estate')
                                                 <a href="{{ route('estates.edit', $estate) }}" class="text-warning p-0" data-original-title=""
                                                     title="Edit">
                                                     <span class="material-icons-outlined">
                                                         edit
                                                         </span>
                                                 </a>
+                                                @endcan
+
+                                                @can('delete estate')
                                                 <a wire:click="destroy({{ $estate->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0"
                                                     data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
                                                         </span>
                                                 </a>
+                                                    @endcan
+
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
-    
+
                                 {{ $estates->links() }}
-    
+
                             </div>
+
+                            @endcan
                         </div>
                     </div>
                 </div>

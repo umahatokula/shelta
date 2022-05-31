@@ -175,11 +175,13 @@
 
                                         <td class="text-center">
 
+                                            @can('process transactions')
                                             <a  data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.process', $transaction) }}" href="#" class="text-default p-0" data-original-title="" title="Process Transaction">
                                                 <span class="material-icons-outlined">
                                                     flaky
                                                     </span>
                                             </a>
+                                            @endcan
 
                                             <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('transactions.show', $transaction) }}" href="#" class="text-primary p-0" data-original-title="" title="View Details">
                                                 <span class="material-icons-outlined">
@@ -261,9 +263,9 @@
                                     <h3>Properties</h3>
                                 </div>
                                 <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
-                                    @if (auth()->user()->hasRole('staff'))
+                                    @can('assign property')
                                     <a href="{{ route('clients.add-property', $client) }}" class="btn btn-primary" >Add properties</a>
-                                    @endif
+                                    @endcan
                                 </div>
                             </div>
 

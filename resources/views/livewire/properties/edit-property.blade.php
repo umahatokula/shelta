@@ -17,13 +17,14 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+                            @can('edit property')
                             <form wire:submit.prevent="save">
-        
+
                                 <div class="box-header">
                                     <h4 class="box-title">Add Property</h4>
                                 </div>
                                 <div class="box-body">
-        
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-3">Property Number</label>
                                         <div class="col-md-9">
@@ -31,7 +32,7 @@
                                             @error('unique_number') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-        
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-3">Estate</label>
                                         <div class="col-md-9">
@@ -45,7 +46,7 @@
                                             @error('estate_id') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-        
+
                                     <div class="form-group row mb-5">
                                         <label class="col-form-label col-md-3">Property Type</label>
                                         <div class="col-md-9">
@@ -60,13 +61,14 @@
                                             @error('property_type_id') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
-        
+
                                 </div>
                                 <div class="box-footer">
                                     <a class="btn-lg btn btn-warning me-1" href="{{ url()->previous() }}">Cancel</a>
                                     <input type="submit" class="btn-lg btn btn-primary" value="Save">
                                 </div>
                             </form>
+                            @endcan
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,8 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('set company profile')
                             <div class="row">
                                 <div class="col-12 d-flex justify-content-end">
                                     <a href="{{ route('settings.edit', $settings) }}"
@@ -41,10 +43,12 @@
                                     alt="{{ $settings->company_name }}" width="300px">
                                 </div>
                                 @else
-                                    <p>Kindly update settings</p> 
+                                    <p>Kindly update settings</p>
                                 @endif
-                                
+
                             </div>
+                        @endcan
+
                         </div>
                     </div>
                 </div>

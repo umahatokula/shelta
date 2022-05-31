@@ -36,24 +36,17 @@ class NotifyLegalAboutFirstPaymentListener implements ShouldQueue
         $message = $event->message;
         $users = User::permission('generate land papers')->get(); // Returns only users with the permission to 'generate land papers';
 
-        foreach ($users as $user) {
 
-            // ===========SNED SMS===============
-            $receiverNumber = $user->staff->phone;
-
-            if ($receiverNumber) {
-                Helpers::sendSMSMessage($receiverNumber, $message); // send sms
-                Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
-            }
-        }
+        $receiverNumbers = $users->pluck('phone')->toArray();
+        Helpers::sendSMSMessage($receiverNumbers, $message); // send sms
+        Helpers::sendWhatsAppMessage($receiverNumbers, $message); // send whatsapp message
 
 
         // ===========SNED EMAIL===============
         try {
 
             // MAIL ADMIN
-            Mail::to($users)
-                ->send(new PropertyFirstPaymentForAdminMailable($event->transaction));
+            Mail::to($users)->send(new PropertyFirstPaymentForAdminMailable($event->transaction));
 
 
         } catch (\Exception $e) {

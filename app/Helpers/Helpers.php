@@ -42,16 +42,24 @@ class Helpers {
         //   'dnd' => 2,
         // ]);
 
-        $termii = new LaraTermii(env('TERMII_API_KEY'));
         $from = 'Richboss';
         $sms = $message;
 
-        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
+//        $termii = new LaraTermii(env('TERMII_API_KEY'));
+//        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
+//        $response = json_decode($response);
+
+        $response = Http::post('https://api.ng.termii.com/api/sms/send', [
+            'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
+            'to' => $to,
+            'from' => $from,
+            'sms' => $sms,
+            'type' => 'plain',
+            'channel' => $channel,
+        ]);
         $response = json_decode($response);
 
-        if ($response->message == 'Successfully Sent') {
-          return 1;
-        };
+        return $response->message;
 
     }
 
@@ -64,16 +72,24 @@ class Helpers {
      */
     public static function sendWhatsAppMessage($to, $message, $channel = 'whatsapp') {
 
-        $termii = new LaraTermii(env('TERMII_API_KEY'));
+//        $termii = new LaraTermii(env('TERMII_API_KEY'));
         $from = 'Richboss';
         $sms = $message;
 
-        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
+//        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
+//        $response = json_decode($response);
+
+        $response = Http::post('https://api.ng.termii.com/api/sms/send', [
+            'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
+            'to' => $to,
+            'from' => $from,
+            'sms' => $sms,
+            'type' => 'plain',
+            'channel' => $channel,
+        ]);
         $response = json_decode($response);
 
-        if ($response->message == 'Successfully Sent') {
-            return 1;
-        };
+        return $response->message;
     }
 
 

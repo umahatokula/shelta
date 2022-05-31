@@ -36,9 +36,11 @@
                                         <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary" >Edit Profile</a>
                                         @endcan
 
-                                        @can('send client notification')
+                                            @can('reset password')
                                         <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.resetPassword', $client) }}" href="#" class="btn btn-success">Reset Password</a>
 
+                                            @endcan
+                                            @can('send client notification')
                                         <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning">Send notification</a>
                                         @endcan
                                     </div>

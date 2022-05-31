@@ -34,7 +34,37 @@ class Staff extends Model
     {
         return 'slug';
     }
-    
+    /**
+     * Set the user's first name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = trim(str_replace(' ', '', $value));
+    }
+
+    /**
+     * Ensure phone number has country code.
+     *
+     * @return bool
+     */
+    public function getPhoneAttribute($value)
+    {
+        $phone = $value;
+
+        if (strlen($value) == 11) {
+            $phone = '+234'.substr($value, 1);
+        }
+
+        if (strlen($value) == 10) {
+            $phone = '+234'.$value;
+        }
+
+        return $phone;
+    }
+
     /**
      * properties
      *

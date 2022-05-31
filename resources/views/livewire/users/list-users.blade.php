@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
-                            <a href="{{ route('users.create') }}" class="btn-lg btn btn-primary">Add Users</a>
+                            <a href="{{ route('users.create') }}" class="btn-lg btn btn-primary">Add/Edit Users</a>
                         </div>
                     </div>
                 </div>
@@ -29,9 +29,9 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="table-responsive-sm">
-    
+
                                 @if ($users->isNotEmpty())
                                 <table class="table mb-0">
                                     <thead>
@@ -39,8 +39,9 @@
                                             <th>#</th>
                                             <th class="text-left">Name</th>
                                             <th>Phone</th>
+                                            <th>Email</th>
                                             <th>Role(s)</th>
-                                            <th>Actions</th>
+                                            <th class="text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -57,12 +58,17 @@
                                             </td>
                                             <td>{{ $user->email }}</td>
                                             <td>
-                                                <a href="{{ route('users.edit', $user) }}" class="text-warning p-0" data-original-title=""
-                                                    title="Edit">
-                                                    <span class="material-icons-outlined">
-                                                        edit
-                                                        </span>
-                                                </a>
+                                                @foreach($user->roles as $role)
+                                                    {{ $role->name }} <br>
+                                                @endforeach
+                                            </td>
+                                            <td class="text-center">
+{{--                                                <a href="{{ route('users.edit', $user) }}" class="text-warning p-0" data-original-title=""--}}
+{{--                                                    title="Edit">--}}
+{{--                                                    <span class="material-icons-outlined">--}}
+{{--                                                        edit--}}
+{{--                                                        </span>--}}
+{{--                                                </a>--}}
                                                 <a wire:click="destroy({{ $user->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0" data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
@@ -71,17 +77,17 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
-    
-                                {{ $users->links() }}   
-                                
+
+                                {{ $users->links() }}
+
                                 @else
                                 <p>No users</p>
                                 @endif
-                                
-    
+
+
                             </div>
                         </div>
                     </div>

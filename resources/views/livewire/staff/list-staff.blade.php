@@ -14,13 +14,17 @@
                         <div class="col-md-6">
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
+                            @can('create staff')
                             <a href="{{ route('staff.create') }}" class="btn-lg btn btn-primary">Add Staff</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('view staffs')
 
                             <div>
                                 @if (session()->has('message'))
@@ -29,7 +33,7 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="table-responsive-sm">
                                 <table class="table mb-0">
                                     <thead>
@@ -49,30 +53,37 @@
                                             <td>{{ $staff->phone }}</td>
                                             <td>{{ $staff->email }}</td>
                                             <td>
+                                                @can('edit staffs')
                                                 <a href="{{ route('staff.edit', $staff) }}" class="text-warning p-0" data-original-title=""
                                                     title="Edit">
                                                     <span class="material-icons-outlined">
                                                         edit
                                                         </span>
                                                 </a>
+                                                @endcan
+
+                                                @can('delete staff')
                                                 <a wire:click="destroy({{ $staff->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"  href="#" class="text-danger p-0" data-original-title="" title="Delete">
                                                     <span class="material-icons-outlined">
                                                         delete
                                                         </span>
                                                 </a>
+                                                    @endcan
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
-    
+
                             <div class="row mt-5">
                                 <div class="col-12 d-flex justify-content-center">
                                     {{ $staffs->links() }}
                                 </div>
                             </div>
+
+                            @endcan
 
                         </div>
                     </div>

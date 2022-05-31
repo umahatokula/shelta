@@ -8,6 +8,7 @@ use App\Services\Services;
 use App\Models\Transaction;
 use App\Models\PaymentDefault;
 use App\Mail\PaymentMadeMailable;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Models\PaymentReminderSetting;
 use App\Models\EstatePropertyTypePrice;
@@ -35,6 +36,7 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\PaymentDetaultController;
 use App\Notifications\PaymentReminderNotification;
 use App\Http\Controllers\EstatePropertyTypeController;
+use Zeevx\LaraTermii\LaraTermii;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,14 +57,10 @@ Route::post('two-factor-auth', [TwoFactorAuthController::class, 'store'])->name(
 Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resend'])->name('2fa.resend')->middleware(['auth']);
 
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/home', function () {
-
-    if (auth()->user()->hasRole('client')) {
-        return redirect()->route('dashboard');
-    }
 
     return redirect()->route('dashboard');
 
@@ -264,4 +262,25 @@ Route::get('/mailable', function () {
 });
 
 Route::get('/test', function() {
+
+//    $termii = new LaraTermii(env('TERMII_API_KEY'));
+    $from = 'Richboss';
+    $to = '+2349099596262';
+    $sms = 'Hi Umaha';
+
+//    $response = $termii->sendMessage($to, $from, $sms, 'generic', $media = false, $media_url = null, $media_caption = null);
+//    $response = json_decode($response);
+
+    $response = Http::post('https://api.ng.termii.com/api/sms/send', [
+        'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
+        'to' => $to,
+        'from' => $from,
+        'sms' => $sms,
+        'type' => 'plain',
+        'channel' => 'generic',
+    ]);
+    $response = json_decode($response);
+
+    dd($response);
+
 });

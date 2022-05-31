@@ -14,6 +14,8 @@
                 </div>
                 <div class="card-body">
                     <div class="example-container">
+
+                        @can('view property')
                         <div class="example-content">
                             <div class="row">
                                 <div class="col-12">
@@ -21,6 +23,8 @@
                                 </div>
                             </div>
                         </div>
+                        @endcan
+
                     </div>
                 </div>
             </div>

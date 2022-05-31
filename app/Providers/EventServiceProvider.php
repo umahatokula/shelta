@@ -30,7 +30,6 @@ class EventServiceProvider extends ServiceProvider
             CompletePaymentNotification::class,
         ],
         'App\Events\PaymentComplete' => [
-            'App\Listeners\SendReceiptNotification',
             'App\Listeners\NotifyLegalAboutPaymentCompleteListener',
         ],
         'App\Events\PaymentMade' => [

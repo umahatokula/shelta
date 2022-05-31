@@ -15,6 +15,8 @@
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
+                            @can('create estate')
                             <form wire:submit.prevent="save">
 
                                 <div class="box-body">
@@ -111,6 +113,7 @@
                                     <input type="submit" class="btn-lg btn btn-primary" value="Save">
                                 </div>
                             </form>
+                            @endcan
                         </div>
                     </div>
                 </div>

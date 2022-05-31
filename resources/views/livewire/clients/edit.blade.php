@@ -21,6 +21,8 @@
                                     <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> Client's Details</h4>
                                     <hr class="my-15">
 
+                                    @can('edit client')
+
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <div class="form-group">
@@ -261,10 +263,14 @@
                                         </div>
                                     </div>
 
+                                    @endcan
+
 
 
                                     {{-- CLIENTS PROPERTIES  --}}
 
+                                    @can('assign property')
+                                        
                                     <div class="row">
                                         <div class="col-md-6 mb-5">
                                             <h4 class="box-title text-info mb-0 mt-20"><i class="ti-home me-15"></i> Client's
@@ -343,6 +349,8 @@
                                         </div>
                                     </div>
                                     @endforeach
+
+                                    @endcan
 
                                 </div>
                                 <!-- /.box-body -->

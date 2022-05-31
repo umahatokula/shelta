@@ -97,6 +97,7 @@ class Client extends Model implements HasMedia
     public function routeNotificationForWhatsApp() {
         return $this->phone;
     }
+
     /**
      * Set the user's first name.
      *

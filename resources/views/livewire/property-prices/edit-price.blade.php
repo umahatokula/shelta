@@ -14,6 +14,7 @@
                 </div>
                 <div class="card-body">
                     <div class="example-container">
+                        @can('edit property price')
                         <div class="example-content">
                             <form wire:submit.prevent="save">
 
@@ -35,6 +36,7 @@
                                 </div>
                             </form>
                         </div>
+                        @endcan
                     </div>
                 </div>
             </div>

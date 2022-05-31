@@ -16,12 +16,12 @@ class ListUsers extends Component
 
             $user = User::findOrFail($id);
 
-            if($user->staff_id) {    
+            if($user->staff_id) {
                 Staff::findOrFail($user->staff_id)->delete();
                 $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Staff deleted.']);
             }
 
-            if($user->client_id) {    
+            if($user->client_id) {
                 Client::findOrFail($user->client_id)->delete();
                 $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client deleted.']);
             }
@@ -35,8 +35,12 @@ class ListUsers extends Component
 
     public function render()
     {
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', '!=', 'client');
+        })->paginate(10);
+
         return view('livewire.users.list-users', [
-            'users' => User::paginate(10)
+            'users' => $users
         ]);
     }
 }

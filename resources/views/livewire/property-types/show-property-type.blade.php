@@ -51,7 +51,14 @@
                                                     <tr>
                                                         <td>
                                                             {{ $estate->name }}
-                                                            <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a>&nbsp;[<a href="{{ route('estate-property-type.csv', [$estate, $propertyType]) }}">CSV</a>]</small>
+
+                                                            @can('view clients')
+                                                            <small class="d-block"><a href="{{ route('estate-property-type.clients', [$estate, $propertyType]) }}">See Clients</a>&nbsp;
+                                                                @endcan
+
+                                                                @can('view clients')
+                                                                [<a href="{{ route('estate-property-type.csv', [$estate, $propertyType]) }}">CSV</a>]</small>
+                                                            @endcan
                                                         </td>
                                                         <td class="text-center">{{ $estate->number_of_units }}</td>
                                                         <td class="text-right">
@@ -69,12 +76,6 @@
                                                     </tr>
                                                 @endforelse
 
-                                                {{-- <tfoot>
-                                                    <tr>
-                                                        <td><b>Total:</b></td>
-                                                        <td colspan="4" class="text-right"><b>&#x20A6; {{ number_format($propertyTypeTotal) }}</b></td>
-                                                    </tr>
-                                                </tfoot> --}}
 
                                             </tbody>
                                         </table>

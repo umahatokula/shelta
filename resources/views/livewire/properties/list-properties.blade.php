@@ -18,13 +18,16 @@
                             <input wire:model="search" type="search" class="form-control" placeholder="Filter Property...">
                         </div>
                         <div class="col-md-3 d-flex justify-content-end float-right">
+                            @can('create property')
                             <a href="{{ route('properties.create') }}" class="btn btn-primary btn-lg">Add Property</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="example-container">
                         <div class="example-content">
+
 
                             @if (session()->has('message'))
                             <div class="col-lg-12">
@@ -34,6 +37,7 @@
                             </div>
                             @endif
 
+                            @can('view property')
                             <div class="table-responsive-sm">
                                 <table class="table mb-0">
                                     <thead>
@@ -75,24 +79,32 @@
                                                 @endif
                                             </td>
                                             <td>
+                                                @can('view property')
                                                 <a href="{{ route('properties.show', $property) }}" class="text-primary p-0" data-original-title="View"
                                                     title="View">
                                                 <span class="material-icons-outlined">
                                                     visibility
                                                     </span>
                                                 </a>
+                                                @endcan
+
+                                                @can('edit property')
                                                 <a href="{{ route('properties.edit', $property) }}" class="text-warning p-0" data-original-title=""
                                                     title="Edit">
                                                 <span class="material-icons-outlined">
                                                     edit
                                                     </span>
                                                 </a>
+                                                    @endcan
+
+                                                    @can('delete property')
                                                 <a wire:click.prevent="destroy({{ $property->id }})" onclick="confirm('Are you sure?') || event.stopImmediatePropagation()" href="#" class="text-danger p-0"
                                                     data-original-title="" title="Delete">
                                                 <span class="material-icons-outlined">
                                                     delete
                                                     </span>
                                                 </a>
+                                                    @endcan
                                             </td>
                                         </tr>
                                         @endforeach
@@ -107,6 +119,7 @@
                                 {{ $properties->links() }}
                               </div>
                             </div>
+                                @endcan
                         </div>
                     </div>
                 </div>
