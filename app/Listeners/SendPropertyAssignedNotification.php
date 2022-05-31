@@ -9,7 +9,7 @@ use App\Events\ClientPropertiesUpdated;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendPropertyAssignedNotification
+class SendPropertyAssignedNotification implements ShouldQueue
 {
     /**
      * Create the event listener.

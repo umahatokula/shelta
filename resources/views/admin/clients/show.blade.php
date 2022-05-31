@@ -31,15 +31,17 @@
                             <div class="row">
                                 <div class="col-12">
 
-                                    @can('manage clients')
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        @can('edit client')
                                         <a href="{{ route('clients.edit', $client) }}" class="btn btn-primary" >Edit Profile</a>
+                                        @endcan
 
+                                        @can('send client notification')
                                         <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.resetPassword', $client) }}" href="#" class="btn btn-success">Reset Password</a>
 
                                         <a data-toggle="modal" data-keyboard="false" data-target="#modal-center" data-remote="{{ route('clients.sendMail', $client) }}" href="#" class="btn btn-warning">Send notification</a>
+                                        @endcan
                                     </div>
-                                    @endcan
 
                                     <div>
                                         <p>

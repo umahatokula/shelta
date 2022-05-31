@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FirstPaymentMade;
 use App\Models\Bank;
 use App\Models\Client;
 use App\Events\PaymentMade;
@@ -171,16 +172,22 @@ class TransactionsController extends Controller
         $transaction->processed_by = auth()->id();
         $transaction->save();
 
-        // dispatch event
-        if ($request->status == 1) {
-            PaymentMade::dispatch($transaction);
-        }
-
         // set date of first transaction
         $property = $transaction->property;
         if (!$property->date_of_first_payment) {
             $property->date_of_first_payment = $transaction->date;
             $property->save();
+        }
+
+        // fire event
+        if ($request->status == 1) {
+
+            if (!$property->date_of_first_payment) {
+                FirstPaymentMade::dispatch($transaction);
+            } else {
+                PaymentMade::dispatch($transaction);
+            }
+
         }
 
         return redirect()->back();

@@ -15,12 +15,11 @@ class DashboardController extends Controller
     {
 
         $user = auth()->user();
-        if ($user->hasRole('staff')) {
-            return redirect()->route('admin.dashboard');
+        if ($user->hasRole('client')) {
+            return redirect()->route('frontend.dashboard');
         }
-        
-        return redirect()->route('frontend.dashboard');
-        return view('dashboard');
+
+        return redirect()->route('admin.dashboard');
     }
 
     public function clientDashboard() {

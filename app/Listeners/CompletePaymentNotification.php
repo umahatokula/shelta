@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Events\NotifyLegal;
+use App\Events\PaymentComplete;
 use App\Models\User;
 use App\Helpers\Helpers;
 use App\Events\PaymentMade;
@@ -11,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Mail\PropertyPaymentCompleteForAdminMailable;
 use App\Mail\PropertyPaymentCompleteForClientMailable;
 
-class CompletePaymentNotification
+class CompletePaymentNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -26,10 +28,10 @@ class CompletePaymentNotification
     /**
      * Handle the event.
      *
-     * @param  PaymentMade  $event
+     * @param $event
      * @return void
      */
-    public function handle(PaymentMade $event)
+    public function handle($event)
     {
         $paymentIsComplete = false;
         $property = $event->transaction->property;
@@ -38,43 +40,9 @@ class CompletePaymentNotification
             $paymentIsComplete = true;
         }
 
-
-
         if ($paymentIsComplete) {
 
-            $message = 'Payment completed';
-            // $users = User::permission('generate land papers')->get(); // Returns only users with the permission to 'generate land papers';
-            $users = User::skip(1)->take(3)->whereNull('client_id')->get();
-            // dd($users);
-
-            foreach ($users as $user) {
-
-                // ===========SNED SMS===============
-                $receiverNumber = $user->client->phone;
-
-                if ($receiverNumber) {
-                    Helpers::sendSMSMessage($receiverNumber, $message); // send sms
-                }
-            }
-
-
-            // ===========SNED EMAIL===============
-            try {
-
-                // MAIL ADMIN
-                Mail::to($users)
-                    ->send(new PropertyPaymentCompleteForAdminMailable($event->transaction));
-
-                // MAIL CLIENT
-                Mail::to($event->transaction->client)
-                    ->send(new PropertyPaymentCompleteForClientMailable($event->transaction));
-
-
-            } catch (\Exception $e) {
-
-                \Log::info($e);
-
-            }
+            event(new PaymentComplete($event->transaction));
 
         }
 

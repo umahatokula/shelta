@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Frontend\Transactions;
 
+use App\Events\FirstPaymentMade;
 use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
@@ -109,6 +110,9 @@ class Online extends Component
                     $transaction->instalment_date = Carbon::now();
                     $transaction->is_first_instalment = true;
                     $transaction->save();
+
+                    // fire event
+                    FirstPaymentMade::dispatch($transaction);
                 }
 
                 // set new date for next payment

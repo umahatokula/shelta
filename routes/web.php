@@ -70,7 +70,7 @@ Route::get('/home', function () {
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
-Route::prefix('admin')->middleware(['auth', 'role:staff', '2fa'])->group(function () {
+Route::prefix('admin')->middleware(['auth', '2fa'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
 

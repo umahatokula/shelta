@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\Client;
@@ -18,11 +19,14 @@ class CreateUser extends Component
             $staff_password_confirmation,
             $client_id,
             $client_password,
-            $client_password_confirmation;
+            $client_password_confirmation,
+            $roles,
+            $role_ids;
 
     public function mount() {
         $this->staffs = Staff::all();
         $this->clients = Client::all();
+        $this->roles = Role::all();
     }
 
     /**
@@ -53,7 +57,7 @@ class CreateUser extends Component
             ]);
 
         // assign role
-        $user->assignRole('staff');
+        $user->assignRole($this->role_ids);
 
         redirect()->route('users.index');
     }

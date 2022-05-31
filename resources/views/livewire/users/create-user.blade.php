@@ -40,10 +40,22 @@
                                                     <select wire:model.lazy="staff_id" class="form-select form-control">
                                                         <option value="">Please select one</option>
                                                         @foreach ($staffs as $staff)
-                                                        <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                                            <option value="{{ $staff->id }}">{{ $staff->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('staff_id') <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="form-group mb-5">
+                                                    <label class="form-label" id="role_ids">Role(s)</label>
+                                                    <select wire:model.lazy="role_ids" class="form-select form-control" multiple>
+                                                        <option value="">Please select one</option>
+                                                        @foreach ($roles as $role)
+                                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('role_ids') <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
 

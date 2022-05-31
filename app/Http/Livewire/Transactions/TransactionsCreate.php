@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Transactions;
 
+use App\Events\FirstPaymentMade;
 use Carbon\Carbon;
 use App\Models\Client;
 use Livewire\Component;
@@ -63,7 +64,7 @@ class TransactionsCreate extends Modal
 
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
-        })->first()->propertyPrice->price;
+        })->first()?->propertyPrice?->price;
 
         $this->propertybalance = $propertyPrice - $property->totalPaid();
 
@@ -115,6 +116,9 @@ class TransactionsCreate extends Modal
             $transaction->save();
 
             $property->date_of_first_payment = $transaction->instalment_date;
+
+            // fire event
+            FirstPaymentMade::dispatch($transaction);
         }
 
         // set new date for next payment

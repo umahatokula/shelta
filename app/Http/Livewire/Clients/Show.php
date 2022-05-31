@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Clients;
 
+use App\Events\FirstPaymentMade;
 use PDF;
 use DB;
 use Mail;
@@ -111,6 +112,9 @@ class Show extends Component
                     // update first transaction instalment date
                     $transaction->instalment_date = Carbon::now();
                     $transaction->save();
+
+                    // fire event
+                    FirstPaymentMade::dispatch($transaction);
                 }
 
                 // set new date for next payment
@@ -137,7 +141,12 @@ class Show extends Component
             ->log('online payment');
 
         // dispatch event
-        PaymentMade::dispatch($transaction);
+
+        if (!$property->date_of_first_payment) {
+            FirstPaymentMade::dispatch($transaction);
+        } else {
+            PaymentMade::dispatch($transaction);
+        }
 
         // session()->flash('message', 'Payment successful.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);

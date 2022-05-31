@@ -9,7 +9,7 @@ use App\Mail\ClientAccountCreatedMailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Events\ClientAccountCreated as ClientAccountCreatedEvent;
 
-class ClientAccountCreated
+class ClientAccountCreated implements ShouldQueue
 {
     /**
      * Create the event listener.

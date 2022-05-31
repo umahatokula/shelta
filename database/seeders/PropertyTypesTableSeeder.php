@@ -15,12 +15,12 @@ class PropertyTypesTableSeeder extends Seeder
     public function run()
     {
 
-        if (env('PHILEOTECH_CLIENT') == 'hall7') {
+//        if (env('PHILEOTECH_CLIENT') == 'hall7') {
             PropertyType::create([
                 'name' => 'CUBIQ DUPLEX',
                 'description' => 'This elegantly designed edifice, stands as an epitome of lifestyle living. This  fully detached duplex features five bedrooms, with two living rooms, a two-car parking garage, a kitchen and dining with ample space and a swimming pool that grants you a resort like experience at the comfort of your own home.'
             ]);
-            
+
             PropertyType::create([
                 'name' => 'HEXAGON COURTYARD',
                 'description' => 'This is an epitome of style and sophistication. Simply move in and live the lifestyle you’ve always dreamed of in this luxurious cluster homes on two suspended floors. An Impressive array of semi-detached homes creating an open hexagon courtyard. Each community features a state of the art key card security barrier. The Hexagon courtyard features a unique patio which makes for a grand entrance and flows effortlessly into a befittingly spacious living room and dining area that extends into a do all you can large kitchen with an eat-in area. It offers four large bedrooms which are all en-suite. Among its other features is a one bedroom boy’s quarters, a study, box room, store, and a laundry room.
@@ -66,7 +66,7 @@ class PropertyTypesTableSeeder extends Seeder
                 It features 3 bedrooms, 2 separate living areas, large kitchen & dining area,
                 3 parking spaces and an attached boy’s quarters.'
             ]);
-        }
+//        }
 
 
         if (env('PHILEOTECH_CLIENT') == 'ochacho') {
@@ -81,7 +81,7 @@ class PropertyTypesTableSeeder extends Seeder
                 Price: 35 million
                 You can be a part of the ochacho family with a N2.5m initial deposit, you can spread your balance and own your dream home with us.'
             ]);
-            
+
             PropertyType::create([
                 'name' => 'FULLY DETACHED DUPLEX WITH PENTHOUSE',
                 'description' => 'Fully Detached standalone duplex with penthouse, 5 bedroom with two room boys quarters.

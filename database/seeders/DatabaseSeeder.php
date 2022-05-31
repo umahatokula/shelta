@@ -27,15 +27,15 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // EstatesTableSeeder::class,
-            // PropertyTypesTableSeeder::class,
+            PropertyTypesTableSeeder::class,
             // EstatePropertyTypeTableSeeder::class,
-            // PropertiesTableSeeder::class,
+            PropertiesTableSeeder::class,
             RolesTableSeeder::class,
-//            StatesTableSeeder::class,
-//            LGAsTableSeeder::class,
-            // PaymentPlansTableSeeder::class,
+            StatesTableSeeder::class,
+            LGAsTableSeeder::class,
+            PaymentPlansTableSeeder::class,
             GenderTableSeeder::class,
-//            BankSeeder::class,
+            BankSeeder::class,
             MaritalStatusSeeder::class,
         ]);
 
