@@ -102,7 +102,7 @@ class User extends Authenticatable
         ]);
 
         $user = auth()->user();
-        $message = 'Hi '. $user->name .'! Kindly use the OTP '. $code .' to complete your login on shelta.tech';
+        $message = 'Your Richboss confirmation code is '. $code .'. Valid for 10 minutes, one time use only';
 
         // dispatch event
         OPTGenerated::dispatch($message, $user);

@@ -41,13 +41,6 @@ class SendOTPNotification
         $message = $event->content;
         $receiverNumber = null;
 
-        if ($event->user->hasRole('staff')) {
-
-            if ($event->user->staff) {
-                $receiverNumber = $event->user->staff->phone;
-            }
-
-        }
 
         if ($event->user->hasRole('client')) {
 
@@ -55,6 +48,11 @@ class SendOTPNotification
                 $receiverNumber = $event->user->client->phone;
             }
 
+        } else {
+
+            if ($event->user->staff) {
+                $receiverNumber = $event->user->staff->phone;
+            }
         }
 
         if ($receiverNumber) {

@@ -25,38 +25,28 @@ class Helpers {
         //   'message' => $message,
         // ]);
 
-        // $response = Http::post('http://www.smslive247.com/http/index.aspx', [
-        //   'cmd' => 'sendmsg',
-        //   'sessionid' => urlencode('4195840d-a848-4e80-8f14-d13d5f2ca848'),
-        //   'sender' => config('app.name'),
-        //   'sendto' => $to,
-        //   'message' => $message,
-        //   'msgtype' => 0,
-        // ]);
+//         $response = Http::post('http://www.smslive247.com/http/index.aspx', [
+//           'cmd' => 'sendmsg',
+//           'sessionid' => urlencode('4195840d-a848-4e80-8f14-d13d5f2ca848'),
+//           'sender' => config('app.name'),
+//           'sendto' => $to,
+//           'message' => $message,
+//           'msgtype' => 0,
+//         ]);
 
-        // $response = Http::post('https://www.bulksmsnigeria.com/api/v1/sms/create', [
-        //   'api_token' => config('services.send_bulk_sms_nigeria.api_token'),
-        //   'from' => config('app.name'),
-        //   'to' => $to,
-        //   'body' => $message,
-        //   'dnd' => 2,
-        // ]);
+//         $response = Http::post('https://www.bulksmsnigeria.com/api/v1/sms/create', [
+//           'api_token' => config('services.send_bulk_sms_nigeria.api_token'),
+//           'from' => config('app.name'),
+//           'to' => $to,
+//           'body' => $message,
+//           'dnd' => 2,
+//         ]);
 
         $from = 'Richboss';
         $sms = $message;
 
-//        $termii = new LaraTermii(env('TERMII_API_KEY'));
-//        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
-//        $response = json_decode($response);
-
-        $response = Http::post('https://api.ng.termii.com/api/sms/send', [
-            'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
-            'to' => $to,
-            'from' => $from,
-            'sms' => $sms,
-            'type' => 'plain',
-            'channel' => $channel,
-        ]);
+        $termii = new LaraTermii(env('TERMII_API_KEY'));
+        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
         $response = json_decode($response);
 
         return $response->message;
@@ -72,21 +62,11 @@ class Helpers {
      */
     public static function sendWhatsAppMessage($to, $message, $channel = 'whatsapp') {
 
-//        $termii = new LaraTermii(env('TERMII_API_KEY'));
+        $termii = new LaraTermii(env('TERMII_API_KEY'));
         $from = 'Richboss';
         $sms = $message;
 
-//        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
-//        $response = json_decode($response);
-
-        $response = Http::post('https://api.ng.termii.com/api/sms/send', [
-            'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
-            'to' => $to,
-            'from' => $from,
-            'sms' => $sms,
-            'type' => 'plain',
-            'channel' => $channel,
-        ]);
+        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
         $response = json_decode($response);
 
         return $response->message;

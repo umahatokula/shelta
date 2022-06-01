@@ -83,7 +83,7 @@ class UsersController extends Controller
     {
         //
     }
-    
+
     /**
      * display profile page
      *
@@ -91,13 +91,12 @@ class UsersController extends Controller
      * @return void
      */
     public function profile(User $user) {
-        dd($user);
 
         $data['user'] = $user->load('client');
 
         return view('frontend.users.profile', $data);
     }
-    
+
     /**
      * store client Profile
      *

@@ -263,24 +263,4 @@ Route::get('/mailable', function () {
 
 Route::get('/test', function() {
 
-//    $termii = new LaraTermii(env('TERMII_API_KEY'));
-    $from = 'Richboss';
-    $to = '+2349099596262';
-    $sms = 'Hi Umaha';
-
-//    $response = $termii->sendMessage($to, $from, $sms, 'generic', $media = false, $media_url = null, $media_caption = null);
-//    $response = json_decode($response);
-
-    $response = Http::post('https://api.ng.termii.com/api/sms/send', [
-        'api_key' => 'TLBz3470GzwE0Rb9Sy8cwZm65zo1v16lUV3kyhC2U59xQZrd4BghGAoadb2j6b',
-        'to' => $to,
-        'from' => $from,
-        'sms' => $sms,
-        'type' => 'plain',
-        'channel' => 'generic',
-    ]);
-    $response = json_decode($response);
-
-    dd($response);
-
 });
