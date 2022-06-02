@@ -18,6 +18,7 @@ class AddFieldsToClientsTable extends Migration
             $table->string('place_of_birth')->nullable();
             $table->foreignId('lga_id')->nullable();
             $table->foreignId('marital_status_id')->nullable();
+            $table->text('residential_address')->nullable();
             $table->foreignId('nok_gender_id')->nullable();
             $table->string('referrer')->nullable();
             $table->string('nok_phone')->nullable();

@@ -1,350 +1,314 @@
 <div>
-    <div class="rs-contact contact-style2 pt-95 pb-100 md-pt-65 md-pb-70">
-        <div class="container">
-            <div class="sec-title2 mb-55 md-mb-35 text-start">
-                <h1 class="title mb-0">Subscription Form </h1>
-            </div>
-            <div class="row y-middle">
-                <div class="col-lg-12">
-                    <div class="contact-wrap">
-                        <div id="form-messages"></div>
 
-                        @if (count($errors) > 0)
-                            <div class="alert alert-danger alert-important">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+    <div class="bloghead">
+        <h1>Subscription Form</h1>
+    </div>
 
-                        <form x-data wire:submit.prevent="signUpPreview">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">&nbsp</h4>
-                            </div>
+    <div class="subbody">
+        <div class="subform">
 
-                            <input type="hidden" name="amount" id="amount" value="10000">
+            <form wire:submit.prevent="signUpPreview">
 
-                            {{-- PAGE ONE --}}
-{{--                            <div x-show="$wire.pageOne" x-transition.duration.100ms class="box-body">--}}
+                <input type="hidden" name="processing_fee" id="processing_fee" value="{{$processingFee}}">
+                <input type="hidden" name="property_price" id="property_price" value="{{$propertyPrice}}">
+                <input type="hidden" name="total_amount" id="total_amount" value="{{$processingFee + $propertyPrice}}">
 
-                                <fieldset>
-                                    <legend>Bio data</legend>
-                                    <div>
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="sname">Surname Name <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <input wire:model.lazy="sname" class="from-control" type="text">
-                                                @error('sname') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <h3>Basic Info</h3>
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="onames">Other Names <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <input wire:model.lazy="onames" class="from-control" type="text">
-                                                @error('onames') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="sname">Surname Name <span>*</span></label>
+                <input  wire:model.lazy="sname" type="text" placeholder="Your Full name" minlength="3" maxlength="25" id="sname">
+                @error('sname') <small><span class="text-danger">{{ $message }}</span></small> @enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" for="gender">Gender <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <select wire:model.lazy="gender" class="from-control">
-                                                    <option value="">Select one</option>
-                                                    @foreach ($genders as $gender)
-                                                        <option value="{{ $gender->id }}">{{ $gender->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="onames">Other Names <span>*</span></label>
+                <input  wire:model.lazy="onames" type="text" placeholder="Your Full name" minlength="3" maxlength="25" id="onames">
+                @error('onames') <small><span class="text-danger">{{ $message }}</span></small> @enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" for="email">Email</label>
-                                            <div class="col-md-10">
-                                                <input wire:model.lazy="email" value="{{ $email }}" class="from-control" type="email" id="email">
-                                                @error('email') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="gender">Gender<span>*</span></label>
+                <select wire:model.lazy="gender" class="from-control">
+                    <option value="">Select one</option>
+                    @foreach ($genders as $gender)
+                        <option value="{{ $gender->id }}">{{ $gender->name }}</option>
+                    @endforeach
+                </select> <br>
+                @error('gender') <small><span class="text-danger">{{ $message }}</span></small> @enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="phone">Phone number <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <input wire:model="phone" class="from-control" type="number">
-                                                @error('phone') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="email">Email<span>*</span></label>
+                <input wire:model.lazy="email" value="{{ $email }}" class="from-control" type="email" id="email">
+                @error('email') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="marital_status_id">Marital Status <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <select wire:model.lazy="marital_status_id" class="from-control">
-                                                    <option value="">Please select one</option>
-                                                    @foreach ($maritalStatuses as $maritalStatus)
-                                                        <option value="{{ $maritalStatus->id }}">{{ $maritalStatus->name }}</option>
-                                                    @endforeach
+                <label for="phone">Phone Number<span>*</span></label>
+                <input wire:model="phone" class="from-control" type="number">
+                @error('phone') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                                </select>
-                                                @error('marital_status_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="marital_status_id">Marital Status<span>*</span></label>
+                <select wire:model.lazy="marital_status_id" class="from-control">
+                    <option value="">Please select one</option>
+                    @foreach ($maritalStatuses as $maritalStatus)
+                        <option value="{{ $maritalStatus->id }}">{{ $maritalStatus->name }}</option>
+                    @endforeach
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="dob">Date of birth <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <input wire:model.lazy="dob" class="from-control" type="date">
-                                                @error('dob') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                </select> <br>
+                @error('marital_status_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" for="country_code">Country <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <select wire:model.lazy="country_code" class="from-control" id="country_code">
-                                                    <option value="">Select one</option>
-                                                    @foreach ($countries as $code =>  $country)
-                                                        <option value="{{ $code }}">{{ $country['name'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('country_code') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="dob">Date of Birth<span>*</span></label>
+                <input wire:model.lazy="dob" class="from-control" type="date">
+                @error('dob') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="place_of_birth">Place of birth</label>
-                                            <div class="col-md-10">
-                                                <input wire:model.lazy="place_of_birth" value="" class="from-control" type="text">
-                                                @error('place_of_birth') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="country_code">Nationality<span>*</span></label>
+                <select wire:model.lazy="country_code" class="from-control" id="country_code">
+                    <option value="">Select one</option>
+                    @foreach ($countries as $code =>  $country)
+                        <option value="{{ $code }}">{{ $country['name'] }}</option>
+                    @endforeach
+                </select> <br>
+                @error('country_code') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="state_id">State of origin <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <select wire:model.lazy="state_id" class="from-control">
-                                                    <option value="">Select one</option>
-                                                    @foreach ($states as $state)
-                                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('state_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="place_of_birth">Place of Birth<span>*</span></label>
+                <input wire:model.lazy="place_of_birth" value="" class="from-control" type="text">
+                @error('place_of_birth') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="lga_id">Local Govt. of origin <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <select wire:model.lazy="lga_id" class="from-control">
-                                                    <option value="">Select one</option>
-                                                    @foreach ($lgas as $lga)
-                                                        <option value="{{ $lga->id }}">{{ $lga->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('lga_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="state_id">State of Origin <span>*</span></label>
+                <select wire:model.lazy="state_id" class="from-control">
+                    <option value="">Select one</option>
+                    @foreach ($states as $state)
+                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                    @endforeach
+                </select> <br>
+                @error('state_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                        <div class="form-group row mb-3 mb-md-5">
-                                            <label class="col-form-label col-md-2" id="profile_picture">Upload Photo (Please take a selfie or upload any picture that captures your face) <span class="text-danger">*</span></label>
-                                            <div class="col-md-10">
-                                                <input wire:model="profile_picture" class="from-control" type="file">
-                                                @error('profile_picture') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
+                <label for="lga_id">Local Government of Origin <span>*</span></label>
+                <select wire:model.lazy="lga_id" class="from-control">
+                    <option value="">Select one</option>
+                    @foreach ($lgas as $lga)
+                        <option value="{{ $lga->id }}">{{ $lga->name }}</option>
+                    @endforeach
+                </select> <br>
+                @error('lga_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    </div>
+                <label for="residential_address">Residential Address <span>*</span></label>
+                <input wire:model.lazy="residential_address" class="from-control" type="text">
+                @error('residential_address') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
-{{--                                        <div class="col-md-3">--}}
-{{--                                            <div class="d-grid grid-2">--}}
-{{--                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Next">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-                                </fieldset>
+                <label for="profile_picture">Upload Photo (Please take a selfie or upload any picture that captures your face)<span>*</span></label>
+                <input wire:model="profile_picture" class="from-control" type="file">
+{{--                <div class="profile_picture">--}}
+{{--                    @if ($profile_picture)--}}
+{{--                        <p style="margin: 10px 0;">Photo Preview:</p>--}}
+{{--                        <img src="{{ $profile_picture->temporaryUrl() }}" style="max-width: 150px;">--}}
+{{--                    @endif--}}
+{{--                </div>--}}
+                @error('profile_picture') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-{{--                            </div>--}}
+                <br><br>
+                <h3>Next of Kin Details</h3>
 
-                            {{-- PAGE TWO --}}
-{{--                            <div x-show="$wire.pageTwo" x-transition.duration.100ms class="box-body">--}}
+                <label for="nok_name">Full Name <span>*</span></label>
+                <input wire:model.lazy="nok_name" class="from-control" type="text">
+                @error('nok_name') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                <fieldset>
-                                    <legend>Next-of-kin</legend>
+                <label for="nok_dob">Date of Birth<span>*</span></label>
+                <input wire:model.lazy="nok_dob" class="from-control" type="date">
+                @error('nok_dob') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_name">Name <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="nok_name" class="from-control" type="text">
-                                            @error('nok_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                <label for="nok_gender_id">Gender<span>*</span></label>
+                <select wire:model.lazy="nok_gender_id" class="from-control">
+                    <option value="">Select one</option>
+                    @foreach ($genders as $gender)
+                        <option value="{{ $gender->id }}">{{ $gender->name }}</option>
+                    @endforeach
+                </select> <br>
+                @error('nok_gender_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_dob">Date of birth <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="nok_dob" class="from-control" type="date">
-                                            @error('nok_dob') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                <label for="relationship_with_nok">Relationship <span>*</span></label>
+                <input wire:model.lazy="relationship_with_nok" class="from-control" type="text">
+                @error('relationship_with_nok') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_gender_id">Gender <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <select wire:model.lazy="nok_gender_id" class="from-control">
-                                                <option value="">Select one</option>
-                                                @foreach ($genders as $gender)
-                                                    <option value="{{ $gender->id }}">{{ $gender->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('nok_gender_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                <label for="nok_phone">Phone Number<span>*</span></label>
+                <input wire:model="nok_phone" class="from-control" type="number">
+                @error('nok_phone') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="relationship_with_nok">Relationship</label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="relationship_with_nok" class="from-control" type="text">
-                                            @error('relationship_with_nok') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_phone">Phone number <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <input wire:model="nok_phone" class="from-control" type="number">
-                                            @error('nok_phone') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_email">Email</label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="nok_email" class="from-control" type="email">
-                                            @error('nok_email') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="nok_address">Contact Address</label>
-                                        <div class="col-md-10">
-                                            <textarea wire:model.lazy="nok_address" class="from-control" type="email"></textarea>
-                                            @error('nok_address') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                <label for="nok_email">Email<span>*</span></label>
+                <input wire:model.lazy="nok_email" class="from-control" type="email">
+                @error('nok_email') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
 
-{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
-{{--                                        <div class="col-md-3">--}}
-{{--                                            <div class="d-grid grid-2">--}}
-{{--                                                <input x-on:click="$wire.setPageOne()" type="button" class="readon submit mb-2" value="Previous">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="col-md-3">--}}
-{{--                                            <div class="d-grid grid-2">--}}
-{{--                                                <input x-on:click="$wire.setPageThree()" type="button" class="readon submit mb-2" value="Next">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-                                </fieldset>
+                <label for="nok_address">Contact Address<span>*</span></label>
+                <textarea wire:model.lazy="nok_address" class="" type="email"></textarea>
+                @error('nok_address') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-{{--                            </div>--}}
 
-                            {{-- PAGE THREE --}}
-{{--                            <div x-show="$wire.pageThree" x-transition.duration.100ms class="box-body">--}}
+                <br><br>
+                <h3>Property Details</h3>
 
-                                <fieldset>
-                                    <legend>Property Details</legend>
+                <label for="estate_id">Select the Estate to buy fom <span>*</span></label>
+                <select wire:model.lazy="estate_id" wire:change="onSelectEstate($event.target.value)" class="from-control">
+                    <option value="">Select one</option>
+                    @foreach ($estates as $estate)
+                        <option value="{{ $estate->id }}">{{ $estate->name }}</option>
+                    @endforeach
+                </select> <br>
+                @error('estate_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-{{--                                    <div class="form-group row mb-3 mb-md-5">--}}
-{{--                                        <label class="col-form-label col-md-2" id="number_of_plots">How Many Plots Are You Buying? <span class="text-danger">*</span></label>--}}
-{{--                                        <div class="col-md-10">--}}
-{{--                                            <input wire:model.lazy="number_of_plots" class="from-control" type="text">--}}
-{{--                                            @error('number_of_plots') <span class="text-danger">{{ $message }}</span> @enderror--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                <label for="propertyType_id">Which Property Are You Subscribing For<span>*</span></label>
+                <select wire:model.lazy="propertyType_id" wire:change="onSelectPropertyType($event.target.value)" class="from-control">
+                    <option value="">Select one</option>
+                    @forelse ($propertyTypes as $propertyType)
+                        <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
+                    @empty
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="estate_id">Estate <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <select wire:model.lazy="estate_id" wire:change="onSelectEstate($event.target.value)" class="from-control">
-                                                <option value="">Select one</option>
-                                                @foreach ($estates as $estate)
-                                                    <option value="{{ $estate->id }}">{{ $estate->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('estate_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                    @endforelse
+                </select> <br>
+                @error('propertyType_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="propertyType_id">Which Property Type Are You Subscribing For <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <select wire:model.lazy="propertyType_id" wire:change="onSelectPropertyType($event.target.value)" class="from-control">
-                                                <option value="">Select one</option>
-                                                @forelse ($propertyTypes as $propertyType)
-                                                    <option value="{{ $propertyType['id'] }}">{{ $propertyType['name'] }}</option>
-                                                @empty
+                <label for="payment_plan_id">Select your prefered Payment Plan<span>*</span></label>
+                <select wire:model.lazy="payment_plan_id" class="from-control" wire:change="onSelectPaymentPlan($event.target.value)" class="from-control">
+                    <option value="">Select one</option>
+                    @forelse  ($paymentPlans as $paymentPlan)
+                    <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>
+                    @empty
 
-                                                @endforelse
-                                            </select>
-                                            @error('propertyType_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+                    @endforelse
+                </select> <br>
+                @error('payment_plan_id') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="payment_plan_id">Select your prefered Payment Plan <span class="text-danger">*</span></label>
-                                        <div class="col-md-10">
-                                            <select wire:model.lazy="payment_plan_id" class="from-control">
-                                                <option value="">Select one</option>
-                                                @forelse  ($paymentPlans as $paymentPlan)
-                                                <option value="{{ $paymentPlan['id'] }}">{{ $paymentPlan['name'] }}</option>
-                                                @empty
+                <label for="referrer">Who Referred You? </label>
+                <input wire:model.lazy="referrer" class="from-control" type="text">
+                @error('referrer') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
 
-                                                @endforelse
-                                            </select>
-                                            @error('payment_plan_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+{{--                <div x-data="{ open: false }">--}}
+{{--                <label for="payment_mode">Choose a payment type </label>--}}
+{{--                <input wire:model.lazy="payment_mode" class="from-control" type="radio" value="transfer" id="transfer" checked required x-model="open = true">--}}
+{{--                <label class="form-check-label" for="transfer">--}}
+{{--                    Transfer--}}
+{{--                </label> <br>--}}
+{{--                <input wire:model.lazy="payment_mode" class="from-control" type="radio" value="online" id="online" required @click="open = false">--}}
+{{--                <label class="form-check-label" for="online">--}}
+{{--                    Online--}}
+{{--                </label>--}}
+{{--                @error('payment_mode') <small><span class="text-danger">{{ $message }}</span> </small>@enderror--}}
+{{--                <br>--}}
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="referrer">Who Referred You?</label>
-                                        <div class="col-md-10">
-                                            <input wire:model.lazy="referrer" class="from-control" type="text">
-                                            @error('referrer') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
 
-                                    <div class="form-group row mb-3 mb-md-5">
-                                        <label class="col-form-label col-md-2" id="signature">Signature (Please sign on a plain sheet, snap it and upload)</label>
-                                        <div class="col-md-10">
-                                            <input wire:model.prevent="signature" class="from-control" type="file">
-                                            @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
+{{--                    <div x-show="open">--}}
+{{--                        <h4>Account Details</h4>--}}
+{{--                        <p>Upon submission of this form, kindl make payment to the company account details within 24 hours. </p>--}}
+{{--                        <br>--}}
+{{--                        <p>--}}
+{{--                            <b>Account Name:</b> Richboss Realty Limited<br>--}}
+{{--                            <b>Account Number:</b> 7810850387 <br>--}}
+{{--                            <b>Bank Name:</b> Wema Bank<br>--}}
+{{--                        </p><br>--}}
+{{--                        <p>Please note that Richboss Realty Limited will not be held liable for any payment not made directly--}}
+{{--                            into our designated bank account.</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
 
-                                    <div class="form-group row mb-3 mb-md-5">
-{{--                                        <div class="col-md-3">--}}
-{{--                                            <div class="d-grid grid-2">--}}
-{{--                                                <input x-on:click="$wire.setPageTwo()" type="button" class="readon submit mb-2" value="Previous">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-                                        <div class="col-md-3">
-                                            <div class="d-grid grid-2">
-                                                <input type="submit" class="readon submit mb-2" value="Preview" id="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
+                <br>
+                <label for="signature">Signature (Please sign on a plain sheet, snap it and upload)<span>*</span></label>
+                <input wire:model.prevent="signature" class="from-control" type="file">
+                @error('signature') <small><span class="text-danger">{{ $message }}</span> </small>@enderror
+                <br><br>
 
-{{--                            </div>--}}
+                <button type="submit" id="onlinePaymentBtn">Submit</button>
 
-                        </form>
+            </form>
 
-                    </div>
-                </div>
-            </div>
         </div>
+
     </div>
 </div>
+
+
+@push('css')
+    <style>
+
+        .subform form input {
+            padding: 10px;
+            outline: none;
+            width: 100%;
+        }
+        .subform form select {
+            padding: 10px;
+            width: 100%;
+        }
+        .subform form textarea {
+            padding: 10px;
+            width: 100%;
+        }
+        .subform form h3 {
+            background-color: var(--primary);
+            color: black;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .text-danger {
+        color: red;
+    }
+    </style>
+@endpush
+
+@push('scripts')
+
+    {{-- Paystack --}}
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <script>
+
+        const onlinePaymentBtn = document.getElementById('onlinePaymentBtn');
+
+        onlinePaymentBtn.addEventListener("click", validateInput, false);
+
+
+        function validateInput(e) {
+
+            e.preventDefault();
+            
+            Livewire.emit('validateInput')
+
+            window.addEventListener('inputValidated', event => {
+                payWithPaystack(e)
+            })
+
+        }
+
+
+        // load paystack plugin
+        function payWithPaystack(e) {
+
+            e.preventDefault();
+
+            var email = document.getElementById('email').value;
+            var amount = document.getElementById('total_amount').value;
+
+            let handler = PaystackPop.setup({
+                key: '{{env("PAYSTACK_PK")}}', // public key
+                email: email,
+                amount: amount * 100,
+                onClose: function(){
+                    // alert('Window closed.');
+                },
+                callback: function(response){
+                    // let message = 'Payment complete! Reference: ' + response.reference;
+
+                    const data = {
+                        reference: response.reference,
+                        email,
+                        amount,
+                        message: response.message,
+                        reference: response.reference,
+                        status: response.status,
+                    }
+
+                    Livewire.emit('onlinePaymentSuccessful', data)
+                }
+            });
+
+            handler.openIframe();
+        }
+
+    </script>
+
+    <script src="js/pages/advanced-form-element.js"></script>
+
+@endpush

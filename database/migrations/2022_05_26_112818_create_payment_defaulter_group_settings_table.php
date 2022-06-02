@@ -17,7 +17,7 @@ class CreatePaymentDefaulterGroupSettingsTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('default_months');
-            $table->integer('message');
+            $table->text('message');
             $table->timestamps();
         });
     }

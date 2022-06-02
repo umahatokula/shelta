@@ -20,7 +20,7 @@ class SignupController extends Controller
 {
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
     public function signup() {
 

@@ -39,10 +39,10 @@ class CreateEstate extends Component
         $this->paymentPlans = array_combine(PaymentPlan::pluck('id')->toArray(), PaymentPlan::pluck('name')->toArray());
         $this->propertyPrices = array_combine(PropertyPrice::pluck('id')->toArray(), PropertyPrice::pluck('price')->toArray());
 
-        array_push($this->properties, [
+        $this->properties[] = [
             'property' => $this->propertyTypes,
             'number_of_units' => '',
-        ]);
+        ];
     }
 
     /**
@@ -113,7 +113,7 @@ class CreateEstate extends Component
 
         redirect()->route('estates.index');
     }
-    
+
     /**
      * propertyPriceAdded
      *

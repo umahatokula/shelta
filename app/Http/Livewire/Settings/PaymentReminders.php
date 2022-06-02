@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Settings;
 
+use App\Models\PaymentDefaulterGroupSetting;
 use App\Models\PaymentDefaultSetting;
 use Livewire\Component;
 use App\Models\PaymentReminderSetting;
@@ -9,8 +10,9 @@ use App\Models\PaymentReminderSetting;
 class PaymentReminders extends Component
 {
     public $reminders = [];
-    public $defaulterGroups = [];
     public $addedReminders = [];
+    public $defaulterGroups = [];
+    public $addedDefaultGroups = [];
     public $default_percentage = 0;
 
     protected $rules = [
@@ -27,7 +29,7 @@ class PaymentReminders extends Component
     public function mount() {
 
         $this->reminders = $this->addedReminders = PaymentReminderSetting::all()->toArray();
-        $this->defaulterGroups = $this->addedDefaulterGroups = PaymentReminderSetting::all()->toArray();
+        $this->defaulterGroups = $this->addedDefaulterGroups = PaymentDefaulterGroupSetting::all()->toArray();
 
         $this->default_percentage = PaymentDefaultSetting::first() ? PaymentDefaultSetting::first()->default_percentage : 0;
     }
@@ -38,10 +40,10 @@ class PaymentReminders extends Component
      * @return void
      */
     public function addReminder() {
-        array_push($this->reminders, [
+        $this->reminders[] = [
             'number_of_days_before_due_date' => '',
             'message' => '',
-        ]);
+        ];
     }
 
     /**
@@ -53,6 +55,30 @@ class PaymentReminders extends Component
     public function removeReminder($key) {
         array_splice($this->reminders, $key, 1);
         array_key_exists($key, $this->addedReminders) ? array_splice($this->addedReminders, $key, 1) : null;
+    }
+
+    /**
+     * addProperty
+     *
+     * @return void
+     */
+    public function addDefaulterGroup() {
+        $this->defaulterGroups[] = [
+            'name' => '',
+            'default_months' => '',
+            'message' => '',
+        ];
+    }
+
+    /**
+     * removeProperty
+     *
+     * @param  mixed $index
+     * @return void
+     */
+    public function removeDefaulterGroup($key) {
+        array_splice($this->defaulterGroups, $key, 1);
+        array_key_exists($key, $this->defaulterGroups) ? array_splice($this->defaulterGroups, $key, 1) : null;
     }
 
 
@@ -81,6 +107,42 @@ class PaymentReminders extends Component
 
     }
 
+
+    /**
+     * save
+     *
+     * @return void
+     */
+    public function saveDefaultersGroup() {
+
+//        $this->validate([
+//            'addedDefaultGroups.*.name' => 'required|numeric',
+//            'addedDefaultGroups.*.default_months' => 'required',
+//            'addedDefaultGroups.*.message' => 'required|max: 150',
+//        ]);
+
+        dd($this->defaulterGroups);
+        PaymentDefaulterGroupSetting::truncate();
+
+        foreach($this->defaulterGroups as $group) {
+
+            PaymentDefaulterGroupSetting::create([
+                'name' => $group['name'],
+                'default_months' => $group['default_months'],
+                'message' => $group['message']
+            ]);
+        }
+
+        // session()->flash('message', 'Estate successfully added.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Defaulters Groups set successfully.']);
+
+        redirect()->route('settings.payment-reminders');
+
+    }
+
+    /**
+     * @return void
+     */
     public function saveDefaultPenaltyPercentage() {
 
         $validatedData = $this->validate([

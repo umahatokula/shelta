@@ -196,8 +196,8 @@ Route::name('frontend.')->middleware(['auth', 'role:client', '2fa', 'password_ch
 //
 //=======================================================================
 
-Route::get('signup', [SignupController::class, 'signup'])->name('signUp');
-Route::post('signup', [SignupController::class, 'signUpPost'])->name('signUpPost');
+Route::get('subscribe', [SignupController::class, 'signup'])->name('signUp');
+//Route::post('signup', [SignupController::class, 'signUpPost'])->name('signUpPost');
 Route::get('signup-preview/{client}/{estateId}/{propertyTypeId}/{paymentPlanId}', [SignupController::class, 'preview'])->name('signUpPreview');
 Route::post('signup-preview/{client}/{estateId}/{propertyTypeId}/{paymentPlanId}', [SignupController::class, 'signUpPreviewPost'])->name('signUpPreviewPost');
 

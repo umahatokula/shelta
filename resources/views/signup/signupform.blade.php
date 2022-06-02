@@ -1,4 +1,4 @@
-@extends('layouts.frontend')
+@extends('layouts.signup')
 
 @section('content')
     <livewire:signup.signup-form :estates="$estates" />

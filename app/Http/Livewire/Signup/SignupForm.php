@@ -38,6 +38,7 @@ class SignupForm extends Component
         $place_of_birth,
         $lga_id,
         $marital_status_id,
+        $residential_address,
         $profile_picture,
 
         $nok_name,
@@ -55,13 +56,16 @@ class SignupForm extends Component
         $propertyType_id,
         $payment_plan_id,
         $referrer,
-        $signature;
+        $signature,
+
+        $payment_mode;
 
     public $maritalStatuses, $countries, $states, $lgas, $estates;
 
     public $pageOne, $pageTwo, $pageThree;
 
     public $property, $client,$propertyTypes = [], $paymentPlans = [], $allPaymentPlans;
+    public $estateId, $propertyTypeId, $paymentPlanId, $propertyPrice, $processingFee, $estate, $propertyType, $paymentPlan;
 
     protected $rules = [
         'sname'             => 'required|string|min:2',
@@ -75,7 +79,7 @@ class SignupForm extends Component
         'place_of_birth'    => 'required',
         'state_id'          => 'required',
         'lga_id'            => 'required',
-        'profile_picture'   => 'required|image|max:1024',
+//        'profile_picture'   => 'required|image|max:1024',
 
         'nok_name' => 'required',
         'nok_dob' => 'required',
@@ -84,11 +88,11 @@ class SignupForm extends Component
         'nok_address' => 'required',
 
 //        'number_of_plots' => 'required',
-        'referrer' => 'required',
+//        'referrer' => 'required',
         'estate_id' => 'required',
         'propertyType_id' => 'required',
         'payment_plan_id' => 'required',
-        'signature' => 'required|image|max:1024',
+//        'signature' => 'required|image|max:1024',
     ];
 
     protected $listeners = [
@@ -106,6 +110,8 @@ class SignupForm extends Component
         $this->lgas = LGA::all();
         $this->estates = Estate::all();
         $this->allPaymentPlans = PaymentPlan::all();
+
+        $this->processingFee = 10_000;
     }
 
     public function setPageOne() {
@@ -140,14 +146,17 @@ class SignupForm extends Component
 
         if ($properties->isEmpty()) {
 
-            $this->addError('email', 'No available property for the selected estate and property type');
+            $this->addError('payment_type', 'No available property for the selected estate and property type');
             $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'No available property for the selected estate and property type']);
             return;
 
         }
 
-        // redirect to preview page
-        $this->signUpPreview();
+        // save client data
+        $this->createClientProfile();
+
+        // input validated: fire event to browser
+        $this->dispatchBrowserEvent('inputValidated');
     }
 
     /**
@@ -208,9 +217,28 @@ class SignupForm extends Component
             return $this->allPaymentPlans->where('id', $estatePropertyTypePrice->payment_plan_id);
         });
 
+        $this->paymentPlans = [];
         foreach (Arr::flatten($estatePropertyTypeIDs) as $paymentPlan) {
             $this->paymentPlans[] = $paymentPlan->toArray();
         }
+    }
+
+
+    public function onSelectPaymentPlan() {
+
+        // get available property
+        $properties = $this->getProperty();
+
+        if ($properties->isEmpty()) {
+
+            $this->addError('payment_plan_id', 'No available property. Try another estate, property type or payment plan.');
+            return;
+        }
+
+        $this->property = $properties->first();
+        $this->property->payment_plan_id = $this->payment_plan_id;
+        $this->propertyPrice = $this->property->getMonthlyPaymentAmount();
+
     }
 
     /**
@@ -219,7 +247,9 @@ class SignupForm extends Component
      * @return void
      */
     public function getProperty() {
+
         return (new Property)->getUnallocatedAllocatedProperties($this->estate_id, $this->propertyType_id);
+
     }
 
     /**
@@ -241,13 +271,17 @@ class SignupForm extends Component
         $this->client->place_of_birth        = $this->place_of_birth;
         $this->client->state_id              = $this->state_id;
         $this->client->lga_id                = $this->lga_id;
+        $this->client->residential_address   = $this->residential_address;
         $this->client->nok_name              = $this->nok_name;
         $this->client->nok_dob               = $this->nok_dob;
         $this->client->nok_gender_id         = $this->nok_gender_id;
         $this->client->relationship_with_nok = $this->relationship_with_nok;
         $this->client->nok_address           = $this->nok_address;
+        $this->client->nok_city           = $this->nok_city;
+        $this->client->nok_state_id           = $this->nok_state_id;
+        $this->client->nok_phone           = $this->nok_phone;
+        $this->client->nok_email           = $this->nok_email;
         $this->client->referrer              = $this->referrer;
-
         $this->client->save();
 
 
@@ -263,6 +297,103 @@ class SignupForm extends Component
 
 //        redirect()->route('property-types.index');
     }
+
+    /**
+     * onlinePaymentSuccessful
+     *
+     * @param  mixed $data
+     * @return void
+     */
+    public function onlinePaymentSuccessful(Array $data) {
+
+        // record transaction
+        $this->recordTransaction($data);
+
+        // add plots/properties to clients
+        $this->updateClientProperties();
+
+        // show notification
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
+
+        redirect()->route('signUp');
+
+    }
+
+    public function recordTransaction($data) {
+
+        if (!$this->property) {
+            return ;
+        }
+
+        $transaction = null;
+
+        \Illuminate\Support\Facades\DB::transaction(function () use($data, &$transaction) {
+
+            if ($data['status'] === 'success') {
+
+                $transaction = Transaction::create([
+                    'client_id'          => $this->client->id,
+                    'property_id'        => $this->property->id,
+                    'amount'             => $data['amount'],
+                    'type'               => 'online',
+                    'transaction_number' => $data['reference'],
+                    'date'               => Carbon::now(),
+                    'instalment_date'    => Carbon::now(),
+                    'recorded_by'        => auth()->id(),
+                    'status'             => 1,
+                    'is_approved'        => 1,
+                ]);
+
+            }
+
+            OnlinePayment::create([
+                'client_id'      => $this->client->id,
+                'transaction_id' => $transaction ? $transaction->id : null,
+                'message'        => $data['message'],
+                'reference'      => $data['reference'],
+                'status'         => $data['status'],
+                'amount'         => $data['amount'],
+            ]);
+
+        });
+
+        // set date of first transaction
+        if (!$this->property->date_of_first_payment) {
+
+            $this->property->date_of_first_payment = Carbon::now();
+            $this->property->save();
+
+            // update first transaction instalment date
+            $transaction->instalment_date = Carbon::now();
+            $transaction->save();
+        }
+
+        // set new date for next payment
+        $this->property = $transaction->property;
+        $this->property->client_id = $this->client->id;
+        $this->property->payment_plan_id = $this->paymentPlanId;
+        $this->property->next_due_date = $this->property->nextPaymentDueDate();
+        $this->property->save();
+
+        // dispatch event
+        PaymentMade::dispatch($transaction);
+    }
+
+    public function updateClientProperties() {
+
+        Property::where('client_id', $this->client->id)->update(['client_id' => null]); // update clients existing properties
+
+        Property::where('id', $this->property->id)->update([
+            'client_id'               => $this->client->id,
+            'payment_plan_id'         => $this->paymentPlanId,
+        ]);
+
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);
+
+        ClientPropertiesUpdated::dispatch($this->client, collect($this->property)->toArray());
+
+    }
+
 
     /**
      * @return void
