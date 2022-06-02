@@ -263,7 +263,7 @@
         function validateInput(e) {
 
             e.preventDefault();
-            
+
             Livewire.emit('validateInput')
 
             window.addEventListener('inputValidated', event => {

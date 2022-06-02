@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Signup;
 
+use App\Events\FirstPaymentMade;
 use DB;
 use Carbon\Carbon;
 use App\Models\LGA;
@@ -138,7 +139,7 @@ class SignupForm extends Component
      * @param  mixed $data
      * @return void
      */
-    public function validateInput(Array $data) {
+    public function validateInput() {
 
         $this->validate();
 
@@ -237,6 +238,9 @@ class SignupForm extends Component
 
         $this->property = $properties->first();
         $this->property->payment_plan_id = $this->payment_plan_id;
+//        $this->property->save();
+
+        // get monthly price based on selected payment plan
         $this->propertyPrice = $this->property->getMonthlyPaymentAmount();
 
     }
@@ -259,29 +263,36 @@ class SignupForm extends Component
      */
     public function createClientProfile() {
 
-        $this->client = new Client;
-        $this->client->sname                 = $this->sname;
-        $this->client->onames                = $this->onames;
-        $this->client->gender                = $this->gender;
-        $this->client->email                 = $this->email;
-        $this->client->phone                 = $this->phone;
-        $this->client->marital_status_id     = $this->marital_status_id;
-        $this->client->dob                   = $this->dob;
-        $this->client->country_code          = $this->country_code;
-        $this->client->place_of_birth        = $this->place_of_birth;
-        $this->client->state_id              = $this->state_id;
-        $this->client->lga_id                = $this->lga_id;
-        $this->client->residential_address   = $this->residential_address;
-        $this->client->nok_name              = $this->nok_name;
-        $this->client->nok_dob               = $this->nok_dob;
-        $this->client->nok_gender_id         = $this->nok_gender_id;
-        $this->client->relationship_with_nok = $this->relationship_with_nok;
-        $this->client->nok_address           = $this->nok_address;
-        $this->client->nok_city           = $this->nok_city;
-        $this->client->nok_state_id           = $this->nok_state_id;
-        $this->client->nok_phone           = $this->nok_phone;
-        $this->client->nok_email           = $this->nok_email;
-        $this->client->referrer              = $this->referrer;
+        $client = Client::where('email', $this->email)->first();
+        if ($client) {
+            $this->client = $client;
+        } else {
+            $this->client = new Client;
+        }
+
+        $this->client->sname                    = $this->sname;
+        $this->client->onames                   = $this->onames;
+        $this->client->gender                   = $this->gender;
+        $this->client->email                    = $this->email;
+        $this->client->phone                    = $this->phone;
+        $this->client->marital_status_id        = $this->marital_status_id;
+        $this->client->dob                      = $this->dob;
+        $this->client->country_code             = $this->country_code;
+        $this->client->place_of_birth           = $this->place_of_birth;
+        $this->client->state_id                 = $this->state_id;
+        $this->client->lga_id                   = $this->lga_id;
+        $this->client->residential_address      = $this->residential_address;
+        $this->client->nok_name                 = $this->nok_name;
+        $this->client->nok_dob                  = $this->nok_dob;
+        $this->client->nok_gender_id            = $this->nok_gender_id;
+        $this->client->relationship_with_nok    = $this->relationship_with_nok;
+        $this->client->nok_address              = $this->nok_address;
+        $this->client->nok_city                 = $this->nok_city;
+        $this->client->nok_state_id             = $this->nok_state_id;
+        $this->client->nok_phone                = $this->nok_phone;
+        $this->client->nok_email                = $this->nok_email;
+        $this->client->referrer                 = $this->referrer;
+        $this->client->by_online_subscription   = true;
         $this->client->save();
 
 
@@ -331,10 +342,12 @@ class SignupForm extends Component
 
             if ($data['status'] === 'success') {
 
+                $amount = $data['amount'] - $this->processingFee; // total paid less processing fee
+
                 $transaction = Transaction::create([
                     'client_id'          => $this->client->id,
                     'property_id'        => $this->property->id,
-                    'amount'             => $data['amount'],
+                    'amount'             => $amount,
                     'type'               => 'online',
                     'transaction_number' => $data['reference'],
                     'date'               => Carbon::now(),
@@ -371,12 +384,18 @@ class SignupForm extends Component
         // set new date for next payment
         $this->property = $transaction->property;
         $this->property->client_id = $this->client->id;
-        $this->property->payment_plan_id = $this->paymentPlanId;
+        $this->property->payment_plan_id = $this->payment_plan_id;
         $this->property->next_due_date = $this->property->nextPaymentDueDate();
         $this->property->save();
 
-        // dispatch event
-        PaymentMade::dispatch($transaction);
+
+        if (\intval($this->property->totalPaid()) >= \intval($this->property->getPropertyPrice())) {
+
+            PaymentMade::dispatch($transaction);
+        } else {
+
+            FirstPaymentMade::dispatch($transaction);
+        }
     }
 
     public function updateClientProperties() {
@@ -385,7 +404,7 @@ class SignupForm extends Component
 
         Property::where('id', $this->property->id)->update([
             'client_id'               => $this->client->id,
-            'payment_plan_id'         => $this->paymentPlanId,
+            'payment_plan_id'         => $this->payment_plan_id,
         ]);
 
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Client successfully added.']);

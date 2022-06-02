@@ -25,7 +25,7 @@
                     <div class="example-container">
                         <div class="example-content">
 
-                            @can('view property price')
+                            @can('view property prices')
 
                             <div>
                                 @if (session()->has('message'))
