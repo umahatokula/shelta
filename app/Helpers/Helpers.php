@@ -15,7 +15,7 @@ class Helpers {
      * @param  mixed $message
      * @return void
      */
-    public static function sendSMSMessage($to, $message, $channel = "generic") {
+    public static function sendSMSMessage(string $to, string $message, string $channel = "dnd") {
 
         // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
         //   'email' => 'umahatokula@gmail.com',
@@ -42,7 +42,7 @@ class Helpers {
 //           'dnd' => 2,
 //         ]);
 
-        $from = 'Richboss';
+        $from = 'N-Alert';
         $sms = $message;
 
         $termii = new LaraTermii(env('TERMII_API_KEY'));

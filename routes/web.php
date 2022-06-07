@@ -263,4 +263,7 @@ Route::get('/mailable', function () {
 
 Route::get('/test', function() {
 
+    // $response = Helpers::sendSMSMessage('+2348033312448', 'Hi Umaha');
+    // dd($response);
+
 });
