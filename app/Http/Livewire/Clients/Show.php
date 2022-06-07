@@ -37,6 +37,10 @@ class Show extends Component
      */
     public function onSelectProperty(Property $property) {
 
+        if (!$property) {
+            return;
+        }
+
         $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
         })->first()->propertyPrice->price;
@@ -87,9 +91,16 @@ class Show extends Component
             return redirect()->back();
         }
 
+        // verify transaction
+        $response= Transaction::verifyPaystackTransaction($data['reference']);
+
         $transaction = null;
-        DB::transaction(function () use($data, &$transaction, &$property) {
-            if ($data['status'] === 'success') {
+
+        if ($response['status']) {
+            $verifiedTransaction = $response['data'];
+
+            DB::transaction(function () use($data, &$transaction, &$property, $verifiedTransaction, $response) {
+
                 $transaction = Transaction::create([
                     'client_id'          => $data['client_id'],
                     'property_id'        => $data['property_id'],
@@ -111,27 +122,30 @@ class Show extends Component
 
                     // update first transaction instalment date
                     $transaction->instalment_date = Carbon::now();
+                    $transaction->is_first_instalment = true;
                     $transaction->save();
-
-                    // fire event
-                    FirstPaymentMade::dispatch($transaction);
                 }
 
                 // set new date for next payment
                 $property = $transaction->property;
                 $property->next_due_date = $property->nextPaymentDueDate();
                 $property->save();
-            }
+            });
 
             OnlinePayment::create([
-                'client_id'      => $data['client_id'],
-                'transaction_id' => $transaction ? $transaction->id : null,
-                'message'        => $data['message'],
-                'reference'      => $data['reference'],
-                'status'         => $data['status'],
-                'amount'         => $data['amount'],
+                'client_id'         => $data['client_id'],
+                'transaction_id'    => $transaction ? $transaction->id : null,
+                'message'           => $verifiedTransaction['message'],
+                'reference'         => $verifiedTransaction['reference'],
+                'status'            => $verifiedTransaction['status'],
+                'amount'            => $verifiedTransaction['amount'],
+                'gateway_response'  => $verifiedTransaction['gateway_response'],
+                'channel'           => $verifiedTransaction['channel'],
+                'currency'          => $verifiedTransaction['currency'],
+                'ip_address'        => $verifiedTransaction['ip_address'],
+                'fees'              => $verifiedTransaction['fees'],
             ]);
-        });
+        }
 
         // log this transaction
         activity()
@@ -141,12 +155,7 @@ class Show extends Component
             ->log('online payment');
 
         // dispatch event
-
-        if (!$property->date_of_first_payment) {
-            FirstPaymentMade::dispatch($transaction);
-        } else {
-            PaymentMade::dispatch($transaction);
-        }
+        PaymentMade::dispatch($transaction);
 
         // session()->flash('message', 'Payment successful.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);

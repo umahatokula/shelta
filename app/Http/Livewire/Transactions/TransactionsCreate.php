@@ -118,7 +118,7 @@ class TransactionsCreate extends Modal
             $property->date_of_first_payment = $transaction->instalment_date;
 
             // fire event
-            FirstPaymentMade::dispatch($transaction);
+            PaymentMade::dispatch($transaction);
         }
 
         // set new date for next payment

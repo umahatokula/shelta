@@ -1018,6 +1018,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Listeners\\CompletePaymentNotification' => __DIR__ . '/../..' . '/app/Listeners/CompletePaymentNotification.php',
         'App\\Listeners\\NotifyLegalAboutFirstPaymentListener' => __DIR__ . '/../..' . '/app/Listeners/NotifyLegalAboutFirstPaymentListener.php',
         'App\\Listeners\\NotifyLegalAboutPaymentCompleteListener' => __DIR__ . '/../..' . '/app/Listeners/NotifyLegalAboutPaymentCompleteListener.php',
+        'App\\Listeners\\PaymentMadeListener' => __DIR__ . '/../..' . '/app/Listeners/PaymentMadeListener.php',
         'App\\Listeners\\SendOTPNotification' => __DIR__ . '/../..' . '/app/Listeners/SendOTPNotification.php',
         'App\\Listeners\\SendPropertyAssignedNotification' => __DIR__ . '/../..' . '/app/Listeners/SendPropertyAssignedNotification.php',
         'App\\Listeners\\SendReceiptNotification' => __DIR__ . '/../..' . '/app/Listeners/SendReceiptNotification.php',

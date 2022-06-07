@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscription Form - RICHBOSS Realty</title>
+
     <link rel="stylesheet" href="{{asset('signup/css/style.css') }}">
+    <link rel="stylesheet" href="{{asset('signup/css/custom.css') }}">
     <link rel="shortcut icon" href="{{asset('signup/img/favicon.png') }}" type="image/x-icon">
     <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
     <!-- <script src="js/scrollreveal.js"></script>

@@ -150,6 +150,7 @@ return array(
     'App\\Listeners\\CompletePaymentNotification' => $baseDir . '/app/Listeners/CompletePaymentNotification.php',
     'App\\Listeners\\NotifyLegalAboutFirstPaymentListener' => $baseDir . '/app/Listeners/NotifyLegalAboutFirstPaymentListener.php',
     'App\\Listeners\\NotifyLegalAboutPaymentCompleteListener' => $baseDir . '/app/Listeners/NotifyLegalAboutPaymentCompleteListener.php',
+    'App\\Listeners\\PaymentMadeListener' => $baseDir . '/app/Listeners/PaymentMadeListener.php',
     'App\\Listeners\\SendOTPNotification' => $baseDir . '/app/Listeners/SendOTPNotification.php',
     'App\\Listeners\\SendPropertyAssignedNotification' => $baseDir . '/app/Listeners/SendPropertyAssignedNotification.php',
     'App\\Listeners\\SendReceiptNotification' => $baseDir . '/app/Listeners/SendReceiptNotification.php',

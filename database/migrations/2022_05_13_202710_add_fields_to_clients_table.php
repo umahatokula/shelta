@@ -25,6 +25,8 @@ class AddFieldsToClientsTable extends Migration
             $table->string('nok_dob')->nullable();
             $table->string('nok_email')->nullable();
             $table->boolean('by_online_subscription')->default(false)->nullable();
+            $table->string('profile_image_path')->nullable();
+            $table->string('signature_path')->nullable();
         });
     }
 

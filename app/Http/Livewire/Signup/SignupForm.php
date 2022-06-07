@@ -96,6 +96,38 @@ class SignupForm extends Component
 //        'signature' => 'required|image|max:1024',
     ];
 
+    protected $messages = [
+        'sname.required'             => 'This field is required',
+        'sname.string'             => 'This field must contain only alphabets',
+        'sname.min'             => 'This name is too short',
+        'onames.required'            => 'This field is required',
+        'onames.string'            => 'This field must contain only alphabets',
+        'onames.min'            => 'This name is too short',
+        'gender.required'            => 'This field is required',
+        'email.required'             => 'This field is required',
+        'phone.required'             => 'This field is required',
+        'marital_status_id.required' => 'This field is required',
+        'dob.required'               => 'This field is required',
+        'country_code.required'      => 'This field is required',
+        'place_of_birth.required'    => 'This field is required',
+        'state_id.required'          => 'This field is required',
+        'lga_id.required'            => 'This field is required',
+//        'profile_picture'   => 'required|image|max:1024',
+
+        'nok_name.required' => 'This field is required',
+        'nok_dob.required' => 'This field is required',
+        'nok_gender_id.required' => 'This field is required',
+        'relationship_with_nok.required' => 'This field is required',
+        'nok_address.required' => 'This field is required',
+
+//        'number_of_plots' => 'required',
+//        'referrer' => 'required',
+        'estate_id.required' => 'This field is required',
+        'propertyType_id.required' => 'This field is required',
+        'payment_plan_id.required' => 'This field is required',
+//        'signature' => 'required|image|max:1024',
+    ];
+
     protected $listeners = [
         'onlinePaymentSuccessful',
         'validateInput',
@@ -297,10 +329,23 @@ class SignupForm extends Component
 
 
         if($this->profile_picture) {
-            $this->client
-                ->addMedia($this->profile_picture->getRealPath())
-                ->usingName($this->profile_picture->getClientOriginalName())
-                ->toMediaCollection('profile_picture', 'public');
+
+            $file = $this->profile_picture;
+            $filePath = date('YmdHi').$file->getClientOriginalName();
+            $file-> move(public_path('public/profile_pictures'), $filePath);
+            $this->client->profile_image_path   = $filePath;
+            $this->client->save();
+
+        }
+
+
+        if($this->signature) {
+
+            $file = $this->signature;
+            $filePath = date('YmdHi').$file->getClientOriginalName();
+            $file-> move(public_path('public/profile_pictures'), $filePath);
+            $this->client->signature_path   = $filePath;
+            $this->client->save();
 
         }
 
@@ -324,7 +369,8 @@ class SignupForm extends Component
         $this->updateClientProperties();
 
         // show notification
-        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);
+        session()->flash('success', 'Congrats. Your payment was successful. Please check your email.');
+        $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Successful']);
 
         redirect()->route('signUp');
 
@@ -336,39 +382,47 @@ class SignupForm extends Component
             return ;
         }
 
+        // verify transaction
+        $response= Transaction::verifyPaystackTransaction($data['reference']);
+
         $transaction = null;
 
-        \Illuminate\Support\Facades\DB::transaction(function () use($data, &$transaction) {
+        if ($response['status']) {
+            $verifiedTransaction = $response['data'];
 
-            if ($data['status'] === 'success') {
+            DB::transaction(function () use($data, &$transaction) {
 
-                $amount = $data['amount'] - $this->processingFee; // total paid less processing fee
+                    $amount = $data['amount'] - $this->processingFee; // total paid less processing fee
 
-                $transaction = Transaction::create([
-                    'client_id'          => $this->client->id,
-                    'property_id'        => $this->property->id,
-                    'amount'             => $amount,
-                    'type'               => 'online',
-                    'transaction_number' => $data['reference'],
-                    'date'               => Carbon::now(),
-                    'instalment_date'    => Carbon::now(),
-                    'recorded_by'        => auth()->id(),
-                    'status'             => 1,
-                    'is_approved'        => 1,
-                ]);
+                    $transaction = Transaction::create([
+                        'client_id'          => $this->client->id,
+                        'property_id'        => $this->property->id,
+                        'amount'             => $amount,
+                        'type'               => 'online',
+                        'transaction_number' => $data['reference'],
+                        'date'               => Carbon::now(),
+                        'instalment_date'    => Carbon::now(),
+                        'recorded_by'        => auth()->id(),
+                        'status'             => 1,
+                        'is_approved'        => 1,
+                    ]);
 
-            }
+            });
 
             OnlinePayment::create([
-                'client_id'      => $this->client->id,
-                'transaction_id' => $transaction ? $transaction->id : null,
-                'message'        => $data['message'],
-                'reference'      => $data['reference'],
-                'status'         => $data['status'],
-                'amount'         => $data['amount'],
+                'client_id'         => $this->client->id,
+                'transaction_id'    => $transaction ? $transaction->id : null,
+                'message'           => $verifiedTransaction['message'],
+                'reference'         => $verifiedTransaction['reference'],
+                'status'            => $verifiedTransaction['status'],
+                'amount'            => $verifiedTransaction['amount'],
+                'gateway_response'  => $verifiedTransaction['gateway_response'],
+                'channel'           => $verifiedTransaction['channel'],
+                'currency'          => $verifiedTransaction['currency'],
+                'ip_address'        => $verifiedTransaction['ip_address'],
+                'fees'              => $verifiedTransaction['fees'],
             ]);
-
-        });
+        }
 
         // set date of first transaction
         if (!$this->property->date_of_first_payment) {
@@ -388,14 +442,8 @@ class SignupForm extends Component
         $this->property->next_due_date = $this->property->nextPaymentDueDate();
         $this->property->save();
 
-
-        if (\intval($this->property->totalPaid()) >= \intval($this->property->getPropertyPrice())) {
-
-            PaymentMade::dispatch($transaction);
-        } else {
-
-            FirstPaymentMade::dispatch($transaction);
-        }
+        // fire event
+        PaymentMade::dispatch($transaction);
     }
 
     public function updateClientProperties() {

@@ -34,7 +34,8 @@
         "spatie/laravel-sluggable": "^2.6",
         "te7a-houdini/laravel-trix": "^2.0",
         "twilio/sdk": "^6.31",
-        "zeevx/lara-termii": "^0.1.5"
+        "zeevx/lara-termii": "^0.1.5",
+        "ext-json": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

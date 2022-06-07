@@ -182,12 +182,9 @@ class TransactionsController extends Controller
         // fire event
         if ($request->status == 1) {
 
-            if (!$property->date_of_first_payment) {
-                FirstPaymentMade::dispatch($transaction);
-            } else {
-                PaymentMade::dispatch($transaction);
-            }
+            $transaction->save();
 
+            PaymentMade::dispatch($transaction);
         }
 
         return redirect()->back();

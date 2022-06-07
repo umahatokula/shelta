@@ -3,18 +3,12 @@
 namespace App\Listeners;
 
 use App\Events\FirstPaymentMade;
-use App\Events\NotifyLegal;
 use App\Events\PaymentComplete;
-use App\Models\User;
-use App\Helpers\Helpers;
 use App\Events\PaymentMade;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Mail\PropertyPaymentCompleteForAdminMailable;
-use App\Mail\PropertyPaymentCompleteForClientMailable;
+use Illuminate\Queue\InteractsWithQueue;
 
-class CompletePaymentNotification implements ShouldQueue
+class PaymentMadeListener
 {
     /**
      * Create the event listener.
@@ -29,7 +23,7 @@ class CompletePaymentNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param $event
+     * @param  \App\Events\PaymentMade  $event
      * @return void
      */
     public function handle($event)
@@ -37,7 +31,7 @@ class CompletePaymentNotification implements ShouldQueue
 
         $property = $event->transaction->property;
 
-        if (!$property->date_of_first_payment) {
+        if ($event->transaction->is_first_instalment) {
 
             event(new FirstPaymentMade($event->transaction));
         }
@@ -46,7 +40,5 @@ class CompletePaymentNotification implements ShouldQueue
 
             event(new PaymentComplete($event->transaction));
         }
-
-
     }
 }

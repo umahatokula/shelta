@@ -8,6 +8,7 @@ use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\OnlinePayment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -123,5 +124,15 @@ class Transaction extends Model implements HasMedia
         }
 
         return Carbon::parse($parsedDateMonth.'/'.$day.'/'.$parsedDateYear);
+    }
+
+    public static function verifyPaystackTransaction(string $reference) {
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('PAYSTACK_SK'),
+            'Cache-Control' => 'no-cache'
+        ])->get('https://api.paystack.co/transaction/verify/'.$reference);
+
+        return $response->collect()->toArray();
     }
 }
