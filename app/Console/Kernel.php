@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
             $inserts = [];
             foreach ($pastDueProperties as $property) {
 
-                $defaultAmount = $property->getMonthlyPaymentAmount() * $default_percentage;
+                $defaultAmount = $property->getMonthlyPaymentAmount() * ($default_percentage / 100);
 
                 // if ($defaultAmount > 0) {
                     $inserts[] = [
