@@ -33,6 +33,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
+        // get payment defaulters
+        $schedule->call(function () {
+            \Log::info('howfa');
+        })->dailyAt('01:00');
+
         $schedule->command('backup:run --only-db --only-to-disk=dropbox')->daily()->at('01:00');
 
         // send payment due reminders

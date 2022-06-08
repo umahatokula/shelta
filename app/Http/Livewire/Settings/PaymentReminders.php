@@ -12,14 +12,8 @@ class PaymentReminders extends Component
     public $reminders = [];
     public $addedReminders = [];
     public $defaulterGroups = [];
-    public $addedDefaultGroups = [];
+    public $addedDefaulterGroups = [];
     public $default_percentage = 0;
-
-    protected $rules = [
-        'addedReminder.*.number_of_days_before_due_date' => 'required|numeric',
-        'addedReminder.*.message' => 'required',
-        'addedReminder.*.number_of_days_before_due_date' => 'distinct',
-    ];
 
     /**
      * mount
@@ -78,7 +72,7 @@ class PaymentReminders extends Component
      */
     public function removeDefaulterGroup($key) {
         array_splice($this->defaulterGroups, $key, 1);
-        array_key_exists($key, $this->defaulterGroups) ? array_splice($this->defaulterGroups, $key, 1) : null;
+        array_key_exists($key, $this->addedDefaulterGroups) ? array_splice($this->addedDefaulterGroups, $key, 1) : null;
     }
 
 
@@ -88,7 +82,12 @@ class PaymentReminders extends Component
      * @return void
      */
     public function save() {
-        // $this->validate();
+
+//        $this->validate([
+//            'addedReminder.*.number_of_days_before_due_date' => 'required|numeric',
+//            'addedReminder.*.message' => 'required',
+//            'addedReminder.*.number_of_days_before_due_date' => 'distinct',
+//        ]);
 
         PaymentReminderSetting::truncate();
 
@@ -116,15 +115,14 @@ class PaymentReminders extends Component
     public function saveDefaultersGroup() {
 
 //        $this->validate([
-//            'addedDefaultGroups.*.name' => 'required|numeric',
-//            'addedDefaultGroups.*.default_months' => 'required',
-//            'addedDefaultGroups.*.message' => 'required|max: 150',
+//            'addedDefaulterGroups.*.name' => 'required|numeric',
+//            'addedDefaulterGroups.*.default_months' => 'required',
+//            'addedDefaulterGroups.*.message' => 'required|max: 150',
 //        ]);
 
-        dd($this->defaulterGroups);
         PaymentDefaulterGroupSetting::truncate();
 
-        foreach($this->defaulterGroups as $group) {
+        foreach($this->addedDefaulterGroups as $group) {
 
             PaymentDefaulterGroupSetting::create([
                 'name' => $group['name'],

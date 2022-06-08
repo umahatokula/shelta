@@ -53,6 +53,12 @@
                                         </p>
                                         <p>Phone :<span class="text-gray ps-10"> <a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></span></p>
                                         <p>Address :<span class="text-gray ps-10"> {{ $client->address }}</span></p>
+                                        <img src="{{$client->profile_image_path}}" alt="" class="img img-thumbnail img-responsive">
+                                        <p>
+                                            @if($client->profile_image_path)
+                                                <img src="{{$client->profile_image_path}}" alt="" class="img img-thumbnail img-responsive">
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
                             </div>

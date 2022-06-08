@@ -13,13 +13,16 @@
                     <h5 class="card-title">&nbsp</h5>
                 </div>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger" role="alert">
-                        Ensure there are no duplicate selections for Property Type
-                    </div>
-                @endif
-
                 <div class="row">
+                    <div class="col-12">
+                        <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger" role="alert">
+                                    Ensure there are no duplicate selections for Property Type
+                                </div>
+                            @endif
+                        </div>
+                    </div>
 
                     @can('set payment reminders')
                     <div class="col-md-6">
@@ -136,7 +139,7 @@
                                                     <div class="col-md-3 mb-5">
                                                         <div class="form-group">
                                                             <label class="form-label">Name</label>
-                                                            <input wire:model.lazy="addedDefaultGroups.{{$key}}.name" class="form-control"
+                                                            <input wire:model.lazy="addedDefaulterGroups.{{$key}}.name" class="form-control"
                                                                    type="type" required>
                                                             @error('name') <span class="error">{{ $message }}</span> @enderror
                                                         </div>
@@ -144,7 +147,7 @@
                                                     <div class="col-md-2 mb-5">
                                                         <div class="form-group">
                                                             <label class="form-label">Number of Months</label>
-                                                            <input wire:model.lazy="addedDefaultGroups.{{$key}}.default_months" class="form-control"
+                                                            <input wire:model.lazy="addedDefaulterGroups.{{$key}}.default_months" class="form-control"
                                                                    type="number" required>
                                                             @error('default_months') <span class="error">{{ $message }}</span> @enderror
                                                         </div>
@@ -152,7 +155,7 @@
                                                     <div class="col-md-6 mb-5">
                                                         <div class="form-group">
                                                             <label class="form-label">Message</label>
-                                                            <textarea wire:model.lazy="addedDefaultGroups.{{$key}}.message" class="form-control" required placeholder="Enter a short message..."></textarea>
+                                                            <textarea wire:model.lazy="addedDefaulterGroups.{{$key}}.message" class="form-control" required placeholder="Enter a short message..."></textarea>
                                                             @error('message') <span class="error">{{ $message }}</span> @enderror
                                                         </div>
                                                     </div>

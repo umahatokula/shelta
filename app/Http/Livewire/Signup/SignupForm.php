@@ -330,9 +330,8 @@ class SignupForm extends Component
 
         if($this->profile_picture) {
 
-            $file = $this->profile_picture;
-            $filePath = date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('public/profile_pictures'), $filePath);
+            $filePath = $this->profile_picture->store('profile_pictures', 'public');
+
             $this->client->profile_image_path   = $filePath;
             $this->client->save();
 
@@ -341,9 +340,8 @@ class SignupForm extends Component
 
         if($this->signature) {
 
-            $file = $this->signature;
-            $filePath = date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('public/profile_pictures'), $filePath);
+            $filePath = $this->signature->store('signatures', 'public');
+
             $this->client->signature_path   = $filePath;
             $this->client->save();
 

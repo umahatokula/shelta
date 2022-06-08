@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentDefaulterGroupSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\PaymentDefault;
@@ -18,6 +19,7 @@ class PaymentDetaultController extends Controller
      */
     public function index() {
         // dd(request()->all());
+        $data['defaultersGroups'] = PaymentDefaulterGroupSetting::all();
 
         $date_from = Carbon::today()->startOfMonth();
         $date_to = Carbon::today()->endOfMonth();
@@ -40,6 +42,12 @@ class PaymentDetaultController extends Controller
         if (request('client_name')) {
             $client_name  = request('client_name');
             $defaultPaymentQuery = $defaultPaymentQuery->where('client_name', 'LIKE', "%{$client_name}%");
+        }
+
+
+        if (request('defaultersGroup')) {
+            $defaulters_group_id  = request('defaultersGroup');
+            $defaultPaymentQuery = $defaultPaymentQuery->where('defaulters_group_id', $defaulters_group_id);
         }
 
 

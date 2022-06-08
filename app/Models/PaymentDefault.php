@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Client;
+use App\Models\PaymentDefaulterGroupSetting;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,5 +48,14 @@ class PaymentDefault extends Model
      */
     public function property() {
         return $this->belongsTo(Property::class)->withDefault();
+    }
+
+    /**
+     * properties
+     *
+     * @return void
+     */
+    public function defaultersGroup() {
+        return $this->belongsTo(PaymentDefaulterGroupSetting::class, 'defaulters_group_id', 'id')->withDefault();
     }
 }

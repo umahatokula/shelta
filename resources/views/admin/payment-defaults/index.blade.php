@@ -35,13 +35,18 @@
                                     {!! Form::date('date_to', $date_to, ['class' => 'form-control rounded bg-light border-0']) !!}
                                 </div>
                             </div>
-
                             <div class="col-md-3">
+                                <div class="mb-3">
+                                    {!! Form::select('defaulters_group_id', $defaultersGroups->pluck('name', 'id'), null, ['class' => 'form-control rounded bg-light border-0', 'placeholder' => 'Select defaulters group']) !!}
+                                </div>
+                            </div>
+
+                            <div class="col-md-1">
                                 <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-start">
                                     <button type="submit" name="filter" class="btn btn-primary btn-md">Filter</button>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-1">
                                 <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
                                     <a href="{{ route('payment-defaults.csv', [$date_from, $date_to]) }}" class="btn btn-success btn-md">CSV</a>
                                 </div>
@@ -84,7 +89,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6">No transactions</td>
+                                        <td colspan="6">No defaulters</td>
                                     </tr>
                                 @endforelse
                             </tbody>
