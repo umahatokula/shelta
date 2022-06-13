@@ -45,8 +45,8 @@ class PaymentDetaultController extends Controller
         }
 
 
-        if (request('defaultersGroup')) {
-            $defaulters_group_id  = request('defaultersGroup');
+        if (request('defaulters_group_id')) {
+            $defaulters_group_id  = request('defaulters_group_id');
             $defaultPaymentQuery = $defaultPaymentQuery->where('defaulters_group_id', $defaulters_group_id);
         }
 

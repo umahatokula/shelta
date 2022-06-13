@@ -263,7 +263,8 @@ Route::get('/mailable', function () {
 
 Route::get('/test', function() {
 
-    // $response = Helpers::sendWhatsAppMessage('+2348033312448', 'Hi Umaha');
-    // dd($response);
+//    $response1 = Helpers::sendSMSMessage('+2348033312448', 'Hi Umaha');
+//    $response2 = Helpers::sendWhatsAppMessage('+2348033312448', 'Hi Umaha');
+//    dd($response1, $response2);
 
 });

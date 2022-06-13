@@ -53,7 +53,7 @@
                                             <td>{{ $staff->phone }}</td>
                                             <td>{{ $staff->email }}</td>
                                             <td>
-                                                @can('edit staffs')
+                                                @can('edit staff')
                                                 <a href="{{ route('staff.edit', $staff) }}" class="text-warning p-0" data-original-title=""
                                                     title="Edit">
                                                     <span class="material-icons-outlined">

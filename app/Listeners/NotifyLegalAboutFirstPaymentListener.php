@@ -41,14 +41,16 @@ class NotifyLegalAboutFirstPaymentListener implements ShouldQueue
 
             foreach ($users as $user) {
 
-                Helpers::sendSMSMessage($user->staff->phone, $message); // send sms
-                Helpers::sendWhatsAppMessage($user->staff->phone, $message); // send whatsapp message
+                if ($user->staff?->phone) {
+
+                    Helpers::sendSMSMessage($user->staff->phone, $message); // send sms
+                    Helpers::sendWhatsAppMessage($user->staff->phone, $message); // send whatsapp message
+                }
 
             }
 
             // MAIL ADMIN
             Mail::to($users)->send(new PropertyFirstPaymentForAdminMailable($event->transaction));
-
 
         } catch (\Exception $e) {
 

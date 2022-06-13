@@ -32,8 +32,7 @@ class PaymentMadeListener
         $property = $event->transaction->property;
 
         if ($event->transaction->is_first_instalment) {
-
-            event(new FirstPaymentMade($event->transaction));
+            FirstPaymentMade::dispatch($event->transaction);
         }
 
         if (\intval($property->totalPaid()) >= \intval($property->getPropertyPrice())) {

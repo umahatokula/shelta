@@ -58,12 +58,13 @@ class Kernel extends ConsoleKernel
 
                 // if ($defaultAmount > 0) {
                     $inserts[] = [
-                        'client_id'      => $property->client_id,
-                        'property_id'    => $property->id,
-                        'default_amount' => $defaultAmount,
-                        'missed_date'    => $property->next_due_date,
-                        'created_at'     => Carbon::now(),
-                        'updated_at'     => Carbon::now(),
+                        'client_id'             => $property->client_id,
+                        'property_id'           => $property->id,
+                        'default_amount'        => $defaultAmount,
+                        'missed_date'           => $property->next_due_date,
+                        'created_at'            => Carbon::now(),
+                        'updated_at'            => Carbon::now(),
+                        'defaulters_group_id'   => PaymentDefault::getDefaultersGroup($property),
                     ];
                 // }
 

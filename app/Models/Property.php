@@ -163,7 +163,6 @@ class Property extends Model
         $months = $absDiff % 12;
 
         $diff = ($years * 12) + $months;
-//        dd($diff);
 
         return $diff;
 
