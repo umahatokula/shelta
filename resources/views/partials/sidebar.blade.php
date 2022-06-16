@@ -5,6 +5,9 @@
     <div class="app-menu">
         <ul class="accordion-menu">
             <li class="sidebar-title">
+                Logged in as: {{ auth()->user()->name }}
+            </li>
+            <li class="sidebar-title">
                 Dashboard
             </li>
 

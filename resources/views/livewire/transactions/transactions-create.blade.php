@@ -120,6 +120,10 @@
                                 <div class="box-footer">
                                     <input type="submit" class="btn-lg btn btn-warning me-1" value="Cancel">
                                     <input type="submit" class="btn-lg btn btn-primary" value="Save">
+
+{{--                                    <button wire:click="save" wire:loading.attr="disabled" type="submit" class="btn-lg btn btn-primary">--}}
+{{--                                        Save--}}
+{{--                                    </button>--}}
                                 </div>
                             </form>
                         </div>

@@ -43,7 +43,7 @@ class Dashboard extends Component
         $this->defaulters_start_date = Carbon::today()->startOfMonth();
         $this->defaulters_end_date = Carbon::today()->endOfMonth();
 
-        $this->defaulters = PaymentDefault::orderByDesc('created_at')->get()->take(5);
+        $this->defaulters = PaymentDefault::whereBetween('missed_date', [$this->defaulters_start_date, $this->defaulters_end_date])->orderByDesc('created_at')->get()->take(5);
 
         $this->propertyTypes = PropertyType::with('properties.transactions')->get()->each(function($propertyType) {
 
@@ -62,44 +62,6 @@ class Dashboard extends Component
      */
     public function fetchPropertiesDueForPayment() {
         $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
-    }
-
-    /**
-     * get list of payment defaulters
-     *
-     * @return void
-     */
-    public function getPaymentDefaultersList() {
-        $defaultersQuery = PaymentDefault::query();
-        $defaultersQuery = $defaultersQuery->with('client');
-
-        if ($this->defaulters_start_date || $this->defaulters_end_date) {
-            $defaultersQuery = $defaultersQuery->whereBetween('created_at', [$this->defaulters_start_date, $this->defaulters_end_date]);
-        }
-
-        if ($this->defaulters_estate) {
-
-            $this->defaults = $defaultersQuery->get()->filter(function($query) {
-                return $query->property->estatePropertyType->estate->id == $this->defaulters_estate;
-            });
-
-            $defaults = $this->defaults->groupBy('client_id');
-
-        } else {
-            $defaults = $defaultersQuery->groupBy('client_id')->get();
-        }
-
-        $this->defaulters = [];
-        foreach ($defaults as $clientId => $default) {
-
-            $client = $this->clients->where('id', $clientId)->first()->toArray();
-            $client['missed_date'] = $default->last() ? $default->last()['missed_date'] : null;
-
-            $this->defaulters[] = $client;
-            // dd($this->defaulters->total_payment_default_owed);
-        }
-        // dd($this->defaulters);
-
     }
 
     public function render()

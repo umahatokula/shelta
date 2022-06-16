@@ -267,4 +267,10 @@ Route::get('/test', function() {
 //    $response2 = Helpers::sendWhatsAppMessage('+2348033312448', 'Hi Umaha');
 //    dd($response1, $response2);
 
+    $users = App\Models\User::where('staff_id', null)->get();
+
+    foreach ($users as $user) {
+            $user->assignRole('client');
+    }
+
 });
