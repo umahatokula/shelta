@@ -62,6 +62,7 @@ class Dashboard extends Component
      */
     public function fetchPropertiesDueForPayment() {
         $this->properties = (new Property())->getPropertiesDueForReminder($this->dueIn);
+//        dd($this->properties);
     }
 
     public function render()

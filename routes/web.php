@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\PropertyAddedMailable;
+use App\Mail\SendMonthlyPaymentRemindersMailable;
 use App\Models\PaymentDefaultSetting;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -9,6 +11,7 @@ use App\Models\Transaction;
 use App\Models\PaymentDefault;
 use App\Mail\PaymentMadeMailable;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Models\PaymentReminderSetting;
 use App\Models\EstatePropertyTypePrice;
@@ -261,16 +264,48 @@ Route::get('/mailable', function () {
     return new App\Mail\PaymentMadeMailable($transaction);
 });
 
+
+Route::get('/duetoday', function() {
+
+    $paymentReminderDates = PaymentReminderSetting::all();
+//    $paymentReminderDates = PaymentReminderSetting::where('number_of_days_before_due_date', 0)->get();
+    $data = [];
+    foreach ($paymentReminderDates as $paymentReminderDate) {
+
+        $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
+
+        $phoneNumbers = [];
+        $emailAddresses = [];
+        foreach ($properties as $property) {
+
+            // ===========GET PHONE NUMBERS===============
+            $phoneNumber = $property->client ? $property->client->phone : null;
+            $email = $property->client ? $property->client->email : null;
+
+            if ($phoneNumber) {
+                if (str_starts_with($phoneNumber, '+234')) {
+                    $phoneNumbers[] = $phoneNumber;
+                }
+            }
+
+            if ($email) {
+                $emailAddresses[] = $email;
+            }
+        }
+        $data[$paymentReminderDate->number_of_days_before_due_date] = $phoneNumbers;
+//         dd($phoneNumbers);
+
+        $message = $paymentReminderDate->message;
+//        $response = Helpers::sendSMSMessage($phoneNumbers, $message); // send sms
+//        dd($response);
+
+    }
+    dd($data);
+
+});
+
 Route::get('/test', function() {
 
-//    $response1 = Helpers::sendSMSMessage('+2348033312448', 'Hi Umaha');
-//    $response2 = Helpers::sendWhatsAppMessage('+2348033312448', 'Hi Umaha');
-//    dd($response1, $response2);
-
-    $users = App\Models\User::where('staff_id', null)->get();
-
-    foreach ($users as $user) {
-            $user->assignRole('client');
-    }
+    $response2 = Helpers::sendWhatsAppMessage();
 
 });

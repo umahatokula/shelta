@@ -13,18 +13,18 @@ class PropertyPrice extends Model
     protected $fillable = ['price', 'is_active'];
 
     protected $casts = [
-      'is_active' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function getPriceAttribute() {
-        return $this->attributes['price'] / 100;
+        return isset($this->attributes['price']) ? $this->attributes['price'] / 100 : 0;
     }
 
     public function setPriceAttribute($value) {
-        return $this->attributes['price'] = $value * 100;
+        return isset($this->attributes['price']) ? $this->attributes['price'] * 100 : 0;
     }
 
     public function properties() {
-      return $this->hasMany(PropertyType::class);
+        return $this->hasMany(PropertyType::class);
     }
 }

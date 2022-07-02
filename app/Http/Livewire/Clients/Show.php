@@ -23,6 +23,7 @@ class Show extends Component
     public $showOnlinePaymentForm = false;
     public $payingName, $payingEmail, $payingAmount;
     public $propertybalance = 0;
+    public $minimumPayable = 0;
 
     protected $listeners = [
         'onlinePaymentSuccessful',
@@ -46,6 +47,7 @@ class Show extends Component
         })->first()->propertyPrice->price;
 
         $this->propertybalance = $propertyPrice - $property->totalPaid();
+        $this->minimumPayable = $property->getMonthlyPaymentAmount();
     }
 
     /**
@@ -92,21 +94,21 @@ class Show extends Component
         }
 
         // verify transaction
-        $response= Transaction::verifyPaystackTransaction($data['reference']);
+        $verifiedTransactionResponse= Transaction::verifyPaystackTransaction($data['reference']);
 
         $transaction = null;
 
-        if ($response['status']) {
-            $verifiedTransaction = $response['data'];
+        if ($verifiedTransactionResponse['status']) {
+            $verifiedTransactionData = $verifiedTransactionResponse['data'];
 
-            DB::transaction(function () use($data, &$transaction, &$property, $verifiedTransaction, $response) {
+            DB::transaction(function () use($data, &$transaction, &$property, $verifiedTransactionData) {
 
                 $transaction = Transaction::create([
                     'client_id'          => $data['client_id'],
                     'property_id'        => $data['property_id'],
                     'amount'             => $data['amount'],
                     'type'               => 'online',
-                    'transaction_number' => $data['reference'],
+                    'transaction_number' => $verifiedTransactionData['reference'],
                     'date'               => Carbon::now(),
                     'instalment_date'    => $property->nextPaymentDueDate(),
                     'recorded_by'        => auth()->id(),
@@ -135,27 +137,30 @@ class Show extends Component
             OnlinePayment::create([
                 'client_id'         => $data['client_id'],
                 'transaction_id'    => $transaction ? $transaction->id : null,
-                'message'           => $verifiedTransaction['message'],
-                'reference'         => $verifiedTransaction['reference'],
-                'status'            => $verifiedTransaction['status'],
-                'amount'            => $verifiedTransaction['amount'],
-                'gateway_response'  => $verifiedTransaction['gateway_response'],
-                'channel'           => $verifiedTransaction['channel'],
-                'currency'          => $verifiedTransaction['currency'],
-                'ip_address'        => $verifiedTransaction['ip_address'],
-                'fees'              => $verifiedTransaction['fees'],
+                'message'           => $verifiedTransactionData['message'],
+                'reference'         => $verifiedTransactionData['reference'],
+                'status'            => $verifiedTransactionData['status'],
+                'amount'            => $verifiedTransactionData['amount'],
+                'gateway_response'  => $verifiedTransactionData['gateway_response'],
+                'channel'           => $verifiedTransactionData['channel'],
+                'currency'          => $verifiedTransactionData['currency'],
+                'ip_address'        => $verifiedTransactionData['ip_address'],
+                'fees'              => $verifiedTransactionData['fees'],
             ]);
+
+            // dispatch event
+            PaymentMade::dispatch($transaction);
         }
 
         // log this transaction
-        activity()
-            ->by(auth()->user())
-            ->on($transaction)
-            ->withProperties(['is_staff' => false])
-            ->log('online payment');
+        if ($transaction) {
+            activity()
+                ->by(auth()->user())
+                ->on($transaction)
+                ->withProperties(['is_staff' => false])
+                ->log('online payment');
+        }
 
-        // dispatch event
-        PaymentMade::dispatch($transaction);
 
         // session()->flash('message', 'Payment successful.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);

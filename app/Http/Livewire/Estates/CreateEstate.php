@@ -28,6 +28,10 @@ class CreateEstate extends Component
         'addedProperties.*.property_id' => 'distinct',
     ];
 
+    protected $messages = [
+        'addedProperties.*.property_id.distinct' => 'Duplicate property type entries',
+    ];
+
     /**
      * mount
      *

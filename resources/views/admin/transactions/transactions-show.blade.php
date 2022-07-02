@@ -41,10 +41,10 @@
         <tr>
             <td scope="row">Type</td>
             <td>
-                @if ($transaction->onlinePayment)
-                    Online
+                @if ($transaction->type == 'recorded')
+                    <span class="badge badge-info">Recorded</span>
                 @else
-                    Recorded
+                    <span class="badge badge-primary">Online</span>
                 @endif
             </td>
         </tr>

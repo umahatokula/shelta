@@ -48,20 +48,20 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
                             <h4>Due for payment</h4>
                             <form wire:submit.prevent="fetchPropertiesDueForPayment">
                                 <div class="row">
-                                    <div class="col-2 col-md-3 mt-3">
+                                    <div class="col-sm-2 col-md-3 mt-3">
                                         Due in
                                     </div>
-                                    <div class="col-2 col-md-3">
+                                    <div class="col-sm-2 col-md-3">
                                         <input wire:model.defer="dueIn" type="number" class="form-control"
-                                            placeholder="3" aria-label="Due in">
+                                               placeholder="0" aria-label="Due in">
                                     </div>
-                                    <div class="col-2 col-md-3 mt-3">
+                                    <div class="col-sm-2 col-md-3 mt-3">
                                         days
                                     </div>
                                     <div class="col-md-3 mt-3 mt-md-0">
@@ -76,79 +76,79 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                        <th>Client</th>
-                                        <th>Property</th>
+                                    <th>Client</th>
+                                    <th>Property</th>
                                     </thead>
                                     <tbody>
-                                        @forelse ($properties as $property)
-                                            <tr>
-                                                <td>
-                                                    <a href="{{ route('clients.show', $property->client) }}">{{ $property->client->name }}</a>
-                                                </td>
-                                                <td>
-                                                    {{ $property->unique_number }}
-                                                    <small>
-                                                        (
-                                                        @if ($property->estatePropertyType)
+                                    @forelse ($properties as $property)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('clients.show', $property->client) }}">{{ $property->client->name }}</a>
+                                            </td>
+                                            <td>
+                                                {{ $property->unique_number }}
+                                                <small>
+                                                    (
+                                                    @if ($property->estatePropertyType)
                                                         {{ $property->estatePropertyType->propertyType ? $property->estatePropertyType->propertyType->name : null }}
 
                                                         <span class="font-weight-bold font-italic">-</span>
 
                                                         @if ($property->estatePropertyType)
-                                                        <span
-                                                            class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
+                                                            <span
+                                                                class="text-warning">{{ $property->estatePropertyType->estate ? $property->estatePropertyType->estate->name : null }}</span>
                                                         @endif
-                                                        @else
+                                                    @else
                                                         Property
-                                                        @endif
-                                                        )
-                                                    </small>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="2">No due payments</td>
-                                            </tr>
-                                        @endforelse
+                                                    @endif
+                                                    )
+                                                </small>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">No due payments</td>
+                                        </tr>
+                                    @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Payments Defaulters</h4>
+                            <h4>Payments Defaulters - {{date('F, Y')}}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-nowrap">
                                     <thead>
-                                        <th>Client</th>
-                                        <th>Property</th>
-                                        <th class="text-end">Default AAmt</th>
-                                        <td>Default Date</td>
+                                    <th>Client</th>
+                                    <th>Property</th>
+                                    <th class="text-end">Default AAmt</th>
+                                    <td>Default Date</td>
                                     </thead>
                                     <tbody>
-                                        @forelse($defaulters as $defaulter)
+                                    @forelse($defaulters as $defaulter)
                                         <tr>
                                             <td>
                                                 <a href="{{ route('clients.show', $defaulter->client) }}">{{ $defaulter->client->name }}</a>
                                             </td>
                                             <td>{{ $defaulter->property->unique_number }}</td>
                                             <td class="text-end">
-                                               {{ number_format($defaulter->default_amount, 2) }}
+                                                {{ number_format($defaulter->default_amount, 2) }}
                                             </td>
                                             <td>
                                                 {{ $defaulter->missed_date->toFormattedDateString() }}
                                             </td>
                                         </tr>
-                                        @empty
+                                    @empty
                                         <tr>
                                             <td colspan="3">No defaulters</td>
                                         </tr>
-                                        @endforelse
+                                    @endforelse
                                     </tbody>
                                 </table>
                             </div>

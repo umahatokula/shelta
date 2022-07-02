@@ -77,7 +77,7 @@
                 <!--Header End-->
             </div>
             <!--Full width header End-->
-            <div style="min-height: calc(100vh - 160px)">
+            <div style="min-height: calc(100vh - 10px)">
                 @yield('content')
             </div>
 

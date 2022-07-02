@@ -43,18 +43,18 @@
                                 <a href="{{ route('frontend.transactions.record') }}"  class="readon submit">Record Payment</a>
 
                             </div>
-                            
+
                         </div>
 
                         @if ($client->transactions->isNotEmpty())
-                            
+
                         <div class="table-responsive">
-                        <table id="payments" class="table-responsive table table-bordered table-hover display nowrap margin-top-10 w-p100">
+                        <table id="payments" class="table-responsive table-condensed table table-bordered table-hover display nowrap margin-top-10 w-p100">
                             <thead>
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-left">Property</th>
-                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Instalment Date</th>
                                         <th class="text-center">Type</th>
                                         <th class="text-right">Amount (&#8358;)</th>
                                         <th class="text-center">Action(s)</th>
@@ -75,15 +75,15 @@
                                     </td>
 
                                     <td class="text-center" style="padding: 15px; line-height: 30px">
-                                        {{ $transaction->created_at ? $transaction->created_at->toFormattedDateString() : null }}
+                                        {{ $transaction->instalment_date ? $transaction->instalment_date->toFormattedDateString() : null }}
                                     </td>
 
                                     <td class="text-center" style="padding: 15px; line-height: 30px">
-                                        
-                                        @if ($transaction->onlinePayment)
-                                        <span class="badge bg-primary">online</span>
+
+                                        @if ($transaction->type == 'recorded')
+                                        <span class="badge bg-info">recorded</span>
                                         @else
-                                        <span class="badge bg-danger">recorded</span>
+                                        <span class="badge bg-primary">online</span>
                                         @endif
                                     </td>
 
@@ -98,9 +98,9 @@
                                         <a href="{{ $transaction->getFirstMediaUrl('proofOfPayment') }}" class="text-danger p-0"
                                             data-original-title="" title="Proof of Payment" target="_blank">
                                             <i class="fa fa-file-pdf font-medium-3 mr-2"></i>
-                                        </a>    
+                                        </a>
                                         @endif
-                                        
+
                                         <a  href="{{ route('frontend.clients.mailReciept', [$transaction->transaction_number]) }}" href="#" class="text-success p-0"
                                             data-original-title="" title="Email Reciept">
                                             <i class="fa fa-envelope font-medium-3 mr-2"></i>
@@ -108,7 +108,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                            </tbody>				  
+                            </tbody>
                             <tfoot>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -186,7 +186,7 @@
         handler.openIframe();
     }
 
-</script> 
+</script>
 @endpush
 
 @endsection

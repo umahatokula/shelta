@@ -10,6 +10,22 @@
                     <div class="contact-wrap">
                         <div id="form-messages"></div>
 
+                        @if ($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                @foreach ($errors->all() as $error)
+                                    <div>{{$error}}</div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        @if (session()->has('error'))
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        </div>
+                        @endif
+
                         <form id="onlinePaymentForm">
                             <fieldset>
                                 <div class="row">

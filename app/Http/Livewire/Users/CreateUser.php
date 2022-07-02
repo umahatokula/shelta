@@ -62,32 +62,6 @@ class CreateUser extends Component
         redirect()->route('users.index');
     }
 
-    /**
-     * saveClient
-     *
-     * @return void
-     */
-    public function saveClient() {
-
-        $validatedData = $this->validate(
-            [
-                'client_id' => 'required',
-                // 'client_password'  => 'required|confirmed|min:6',
-                // 'client_password_confirmation'  => 'required',
-            ],
-            [
-                'client_id.required' => 'This field is required',
-                'client_password_confirmation.required' => 'Please enter the client password confirmation'
-            ]);
-
-        $client = Client::findOrFail($this->client_id);
-
-        // trigger event
-        ClientAccountCreated::dispatch($client);
-
-        redirect()->route('users.index');
-    }
-
     public function render()
     {
         return view('livewire.users.create-user');

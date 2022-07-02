@@ -9,7 +9,7 @@ class Balance extends Component
 {
     public $smsBalance;
 
-    public function mount() {
+    public function getSMSBalance() {
         $termii = new LaraTermii(env('TERMII_API_KEY'));
         $this->smsBalance = \json_decode($termii->balance())->balance;
     }

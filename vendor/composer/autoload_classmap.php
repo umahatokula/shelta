@@ -148,6 +148,7 @@ return array(
     'App\\Imports\\PropertyImport' => $baseDir . '/app/Imports/PropertyImport.php',
     'App\\Listeners\\ClientAccountCreated' => $baseDir . '/app/Listeners/ClientAccountCreated.php',
     'App\\Listeners\\CompletePaymentNotification' => $baseDir . '/app/Listeners/CompletePaymentNotification.php',
+    'App\\Listeners\\LogEmail' => $baseDir . '/app/Listeners/LogEmail.php',
     'App\\Listeners\\NotifyLegalAboutFirstPaymentListener' => $baseDir . '/app/Listeners/NotifyLegalAboutFirstPaymentListener.php',
     'App\\Listeners\\NotifyLegalAboutPaymentCompleteListener' => $baseDir . '/app/Listeners/NotifyLegalAboutPaymentCompleteListener.php',
     'App\\Listeners\\PaymentMadeListener' => $baseDir . '/app/Listeners/PaymentMadeListener.php',

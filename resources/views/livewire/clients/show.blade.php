@@ -147,11 +147,10 @@
                                         <td class="text-right">{{ number_format($transaction->amount, 2) }}</td>
 
                                         <td class="text-center">
-
-                                            @if ($transaction->onlinePayment)
+                                            @if ($transaction->type == 'online')
                                                 <span class="badge badge-primary">online</span>
                                             @else
-                                                <span class="badge badge-danger">recorded</span>
+                                                <span class="badge badge-info">recorded</span>
                                             @endif
                                         </td>
 
@@ -344,7 +343,7 @@
                                                                         <td>Price:</td>
                                                                         <td>
                                                                             @if ($property->estatePropertyType)
-                                                                            &#x20A6; {{ number_format($property->estatePropertyType->priceOfPaymentPlan($property->payment_plan_id), 2) }}
+                                                                            &#x20A6; {{ number_format($property->getPropertyPrice(), 2) }}
                                                                             @endif
                                                                         </td>
                                                                     </tr>

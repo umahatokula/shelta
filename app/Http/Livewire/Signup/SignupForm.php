@@ -381,14 +381,14 @@ class SignupForm extends Component
         }
 
         // verify transaction
-        $response= Transaction::verifyPaystackTransaction($data['reference']);
+        $verifiedTransactionResponse = Transaction::verifyPaystackTransaction($data['reference']);
 
         $transaction = null;
 
-        if ($response['status']) {
-            $verifiedTransaction = $response['data'];
+        if ($verifiedTransactionResponse['status']) {
+            $verifiedTransactionData = $verifiedTransactionResponse['data'];
 
-            DB::transaction(function () use($data, &$transaction) {
+            DB::transaction(function() use ($data, &$transaction, $verifiedTransactionData) {
 
                     $amount = $data['amount'] - $this->processingFee; // total paid less processing fee
 
@@ -397,7 +397,7 @@ class SignupForm extends Component
                         'property_id'        => $this->property->id,
                         'amount'             => $amount,
                         'type'               => 'online',
-                        'transaction_number' => $data['reference'],
+                        'transaction_number' => $verifiedTransactionData['reference'],
                         'date'               => Carbon::now(),
                         'instalment_date'    => Carbon::now(),
                         'recorded_by'        => auth()->id(),
@@ -410,15 +410,15 @@ class SignupForm extends Component
             OnlinePayment::create([
                 'client_id'         => $this->client->id,
                 'transaction_id'    => $transaction ? $transaction->id : null,
-                'message'           => $verifiedTransaction['message'],
-                'reference'         => $verifiedTransaction['reference'],
-                'status'            => $verifiedTransaction['status'],
-                'amount'            => $verifiedTransaction['amount'],
-                'gateway_response'  => $verifiedTransaction['gateway_response'],
-                'channel'           => $verifiedTransaction['channel'],
-                'currency'          => $verifiedTransaction['currency'],
-                'ip_address'        => $verifiedTransaction['ip_address'],
-                'fees'              => $verifiedTransaction['fees'],
+                'message'           => $verifiedTransactionData['message'],
+                'reference'         => $verifiedTransactionData['reference'],
+                'status'            => $verifiedTransactionData['status'],
+                'amount'            => $verifiedTransactionData['amount'],
+                'gateway_response'  => $verifiedTransactionData['gateway_response'],
+                'channel'           => $verifiedTransactionData['channel'],
+                'currency'          => $verifiedTransactionData['currency'],
+                'ip_address'        => $verifiedTransactionData['ip_address'],
+                'fees'              => $verifiedTransactionData['fees'],
             ]);
         }
 

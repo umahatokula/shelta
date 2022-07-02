@@ -1016,6 +1016,7 @@ class ComposerStaticInitba9b097295997f41eec053dff2ce9a4f
         'App\\Imports\\PropertyImport' => __DIR__ . '/../..' . '/app/Imports/PropertyImport.php',
         'App\\Listeners\\ClientAccountCreated' => __DIR__ . '/../..' . '/app/Listeners/ClientAccountCreated.php',
         'App\\Listeners\\CompletePaymentNotification' => __DIR__ . '/../..' . '/app/Listeners/CompletePaymentNotification.php',
+        'App\\Listeners\\LogEmail' => __DIR__ . '/../..' . '/app/Listeners/LogEmail.php',
         'App\\Listeners\\NotifyLegalAboutFirstPaymentListener' => __DIR__ . '/../..' . '/app/Listeners/NotifyLegalAboutFirstPaymentListener.php',
         'App\\Listeners\\NotifyLegalAboutPaymentCompleteListener' => __DIR__ . '/../..' . '/app/Listeners/NotifyLegalAboutPaymentCompleteListener.php',
         'App\\Listeners\\PaymentMadeListener' => __DIR__ . '/../..' . '/app/Listeners/PaymentMadeListener.php',

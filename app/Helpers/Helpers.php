@@ -15,7 +15,7 @@ class Helpers {
      * @param  mixed $message
      * @return void
      */
-    public static function sendSMSMessage(string $to, string $message, string $channel = "dnd") {
+    public static function sendSMSMessage($to, string $message) {
 
         // $response = Http::post('http://www.sendsmsnigeria.com/api/', [
         //   'email' => 'umahatokula@gmail.com',
@@ -42,11 +42,15 @@ class Helpers {
 //           'dnd' => 2,
 //         ]);
 
-        $from = 'N-Alert';
-        $sms = $message;
+        $response = Http::post(env('TERMII_API_ENDPOINT'), [
+            'api_key' => env('TERMII_API_KEY'),
+            'to' => $to,
+            'from' => env('TERMII_SMS_SENDER_ID'),
+            'sms' => $message,
+            'type' => 'plain',
+            'channel' => env('TERMII_SMS_CHANNEL'),
+        ]);
 
-        $termii = new LaraTermii(env('TERMII_API_KEY'));
-        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
         $response = json_decode($response);
 
         return $response->message;
@@ -57,19 +61,38 @@ class Helpers {
      * Send a WhatsApp message using Twilio
      *
      * @param  mixed $to
-     * @param  mixed $message
+     * @param  mixed $first_name
      * @return void
      */
-    public static function sendWhatsAppMessage($to, $message, $channel = 'whatsapp') {
+    public static function sendWhatsAppMessage($to) {
 
-        $termii = new LaraTermii(env('TERMII_API_KEY'));
-        $from = 'Richboss';
-        $sms = $message;
+//        $URL = 'https://live-server-10820.wati.io/api/v1/sendTemplateMessage?whatsappNumber=2348033312448';
+//
+//        $response = Http::withHeaders([
+//            'Authorization' => env('WATI_TOKEN'),
+//        ])->post($URL, [
+//            'template_name' => 'login_otp',
+//            'broadcast_name' => 'login_otp',
+//            'parameters' => [
+//                'otp' => '253654',
+//            ],
+//        ]);
 
-        $response = $termii->sendMessage($to, $from, $sms, $channel, $media = false, $media_url = null, $media_caption = null);
-        $response = json_decode($response);
+        $URL = 'https://live-server-10820.wati.io/api/v1/sendTemplateMessage?whatsappNumber=2348033312448';
 
-        return $response->message;
+        $response = Http::withHeaders([
+            'Authorization' => env('WATI_TOKEN'),
+        ])->post($URL, [
+            'template_name' => 'login_otp',
+            'broadcast_name' => 'login_otp',
+            'parameters' => [
+                'otp' => '253654',
+            ],
+        ]);
+
+        dd($response->object());
+
+        return $response->object();
     }
 
 

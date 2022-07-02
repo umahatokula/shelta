@@ -18,6 +18,7 @@ class Online extends Component
     public $showOnlinePaymentForm = false;
     public $payingName, $payingEmail, $payingAmount;
     public $propertybalance = 0;
+    public $minimumPayable = 0;
 
     protected $listeners = [
         'onlinePaymentSuccessful',
@@ -32,11 +33,28 @@ class Online extends Component
      */
     public function onSelectProperty(Property $property) {
 
-        $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
+        $estatePropertyTypePrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
-        })->first()->propertyPrice->price;
+        })->first();
 
-        $this->propertybalance = $propertyPrice - $property->totalPaid();
+        if (!$estatePropertyTypePrice) {
+            $this->addError('amount', 'Property balance could not be determined. Contact admin.');
+            return;
+        }
+
+        $propertyPrice = $estatePropertyTypePrice->propertyPrice;
+
+
+        if (!$propertyPrice) {
+            $this->addError('amount', 'Property balance could not be determined. Contact admin.');
+            return;
+        }
+
+        $price = $propertyPrice->price;
+
+        $this->propertybalance = $price - $property->totalPaid();
+        $this->minimumPayable = $property->getMonthlyPaymentAmount();
+
     }
 
     /**
@@ -50,7 +68,9 @@ class Online extends Component
 
         if (empty($data['client_id']) || empty($data['property_id']) || empty($data['amount'])) {
 
-            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Client, Property and Amount are ALL required']);
+
+            session()->flash('error', 'Kindly select a property and enter an amount');
+            // $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Client, Property and Amount are ALL required']);
             return;
 
         }
@@ -58,7 +78,9 @@ class Online extends Component
         $property = Property::find($data['property_id']);
         if (!$property) {
 
-            $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Property not found']);
+
+            session()->flash('error', 'Property not found');
+            // $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Property not found']);
             return;
 
         }
@@ -74,7 +96,7 @@ class Online extends Component
      * @return void
      */
     public function onlinePaymentSuccessful(Array $data) {
-        // dd($data);
+//         dd($data);
 
         // check for existence of property before procedding
         $property = Property::find($data['property_id']);
@@ -84,21 +106,22 @@ class Online extends Component
         }
 
         // verify transaction
-        $response= Transaction::verifyPaystackTransaction($data['reference']);
+        $verifiedTransactionResponse = Transaction::verifyPaystackTransaction($data['reference']);
+//        dd($verifiedTransactionResponse);
 
         $transaction = null;
 
-        if ($response['status']) {
-            $verifiedTransaction = $response['data'];
+        if ($verifiedTransactionResponse['status']) {
+            $verifiedTransactionData = $verifiedTransactionResponse['data'];
 
-            DB::transaction(function () use($data, &$transaction, &$property, $verifiedTransaction, $response) {
+            DB::transaction(function () use($data, &$transaction, &$property, $verifiedTransactionData) {
 
                 $transaction = Transaction::create([
                     'client_id'          => $data['client_id'],
                     'property_id'        => $data['property_id'],
                     'amount'             => $data['amount'],
                     'type'               => 'online',
-                    'transaction_number' => $data['reference'],
+                    'transaction_number' => $verifiedTransactionData['reference'],
                     'date'               => Carbon::now(),
                     'instalment_date'    => $property->nextPaymentDueDate(),
                     'recorded_by'        => auth()->id(),
@@ -127,27 +150,30 @@ class Online extends Component
             OnlinePayment::create([
                 'client_id'         => $data['client_id'],
                 'transaction_id'    => $transaction ? $transaction->id : null,
-                'message'           => $verifiedTransaction['message'],
-                'reference'         => $verifiedTransaction['reference'],
-                'status'            => $verifiedTransaction['status'],
-                'amount'            => $verifiedTransaction['amount'],
-                'gateway_response'  => $verifiedTransaction['gateway_response'],
-                'channel'           => $verifiedTransaction['channel'],
-                'currency'          => $verifiedTransaction['currency'],
-                'ip_address'        => $verifiedTransaction['ip_address'],
-                'fees'              => $verifiedTransaction['fees'],
+                'message'           => $verifiedTransactionData['message'],
+                'reference'         => $verifiedTransactionData['reference'],
+                'status'            => $verifiedTransactionData['status'],
+                'amount'            => $verifiedTransactionData['amount'],
+                'gateway_response'  => $verifiedTransactionData['gateway_response'],
+                'channel'           => $verifiedTransactionData['channel'],
+                'currency'          => $verifiedTransactionData['currency'],
+                'ip_address'        => $verifiedTransactionData['ip_address'],
+                'fees'              => $verifiedTransactionData['fees'],
             ]);
+
+            // dispatch event
+            PaymentMade::dispatch($transaction);
         }
 
         // log this transaction
-        activity()
-            ->by(auth()->user())
-            ->on($transaction)
-            ->withProperties(['is_staff' => false])
-            ->log('online payment');
+        if ($transaction) {
+            activity()
+                ->by(auth()->user())
+                ->on($transaction)
+                ->withProperties(['is_staff' => false])
+                ->log('online payment');
+        }
 
-        // dispatch event
-        PaymentMade::dispatch($transaction);
 
         // session()->flash('message', 'Payment successful.');
         $this->dispatchBrowserEvent('showToastr', ['type' => 'success', 'message' => 'Payment successful']);

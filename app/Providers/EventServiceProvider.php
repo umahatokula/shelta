@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\OPTGenerated;
+use App\Listeners\LogEmail;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\SendOTPNotification;
 use App\Listeners\CompletePaymentNotification;
@@ -42,6 +43,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\ClientAccountCreated' => [
             'App\Listeners\ClientAccountCreated',
+        ],
+        'Illuminate\Mail\Events\MessageSending' => [
+            LogEmail::class,
         ],
     ];
 

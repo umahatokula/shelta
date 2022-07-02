@@ -101,4 +101,14 @@ class Estate extends Model
             $q->whereNull('client_id');
         })->get();
     }
+
+//    public static function boot() {
+//
+//        parent::boot();
+//
+//        self::deleting(function($estate) {
+//            $estate->estatePropertyType()->delete();
+//        });
+//
+//    }
 }

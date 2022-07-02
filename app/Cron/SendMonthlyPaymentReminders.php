@@ -23,27 +23,40 @@ class SendMonthlyPaymentReminders {
      */
     public function __invoke () {
 
+
         $paymentReminderDates = PaymentReminderSetting::all();
 
         foreach ($paymentReminderDates as $paymentReminderDate) {
 
             $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
 
+            $phoneNumbers = [];
+            $emailAddresses = [];
             foreach ($properties as $property) {
 
-                // ===========SNED SMS===============
-                $receiverNumber = $property->client ? $property->client->phone : null;
-                $message = $paymentReminderDate->message;
+                // ===========GET PHONE NUMBERS===============
+                $phoneNumber = $property->client ? $property->client->phone : null;
+                $email = $property->client ? $property->client->email : null;
 
-                if ($receiverNumber) {
-                    Helpers::sendSMSMessage($receiverNumber, $message); // send sms
-                    Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
+                if ($phoneNumber) {
+                    if (str_starts_with($phoneNumber, '+234')) {
+                        $phoneNumbers[] = $phoneNumber;
+                    }
                 }
 
-                // ================SEND NOTIFICATION (Email)===================
-                Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
+                if ($email) {
+                    $emailAddresses[] = $email;
+                }
             }
+
+            $message = $paymentReminderDate->message;
+            Helpers::sendSMSMessage($phoneNumbers, $message); // send sms
+
+            // ================SEND NOTIFICATION (Email)===================
+            Mail::to($emailAddresses)->send(new SendMonthlyPaymentRemindersMailable($message));
+//        Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
         }
+
 
     }
 

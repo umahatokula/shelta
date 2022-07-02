@@ -20,7 +20,7 @@
                                 Please note that the system runs a 28 day payment cycle. Any date on or after 28th defaults to 28th. Eg, if a client's first instalment is Jan 31, the system automatically records it as Jan 28.
                             </div>
 
-                            <form wire:submit.prevent="save">
+                            <form>
                                 <div class="box-header with-border">
                                     <h4 class="box-title">&nbsp</h4>
                                 </div>
@@ -119,11 +119,8 @@
                                 <!-- /.box-body -->
                                 <div class="box-footer">
                                     <input type="submit" class="btn-lg btn btn-warning me-1" value="Cancel">
-                                    <input type="submit" class="btn-lg btn btn-primary" value="Save">
+                                    <input type="submit" class="btn-lg btn btn-primary" value="Save" wire:click.prevent="save" wire:loading.attr="disabled">
 
-{{--                                    <button wire:click="save" wire:loading.attr="disabled" type="submit" class="btn-lg btn btn-primary">--}}
-{{--                                        Save--}}
-{{--                                    </button>--}}
                                 </div>
                             </form>
                         </div>

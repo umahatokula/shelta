@@ -17,7 +17,7 @@
                         <div class="example-content">
                             <div class="row">
                                 <div class="col-12">
-                                        
+
                                     @forelse ($results as $result)
                                         <div class="mb-5">
                                             <h4>
@@ -30,13 +30,15 @@
                                                 </div>
                                                 <div class="col-lg-6 d-block justify-content-end">
                                                     @forelse ($result->properties as $property)
-                
-                                                        @if ($property->estatePropertyType)
-                                                            <a href="{{ route('property-types.show', $property->estatePropertyType->propertyType) }}">{{ $property->estatePropertyType->propertyType ? ucfirst(strtolower($property->estatePropertyType->propertyType->name)) : null }}</a> 
+
+                                                        @if ($property->estatePropertyType()->exists())
+                                                            @if ($property->estatePropertyType->propertyType()->exists())
+                                                                <a href="{{ route('property-types.show', $property->estatePropertyType->propertyType) }}">{{ $property->estatePropertyType->propertyType ? ucfirst(strtolower($property->estatePropertyType->propertyType->name)) : null }}</a>
+                                                            @endif
                                                         @endif
-                
+
                                                         @if (!$loop->last) <br> @endif
-                
+
                                                     @empty
                                                         <p>No property</p>
                                                     @endforelse
@@ -46,7 +48,7 @@
                                     @empty
                                         <p>No results</p>
                                     @endforelse
-                    
+
                                 </div>
                             </div>
                         </div>

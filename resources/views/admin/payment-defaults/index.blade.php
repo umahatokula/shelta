@@ -70,9 +70,11 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="text-start">
+                                            @if ($default->property->unique_number && $default->client->id)
                                             <a href="@if ($default->property->client->id) {{ route('clients.show', $default->client) }} @endif" title="Client">
                                                 {{ $default->property->client->id ? $default->property->client->name : '[NO NAME]' }}
                                             </a>
+                                            @endif
                                         </td>
                                         <td class="text-start">{{ $default->property->unique_number }}</td>
                                         <td class="text-end">{{ number_format($default->default_amount, 2) }}</td>
@@ -80,9 +82,7 @@
                                         <td class="text-center">
 
                                             @if ($default->property->unique_number && $default->client->id)
-
                                                 <a href="{{ route('payment-defaults.pay', [$default->property->unique_number, $default->client->id]) }}">[Pay]</a>
-
                                             @endif
 
                                         </td>

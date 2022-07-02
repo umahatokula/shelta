@@ -81,9 +81,12 @@ class EstatePropertyType extends Model
         parent::boot();
 
         self::deleting(function($estatePropertyType) {
+
              $estatePropertyType->properties()->each(function($property) {
-                $property->delete();
+                $property->estate_property_type_id = null;
+                $property->save();
              });
+
         });
 
     }
@@ -117,4 +120,5 @@ class EstatePropertyType extends Model
             ];
         });
     }
+
 }

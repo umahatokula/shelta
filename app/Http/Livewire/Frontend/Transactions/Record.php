@@ -57,11 +57,26 @@ class Record extends Component
      */
     public function onSelectProperty(Property $property) {
 
-        $propertyPrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
+        $estatePropertyTypePrice = $property->estatePropertyType->estatePropertyTypePrices->filter(function($price) use($property) {
             return $price->payment_plan_id == $property->payment_plan_id;
-        })->first()->propertyPrice->price;
+        })->first();
 
-        $this->propertybalance = $propertyPrice - $property->totalPaid();
+        if (!$estatePropertyTypePrice) {
+            $this->addError('amount', 'Property balance could not be determined. Contact admin.');
+            return;
+        }
+
+        $propertyPrice = $estatePropertyTypePrice->propertyPrice;
+
+
+        if (!$propertyPrice) {
+            $this->addError('amount', 'Property balance could not be determined. Contact admin.');
+            return;
+        }
+
+        $price = $propertyPrice->price;
+
+        $this->propertybalance = $price - $property->totalPaid();
 
         $this->instalment_date = $property->nextPaymentDueDate() ? $property->nextPaymentDueDate()->format('Y-m-d') : null;
     }
