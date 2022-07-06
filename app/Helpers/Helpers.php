@@ -58,41 +58,89 @@ class Helpers {
     }
 
     /**
-     * Send a WhatsApp message using Twilio
+     * Send an OTP using WhatsApp (WATI)
      *
      * @param  mixed $to
      * @param  mixed $first_name
      * @return void
      */
-    public static function sendWhatsAppMessage($to) {
+    public static function sendOTPViaWhatsapp($to) {
+        $curl = curl_init();
 
-//        $URL = 'https://live-server-10820.wati.io/api/v1/sendTemplateMessage?whatsappNumber=2348033312448';
-//
-//        $response = Http::withHeaders([
-//            'Authorization' => env('WATI_TOKEN'),
-//        ])->post($URL, [
-//            'template_name' => 'login_otp',
-//            'broadcast_name' => 'login_otp',
-//            'parameters' => [
-//                'otp' => '253654',
-//            ],
-//        ]);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WATI_ENDPOINT').'/api/v1/sendTemplateMessage?whatsappNumber='.$to,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "template_name": "login_otp",
+                "broadcast_name": "login_otp",
+                "parameters": [
+                    {
+                        "name": "otp",
+                        "value": "236521"
+                    }
+                ]
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: '.env('WATI_TOKEN'),
+                'Content-Type: application/json'
+            ),
+        ));
 
-        $URL = 'https://live-server-10820.wati.io/api/v1/sendTemplateMessage?whatsappNumber=2348033312448';
+        $response = curl_exec($curl);
 
-        $response = Http::withHeaders([
-            'Authorization' => env('WATI_TOKEN'),
-        ])->post($URL, [
-            'template_name' => 'login_otp',
-            'broadcast_name' => 'login_otp',
-            'parameters' => [
-                'otp' => '253654',
-            ],
-        ]);
+        curl_close($curl);
 
-        dd($response->object());
+        return json_decode($response);
+    }
 
-        return $response->object();
+
+    /**
+     * Send an OTP using WhatsApp (WATI)
+     *
+     * @param  mixed $to
+     * @param  mixed $first_name
+     * @return void
+     */
+    public static function sendPaymentReminderViaWhatsapp($to, $number_of_days) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WATI_ENDPOINT').'/api/v1/sendTemplateMessage?whatsappNumber='.$to,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "template_name": "instalment_reminder",
+                "broadcast_name": "instalment_reminder",
+                "parameters": [
+                    {
+                        "name": "number_of_days",
+                        "value": "'.$number_of_days.'"
+                    }
+                ]
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: '.env('WATI_TOKEN'),
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        dd(json_decode($response));
+
+        return json_decode($response);
     }
 
 

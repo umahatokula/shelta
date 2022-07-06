@@ -24,8 +24,9 @@ class SendMonthlyPaymentReminders {
     public function __invoke () {
 
 
-        $paymentReminderDates = PaymentReminderSetting::all();
+        $paymentReminderDates = PaymentReminderSetting::orderBy('number_of_days_before_due_date', 'asc')->get();
 
+        $data = [];
         foreach ($paymentReminderDates as $paymentReminderDate) {
 
             $properties = (new Property())->getPropertiesDueForReminder($paymentReminderDate->number_of_days_before_due_date);
@@ -42,12 +43,21 @@ class SendMonthlyPaymentReminders {
                     if (str_starts_with($phoneNumber, '+234')) {
                         $phoneNumbers[] = $phoneNumber;
                     }
+
+                    if ($paymentReminderDate->number_of_days_before_due_date == 0) {
+                        $number_of_days = 'TODAY';
+                    } else {
+                        $number_of_days = $paymentReminderDate->number_of_days_before_due_date.' days';
+                    }
+                    Helpers::sendPaymentReminderViaWhatsapp($phoneNumber, $number_of_days); // send whatsapp msg
                 }
 
                 if ($email) {
                     $emailAddresses[] = $email;
                 }
             }
+
+            $data[$paymentReminderDate->number_of_days_before_due_date] = $phoneNumbers;
 
             $message = $paymentReminderDate->message;
             Helpers::sendSMSMessage($phoneNumbers, $message); // send sms
@@ -57,7 +67,7 @@ class SendMonthlyPaymentReminders {
 //        Notification::send($property->client, new PaymentReminderNotification($property, $paymentReminderDate->message, $paymentReminderDate->number_of_days_before_due_date));
         }
 
-
+        \Log::info($data);
     }
 
 }
