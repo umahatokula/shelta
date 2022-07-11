@@ -308,6 +308,12 @@ Route::get('/test', function() {
 
 //    $response2 = Helpers::sendSMSMessage('2348033312448', 'This is message');
 //    $response2 = Helpers::sendOTPViaWhatsapp('2348033312448');
-    $response2 = Helpers::sendPaymentReminderViaWhatsapp('2348033312448', 'TODAY');
+//    $response2 = Helpers::sendPaymentReminderViaWhatsapp('2348033312448', 'TODAY');
+    (new App\Cron\SendMonthlyPaymentReminders)->viaWhatsapp();
 
+});
+
+Route::get('due', function() {
+    $SendMonthlyPaymentReminders = new App\Cron\SendMonthlyPaymentReminders;
+    $SendMonthlyPaymentReminders();
 });

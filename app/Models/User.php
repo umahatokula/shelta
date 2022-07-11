@@ -105,7 +105,7 @@ class User extends Authenticatable
         $message = 'Your Richboss confirmation code is '. $code .'. Valid for 10 minutes, one time use only';
 
         // dispatch event
-        OPTGenerated::dispatch($message, $user);
+        OPTGenerated::dispatch($message, $user, $code);
     }
 
     /**

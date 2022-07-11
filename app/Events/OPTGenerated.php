@@ -16,16 +16,18 @@ class OPTGenerated
 
     public $content;
     public $user;
+    public $otp;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($content, $user)
+    public function __construct($content, $user, $otp)
     {
         $this->content = $content;
         $this->user = $user;
+        $this->otp = $otp;
     }
 
     /**

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\Client;
 use App\Helpers\Helpers;
 use App\Models\PaymentPlan;
-use App\Models\Transaction;
 use App\Models\PaymentDefault;
 use App\Models\PropertyTypePrice;
 use App\Models\EstatePropertyType;
@@ -221,13 +221,20 @@ class Property extends Model
 
       $nextDueDate = Carbon::today()->addDays($number_of_days_to_due_date);
 
-      return $this->with('client')
+      $properties =  $this->with('client')
           ->whereNotNull('client_id')
           ->whereNotNull('date_of_first_payment')
           ->get()
           ->filter(function ($property) use ($nextDueDate) {
               return ($property->nextPaymentDueDate() == $nextDueDate) && $property->transactionTotal() < $property->getPropertyPrice();
           });
+
+
+        $currentMonthTransactions = Transaction::whereMonth('instalment_date', date('m'))->isApproved()->pluck('property_id')->toArray();
+
+        return $properties->filter(function ($property) use($currentMonthTransactions) {
+            return !in_array($property->id, $currentMonthTransactions);
+        });
     }
 
     /**

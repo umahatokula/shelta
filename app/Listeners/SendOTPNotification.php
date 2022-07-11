@@ -57,7 +57,7 @@ class SendOTPNotification
 
         if ($receiverNumber) {
             Helpers::sendSMSMessage($receiverNumber, $message); // send sms
-            Helpers::sendWhatsAppMessage($receiverNumber, $message); // send whatsapp message
+            Helpers::sendOTPViaWhatsapp($receiverNumber, $event->otp); // send whatsapp message
         }
 
     }

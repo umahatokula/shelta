@@ -1,5 +1,5 @@
 <div class="row">
-           
+
     <div class="col-md-12 ma-5">
         <div class="box ">
             <div class="box-header with-border">
@@ -14,13 +14,13 @@
                     @csrf
 
                     <input type="hidden" name="client_id" value="{{ $client->id }}">
-                
-                    <div class="form-check">
-                        <input name="whatsapp" class="form-check-input" type="checkbox" value="whatsapp" id="whatsapp" checked="">
-                        <label class="form-check-label" for="whatsapp">
-                            WhatsApp
-                        </label>
-                    </div>
+
+{{--                    <div class="form-check">--}}
+{{--                        <input name="whatsapp" class="form-check-input" type="checkbox" value="whatsapp" id="whatsapp" checked="">--}}
+{{--                        <label class="form-check-label" for="whatsapp">--}}
+{{--                            WhatsApp--}}
+{{--                        </label>--}}
+{{--                    </div>--}}
                     <div class="form-check">
                         <input name="sms" class="form-check-input" type="checkbox" value="sms" id="sms">
                         <label class="form-check-label" for="sms">
@@ -33,13 +33,13 @@
                             Email
                         </label>
                     </div>
-                    
+
                     <div class="form-group mb-3">
                         <label class="form-label">Subject (For Email only)</label>
                         <input wire:model="subject" class="form-control" name="subject" autofocus>
                         @error('subject') <span class="text-danger">{{ $subject }}</span> @enderror
                     </div>
-                    
+
                     <div class="form-group mb-3">
                         <label class="form-label">Message</label>
 

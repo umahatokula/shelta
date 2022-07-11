@@ -64,7 +64,7 @@ class Helpers {
      * @param  mixed $first_name
      * @return void
      */
-    public static function sendOTPViaWhatsapp($to) {
+    public static function sendOTPViaWhatsapp($to, $otp) {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -82,7 +82,7 @@ class Helpers {
                 "parameters": [
                     {
                         "name": "otp",
-                        "value": "236521"
+                        "value": "'.$otp.'"
                     }
                 ]
             }',
@@ -138,7 +138,7 @@ class Helpers {
         $response = curl_exec($curl);
 
         curl_close($curl);
-        dd(json_decode($response));
+//        dd(json_decode($response));
 
         return json_decode($response);
     }
