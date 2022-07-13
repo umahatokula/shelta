@@ -144,6 +144,93 @@ class Helpers {
     }
 
 
+
+    /**
+     * Send an OTP using WhatsApp (WATI)
+     *
+     * @param  mixed $to
+     * @param  mixed $first_name
+     * @return void
+     */
+    public static function firstPaymentNotificationViaWhatsapp($to, $property) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WATI_ENDPOINT').'/api/v1/sendTemplateMessage?whatsappNumber='.$to,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "template_name": "first_payment",
+                "broadcast_name": "first_payment",
+                "parameters": [
+                    {
+                        "name": "property_number",
+                        "value": "'.$property->unique_number.'"
+                    }
+                ]
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: '.env('WATI_TOKEN'),
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+    }
+
+
+
+    /**
+     * Send an OTP using WhatsApp (WATI)
+     *
+     * @param  mixed $to
+     * @param  mixed $first_name
+     * @return void
+     */
+    public static function paymentCompleteNotificationViaWhatsapp($to, $property) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WATI_ENDPOINT').'/api/v1/sendTemplateMessage?whatsappNumber='.$to,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "template_name": "payment_complete",
+                "broadcast_name": "payment_complete",
+                "parameters": [
+                    {
+                        "name": "property_number",
+                        "value": "'.$property->unique_number.'"
+                    }
+                ]
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: '.env('WATI_TOKEN'),
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+    }
+
     /**
      * get suffix of a number
      * @param  int $int position

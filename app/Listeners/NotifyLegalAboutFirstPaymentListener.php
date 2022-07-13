@@ -44,7 +44,7 @@ class NotifyLegalAboutFirstPaymentListener implements ShouldQueue
                 if ($user->staff?->phone) {
 
                     Helpers::sendSMSMessage($user->staff->phone, $message); // send sms
-                    Helpers::sendWhatsAppMessage($user->staff->phone, $message); // send whatsapp message
+                    Helpers::firstPaymentNotificationViaWhatsapp($user->staff->phone, $event->transaction?->property); // send whatsapp message
                 }
 
             }

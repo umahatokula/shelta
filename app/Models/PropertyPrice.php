@@ -21,7 +21,7 @@ class PropertyPrice extends Model
     }
 
     public function setPriceAttribute($value) {
-        return isset($this->attributes['price']) ? $this->attributes['price'] * 100 : 0;
+        $this->attributes['price'] = $value * 100;
     }
 
     public function properties() {

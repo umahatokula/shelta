@@ -73,10 +73,10 @@ class EditEstate extends Component
      * @return void
      */
     public function addProperty() {
-        array_push($this->properties, [
+        $this->properties[] = [
             'property' => $this->propertyTypes,
             'number_of_units' => '',
-        ]);
+        ];
     }
 
     /**

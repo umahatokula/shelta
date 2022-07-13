@@ -22,7 +22,7 @@ class CreatePrice extends Component
     {
         $this->validate();
 
-        PropertyPrice::insert([
+        PropertyPrice::create([
             'price' => $this->price,
             'is_active' => 1,
         ]);

@@ -13,10 +13,13 @@ class AddPropertyPriceModal extends Component
     public $propertyPrices;
     public $planPrices = [];
     public $paired = [];
+    public $validatedData = [];
     public $index;
+    public $selectedPlan = null;
+    public $selectedPrice = null;
 
     protected $rules = [
-        'paired.*.plan_id' => 'required|distinct',
+        'paired.*.plan_id' => 'required',
         'paired.*.price_id' => 'required',
     ];
 
@@ -27,17 +30,57 @@ class AddPropertyPriceModal extends Component
         $this->propertyPrices = PropertyPrice::all();
         $this->index = $index;
 
-        array_push($this->planPrices, [
+        $this->planPrices[] = [
             'plan_id' => '',
             'price_id' => '',
-        ]);
+        ];
+    }
+
+    public function setPlanId($value, $key) {
+
+        $this->selectedPlan = $value;
+
+        if ($this->selectedPlan && $this->selectedPrice) {
+            $this->checkDuplicate();
+        }
+
+    }
+
+    public function setPriceId($value, $key) {
+
+        $this->selectedPrice = $value;
+
+        if ($this->selectedPlan && $this->selectedPrice) {
+            $this->checkDuplicate();
+        }
+
+    }
+
+    public function checkDuplicate() {
+
+        foreach ($this->validatedData as $vd) {
+            if ($vd['plan_id'] == $this->selectedPlan && $vd['price_id'] == $this->selectedPrice) {
+//                $this->addError('duplicate_error', 'Ensure there are no duplicate selections for Payment Plan and Price');
+                $this->dispatchBrowserEvent('showToastr', ['type' => 'error', 'message' => 'Ensure there are no duplicate selections for Payment Plan and Price']);
+                return;
+            }
+        }
+
+        $this->validatedData[] = [
+            'plan_id' => $this->selectedPlan,
+            'price_id' => $this->selectedPrice,
+        ];
+
+        $this->selectedPlan = null;
+        $this->selectedPrice = null;
+
     }
 
     public function addPrice() {
-        array_push($this->planPrices, [
+        $this->planPrices[] = [
             'plan_id' => '',
             'price_id' => '',
-        ]);
+        ];
     }
 
     public function removePrice($key) {
@@ -54,12 +97,13 @@ class AddPropertyPriceModal extends Component
     }
 
     public function attachPrice() {
+
         $this->validate();
 
-        $this->emit('propertyPriceAdded', $this->index, $this->paired);
+        $this->emit('propertyPriceAdded', $this->index, $this->validatedData);
         $this->emit('hideModal');
 
-        $this->reset(['index', 'paired']);
+        $this->reset(['index', 'validatedData']);
     }
 
     public function render()

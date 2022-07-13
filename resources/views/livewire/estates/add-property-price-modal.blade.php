@@ -14,7 +14,7 @@
 
           @if ($errors->any())
               <div class="alert alert-danger" role="alert">
-                  Ensure there are no duplicate selections for Property Type
+                  Ensure there are no duplicate selections for Payment Plan and Price
               </div>
           @endif
 
@@ -29,7 +29,7 @@
               <tr>
                 <td>
                   <select wire:model.lazy="paired.{{$key}}.plan_id"
-                      class="form-select form-control" required>
+                      class="form-select form-control" wire:change="setPlanId($event.target.value, {{$key}})" required>
                       <option value="">Please select one</option>
                       @foreach ($paymentPlans as $paymentPlan)
                       <option value="{{ $paymentPlan->id }}">{{ $paymentPlan->name }}</option>
@@ -38,7 +38,7 @@
                 </td>
                 <td>
                   <select wire:model.lazy="paired.{{$key}}.price_id"
-                      class="form-select form-control" required>
+                      class="form-select form-control" wire:change="setPriceId($event.target.value, {{$key}})" required>
                       <option value="">Please select one</option>
                       @foreach ($propertyPrices as $PropertyPrice)
                       <option value="{{ $PropertyPrice->id }}">{{ $PropertyPrice->price }}</option>
