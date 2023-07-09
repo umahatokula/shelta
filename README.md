@@ -55,7 +55,7 @@ To install and set up the Shelta application, follow these steps:
 2. Clone the Shelta repository from the GitHub repository:
 
    ```bash
-   git clone https://github.com/koachtech/shelta.git
+   https://github.com/umahatokula/shelta.git
    ```
 
 3. Install the application dependencies using Composer:
